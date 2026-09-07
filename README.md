@@ -1,6 +1,6 @@
 # Not Alone Summit Platform
 
-Production-oriented event platform scaffold for Inspiring Children Foundation.
+Official app platform for the 2026 Not Alone Summit, built as a production-oriented event system for Inspiring Children Foundation.
 
 ## Apps
 

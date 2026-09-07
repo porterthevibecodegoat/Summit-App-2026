@@ -12,6 +12,8 @@ coverage
 *.local
 work/
 outputs/
+*.tar.gz
+*.zip
 .DS_Store
 **/.expo/
 **/.next/
