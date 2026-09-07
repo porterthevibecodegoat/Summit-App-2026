@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": [
+      "react",
+      "react-native"
+    ],
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "app",
+    "components",
+    "app.config.ts",
+    "../../packages/**/*.ts"
+  ]
+}

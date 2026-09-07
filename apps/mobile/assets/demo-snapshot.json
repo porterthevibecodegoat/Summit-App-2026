@@ -1,0 +1,1427 @@
+{
+  "event": {
+    "id": "not-alone-summit-2026-prototype",
+    "name": "Not Alone Summit",
+    "organizationName": "Inspiring Children Foundation",
+    "timeZone": "America/Los_Angeles",
+    "dateLabel": "November 2-4, 2026",
+    "venueName": "Wynn Las Vegas",
+    "city": "Las Vegas, Nevada",
+    "positioning": "Prototype attendee agenda based on the 2025 Not Alone Summit production timeline. Final 2026 programming will replace these records as details are approved.",
+    "presentedBy": "Villa Bibbiani",
+    "poweredBy": "Steven & Alexandra Cohen Foundation",
+    "tracks": [
+      "Main Stage",
+      "Awards",
+      "Concerts",
+      "Meditation",
+      "Workshops",
+      "Wellness",
+      "Founder Events",
+      "Community Day"
+    ],
+    "featuredPeople": [
+      {
+        "name": "Jewel",
+        "role": "Singer-songwriter and mental health advocate",
+        "group": "Featured Artist"
+      },
+      {
+        "name": "Harry Hudson",
+        "role": "Artist and advocate",
+        "group": "Featured Performer"
+      },
+      {
+        "name": "Tallulah Willis",
+        "role": "Artist and mental health advocate",
+        "group": "Workshop Guest"
+      },
+      {
+        "name": "The Bryan Brothers",
+        "role": "Tennis champions and wellness guests",
+        "group": "Community Day"
+      },
+      {
+        "name": "Rachel Platten",
+        "role": "Singer-songwriter",
+        "group": "Closing Dinner Performer"
+      }
+    ],
+    "demo": false
+  },
+  "revision": 2,
+  "serverTimeUtc": "2026-09-07T16:00:00.000Z",
+  "scheduleItems": [
+    {
+      "id": "50000000-0000-4000-8000-000000000001",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Registration, Gifting Suite, and Wellness Rooms Open",
+      "shortTitle": "Doors Open",
+      "summary": "Check in, explore gifting, and ease into the summit wellness spaces.",
+      "description": "Check in, explore gifting, and ease into the summit wellness spaces. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-02T21:00:00.000Z",
+      "endUtc": "2026-11-03T03:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 0,
+      "locationId": "20000000-0000-4000-8000-000000000001",
+      "locationName": "Registration Desk",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000009"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        60,
+        15
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000002",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Pilates Class",
+      "shortTitle": "Pilates",
+      "summary": "A grounding movement session to begin the afternoon.",
+      "description": "A grounding movement session to begin the afternoon. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-02T21:00:00.000Z",
+      "endUtc": "2026-11-02T21:45:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 0,
+      "locationId": "20000000-0000-4000-8000-000000000003",
+      "locationName": "Lafleur - Wellness Room Zone 1",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000003"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000003",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Circuit Training",
+      "shortTitle": "Circuit Training",
+      "summary": "A high-energy fitness block adapted from the prior summit wellness programming.",
+      "description": "A high-energy fitness block adapted from the prior summit wellness programming. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-02T22:00:00.000Z",
+      "endUtc": "2026-11-02T22:45:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 0,
+      "locationId": "20000000-0000-4000-8000-000000000003",
+      "locationName": "Lafleur - Wellness Room Zone 1",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000004"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000004",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Meditation and Stretching",
+      "shortTitle": "Meditation",
+      "summary": "A short reset session before evening founder and main-stage programming.",
+      "description": "A short reset session before evening founder and main-stage programming. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T00:00:00.000Z",
+      "endUtc": "2026-11-03T00:30:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 0,
+      "locationId": "20000000-0000-4000-8000-000000000003",
+      "locationName": "Lafleur - Wellness Room Zone 1",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000010"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000005",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Founder Cocktails",
+      "shortTitle": "Cocktails",
+      "summary": "A founder-only welcome moment before dinner.",
+      "description": "A founder-only welcome moment before dinner. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T01:00:00.000Z",
+      "endUtc": "2026-11-03T01:30:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 0,
+      "locationId": "20000000-0000-4000-8000-000000000007",
+      "locationName": "Outside SW Steakhouse",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "founders",
+        "label": "Founders only"
+      },
+      "eligibilityScope": {
+        "id": "founders",
+        "label": "Founders only"
+      },
+      "notificationScope": {
+        "id": "founders",
+        "label": "Founders only"
+      },
+      "notificationOffsetsMinutes": [
+        30,
+        10
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000006",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Founder's Dinner",
+      "shortTitle": "Founder Dinner",
+      "summary": "A founder-only dinner adapted from the prior summit timeline.",
+      "description": "A founder-only dinner adapted from the prior summit timeline. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T01:30:00.000Z",
+      "endUtc": "2026-11-03T03:30:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 0,
+      "locationId": "20000000-0000-4000-8000-000000000007",
+      "locationName": "SW Steakhouse",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "founders",
+        "label": "Founders only"
+      },
+      "eligibilityScope": {
+        "id": "founders",
+        "label": "Founders only"
+      },
+      "notificationScope": {
+        "id": "founders",
+        "label": "Founders only"
+      },
+      "notificationOffsetsMinutes": [
+        60,
+        15
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000007",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Wisdom Forum Doors Open",
+      "shortTitle": "Forum Doors",
+      "summary": "Guests enter the main room, gather, and take seats before opening night begins.",
+      "description": "Guests enter the main room, gather, and take seats before opening night begins. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T03:00:00.000Z",
+      "endUtc": "2026-11-03T04:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 0,
+      "locationId": "20000000-0000-4000-8000-000000000002",
+      "locationName": "Margaux - Wisdom Forum",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000009"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        30,
+        10
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000008",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Opening Night Intro",
+      "shortTitle": "Opening Intro",
+      "summary": "The summit opens with a concise welcome into the evening program.",
+      "description": "The summit opens with a concise welcome into the evening program. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T04:00:00.000Z",
+      "endUtc": "2026-11-03T04:10:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 0,
+      "locationId": "20000000-0000-4000-8000-000000000002",
+      "locationName": "Margaux - Wisdom Forum",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000009"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        10
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000009",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Harry Hudson Performance",
+      "shortTitle": "Harry Hudson",
+      "summary": "A short opening-night music performance.",
+      "description": "A short opening-night music performance. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T04:10:00.000Z",
+      "endUtc": "2026-11-03T04:20:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 0,
+      "locationId": "20000000-0000-4000-8000-000000000002",
+      "locationName": "Margaux - Wisdom Forum",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000002"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        10
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000010",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Jewel Performance",
+      "shortTitle": "Jewel",
+      "summary": "A main-stage music moment inspired by the prior summit program.",
+      "description": "A main-stage music moment inspired by the prior summit program. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T04:25:00.000Z",
+      "endUtc": "2026-11-03T05:10:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 0,
+      "locationId": "20000000-0000-4000-8000-000000000002",
+      "locationName": "Margaux - Wisdom Forum",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000001"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        30,
+        10
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000011",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Late Night Pickleball and Sauna",
+      "shortTitle": "Late Night Wellness",
+      "summary": "A casual late-night wellness and connection block.",
+      "description": "A casual late-night wellness and connection block. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T05:30:00.000Z",
+      "endUtc": "2026-11-03T07:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 0,
+      "locationId": "20000000-0000-4000-8000-000000000004",
+      "locationName": "Pomerol - Wellness Room Zone 2",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000010"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000012",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Pickleball Clinic with a Pro",
+      "shortTitle": "Pickleball Clinic",
+      "summary": "Morning play and instruction in the wellness zone.",
+      "description": "Morning play and instruction in the wellness zone. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T15:00:00.000Z",
+      "endUtc": "2026-11-03T16:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000004",
+      "locationName": "Pomerol Patio East - Wellness Room Zone 2",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000010"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000013",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Reformer Pilates",
+      "shortTitle": "Pilates",
+      "summary": "A short morning pilates session.",
+      "description": "A short morning pilates session. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T15:30:00.000Z",
+      "endUtc": "2026-11-03T16:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000003",
+      "locationName": "Lafleur - Wellness Room Zone 1",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000003"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000014",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Morning Breathwork",
+      "shortTitle": "Breathwork",
+      "summary": "A guided breathwork session to begin the day with focus and calm.",
+      "description": "A guided breathwork session to begin the day with focus and calm. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T16:00:00.000Z",
+      "endUtc": "2026-11-03T16:30:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000005",
+      "locationName": "Mouton 2 - Nourish Room",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000010"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000015",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Guided Meditation",
+      "shortTitle": "Meditation",
+      "summary": "A quiet guided meditation adapted from the prior summit wellness block.",
+      "description": "A quiet guided meditation adapted from the prior summit wellness block. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T16:00:00.000Z",
+      "endUtc": "2026-11-03T16:30:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000003",
+      "locationName": "Lafleur Patio",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000005"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000016",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Art and Healing",
+      "shortTitle": "Art and Healing",
+      "summary": "A creative wellness conversation inspired by the prior summit schedule.",
+      "description": "A creative wellness conversation inspired by the prior summit schedule. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T16:30:00.000Z",
+      "endUtc": "2026-11-03T17:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000005",
+      "locationName": "Mouton 2 - Nourish Room",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000006"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000017",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Wisdom Forum Doors Open",
+      "shortTitle": "Forum Doors",
+      "summary": "Guests enter the main room before morning programming begins.",
+      "description": "Guests enter the main room before morning programming begins. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T17:30:00.000Z",
+      "endUtc": "2026-11-03T17:45:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000002",
+      "locationName": "Margaux - Wisdom Forum",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000018",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Opening Performance",
+      "shortTitle": "Opening Performance",
+      "summary": "A short performance and opening sequence before the main panels.",
+      "description": "A short performance and opening sequence before the main panels. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T17:45:00.000Z",
+      "endUtc": "2026-11-03T18:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000002",
+      "locationName": "Margaux - Wisdom Forum",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        10
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000019",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Morning Panel Sessions",
+      "shortTitle": "Morning Panels",
+      "summary": "Main-stage conversations on mental health, purpose, resilience, and lived experience.",
+      "description": "Main-stage conversations on mental health, purpose, resilience, and lived experience. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T18:00:00.000Z",
+      "endUtc": "2026-11-03T20:30:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000002",
+      "locationName": "Margaux - Wisdom Forum",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        60,
+        15
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000020",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Lunch",
+      "shortTitle": "Lunch",
+      "summary": "A buffet-style lunch and conversation break.",
+      "description": "A buffet-style lunch and conversation break. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T20:30:00.000Z",
+      "endUtc": "2026-11-03T21:30:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000003",
+      "locationName": "Lafleur Patio",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000021",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Afternoon Panel Sessions",
+      "shortTitle": "Afternoon Panels",
+      "summary": "Main-stage conversations continuing the summit themes of wellness, connection, and action.",
+      "description": "Main-stage conversations continuing the summit themes of wellness, connection, and action. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-03T21:45:00.000Z",
+      "endUtc": "2026-11-04T00:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000002",
+      "locationName": "Margaux - Wisdom Forum",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        30,
+        10
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000022",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Dinner in the Nourish Room",
+      "shortTitle": "Nourish Dinner",
+      "summary": "A hosted dinner moment before the Not Alone Awards evening.",
+      "description": "A hosted dinner moment before the Not Alone Awards evening. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-04T01:45:00.000Z",
+      "endUtc": "2026-11-04T03:15:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000005",
+      "locationName": "Mouton 2 - Nourish Room",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        30
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000023",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Not Alone Awards Red Carpet",
+      "shortTitle": "Red Carpet",
+      "summary": "Arrival, photos, and pre-show gathering for the Not Alone Awards.",
+      "description": "Arrival, photos, and pre-show gathering for the Not Alone Awards. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-04T03:00:00.000Z",
+      "endUtc": "2026-11-04T03:45:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000009",
+      "locationName": "Registration Area / La Tache",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        30,
+        10
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000024",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Awards Preshow Act",
+      "shortTitle": "Preshow",
+      "summary": "A short preshow before the Not Alone Awards begin.",
+      "description": "A short preshow before the Not Alone Awards begin. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-04T03:30:00.000Z",
+      "endUtc": "2026-11-04T03:55:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000002",
+      "locationName": "Margaux - Wisdom Forum",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        10
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000025",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Not Alone Awards",
+      "shortTitle": "Awards",
+      "summary": "An evening celebration of impact, storytelling, and mental health leadership.",
+      "description": "An evening celebration of impact, storytelling, and mental health leadership. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-04T04:00:00.000Z",
+      "endUtc": "2026-11-04T06:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 1,
+      "locationId": "20000000-0000-4000-8000-000000000002",
+      "locationName": "Margaux - Wisdom Forum",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        60,
+        15
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000026",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Community Day Pickleball Clinic",
+      "shortTitle": "Pickleball",
+      "summary": "A morning pickleball session adapted for the Community Day prototype.",
+      "description": "A morning pickleball session adapted for the Community Day prototype. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-04T15:00:00.000Z",
+      "endUtc": "2026-11-04T16:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 2,
+      "locationId": "20000000-0000-4000-8000-000000000004",
+      "locationName": "Pomerol - Wellness Room Zone 2",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000007"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "eligibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000027",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Life Plan Workshop",
+      "shortTitle": "Life Plan",
+      "summary": "A reflective workshop using life-plan prompts and guided conversation.",
+      "description": "A reflective workshop using life-plan prompts and guided conversation. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-04T16:00:00.000Z",
+      "endUtc": "2026-11-04T17:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 2,
+      "locationId": "20000000-0000-4000-8000-000000000005",
+      "locationName": "Mouton 2 Patio",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "eligibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000028",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "DBT: The Ultimate Parenting Tool",
+      "shortTitle": "DBT Workshop",
+      "summary": "A practical morning workshop inspired by the prior summit Community Day.",
+      "description": "A practical morning workshop inspired by the prior summit Community Day. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-04T16:00:00.000Z",
+      "endUtc": "2026-11-04T16:30:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 2,
+      "locationId": "20000000-0000-4000-8000-000000000005",
+      "locationName": "Mouton 2 - Nourish Room",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "eligibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000029",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "The Power of Emotional Intelligence",
+      "shortTitle": "Emotional Intelligence",
+      "summary": "A prototype workshop on turning insight into impact.",
+      "description": "A prototype workshop on turning insight into impact. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-04T16:30:00.000Z",
+      "endUtc": "2026-11-04T17:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 2,
+      "locationId": "20000000-0000-4000-8000-000000000005",
+      "locationName": "Mouton 2 - Nourish Room",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "eligibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000030",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Community Day Morning Panel Sessions",
+      "shortTitle": "Community Panels",
+      "summary": "Main-stage morning programming adapted from the prior summit schedule.",
+      "description": "Main-stage morning programming adapted from the prior summit schedule. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-04T18:00:00.000Z",
+      "endUtc": "2026-11-04T20:30:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 2,
+      "locationId": "20000000-0000-4000-8000-000000000002",
+      "locationName": "Margaux - Wisdom Forum",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "eligibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationOffsetsMinutes": [
+        60,
+        15
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000031",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Community Day Lunch",
+      "shortTitle": "Lunch",
+      "summary": "A hosted lunch break in the Nourish Room.",
+      "description": "A hosted lunch break in the Nourish Room. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-04T20:30:00.000Z",
+      "endUtc": "2026-11-04T21:30:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 2,
+      "locationId": "20000000-0000-4000-8000-000000000005",
+      "locationName": "Mouton 2 - Nourish Room",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "eligibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationOffsetsMinutes": [
+        15
+      ],
+      "featured": false,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000032",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Community Day Afternoon Panel Sessions",
+      "shortTitle": "Afternoon Panels",
+      "summary": "Afternoon main-stage programming for the Community Day prototype.",
+      "description": "Afternoon main-stage programming for the Community Day prototype. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-04T21:45:00.000Z",
+      "endUtc": "2026-11-05T00:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 2,
+      "locationId": "20000000-0000-4000-8000-000000000002",
+      "locationName": "Margaux - Wisdom Forum",
+      "speakerIds": [],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "eligibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationOffsetsMinutes": [
+        30,
+        10
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000033",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Mindfulness and Music by Jewel",
+      "shortTitle": "Mindfulness Music",
+      "summary": "A closing main-stage mindfulness and music moment.",
+      "description": "A closing main-stage mindfulness and music moment. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-05T00:00:00.000Z",
+      "endUtc": "2026-11-05T00:25:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 2,
+      "locationId": "20000000-0000-4000-8000-000000000002",
+      "locationName": "Margaux - Wisdom Forum",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000001"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "eligibilityScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationScope": {
+        "id": "community",
+        "label": "Community Day"
+      },
+      "notificationOffsetsMinutes": [
+        30,
+        10
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
+      "id": "50000000-0000-4000-8000-000000000034",
+      "eventId": "not-alone-summit-2026-prototype",
+      "title": "Closing Dinner and Rachel Platten Concert",
+      "shortTitle": "Closing Dinner",
+      "summary": "A closing dinner and concert adapted from the prior summit timeline.",
+      "description": "A closing dinner and concert adapted from the prior summit timeline. This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.",
+      "startUtc": "2026-11-05T02:30:00.000Z",
+      "endUtc": "2026-11-05T06:00:00.000Z",
+      "eventTimeZone": "America/Los_Angeles",
+      "dayOrder": 2,
+      "locationId": "20000000-0000-4000-8000-000000000008",
+      "locationName": "BOA Steakhouse",
+      "speakerIds": [
+        "30000000-0000-4000-8000-000000000008"
+      ],
+      "status": "scheduled",
+      "visibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "eligibilityScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationScope": {
+        "id": "public",
+        "label": "All attendees"
+      },
+      "notificationOffsetsMinutes": [
+        60,
+        15
+      ],
+      "featured": true,
+      "published": true,
+      "revision": 2,
+      "updatedAt": "2026-09-07T16:00:00.000Z",
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    }
+  ],
+  "locations": [
+    {
+      "id": "20000000-0000-4000-8000-000000000001",
+      "eventId": "not-alone-summit-2026-prototype",
+      "name": "Registration Desk",
+      "description": "Guest check-in, credential support, schedule help, and wayfinding.",
+      "mapX": 0.2,
+      "mapY": 0.28
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000002",
+      "eventId": "not-alone-summit-2026-prototype",
+      "name": "Margaux - Wisdom Forum",
+      "description": "Main room for summit programming, panels, performances, and award moments.",
+      "mapX": 0.5,
+      "mapY": 0.24
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000003",
+      "eventId": "not-alone-summit-2026-prototype",
+      "name": "Lafleur - Wellness Room Zone 1",
+      "description": "Movement, pilates, mindful fitness, meditation, and reset programming.",
+      "mapX": 0.26,
+      "mapY": 0.58
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000004",
+      "eventId": "not-alone-summit-2026-prototype",
+      "name": "Pomerol - Wellness Room Zone 2",
+      "description": "Pickleball, sauna, cold plunge, games, and community wellness activation.",
+      "mapX": 0.68,
+      "mapY": 0.6
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000005",
+      "eventId": "not-alone-summit-2026-prototype",
+      "name": "Mouton 2 - Nourish Room",
+      "description": "Lunch, dinner, life-plan workshops, and quieter conversation spaces.",
+      "mapX": 0.46,
+      "mapY": 0.72
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000006",
+      "eventId": "not-alone-summit-2026-prototype",
+      "name": "Mouton 1 - Gifting Suite",
+      "description": "Prototype location for attendee gifting, speaker holding, and support.",
+      "mapX": 0.36,
+      "mapY": 0.72
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000007",
+      "eventId": "not-alone-summit-2026-prototype",
+      "name": "SW Steakhouse",
+      "description": "Prototype founder dinner location from the prior summit timeline.",
+      "mapX": 0.72,
+      "mapY": 0.82
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000008",
+      "eventId": "not-alone-summit-2026-prototype",
+      "name": "BOA Steakhouse",
+      "description": "Prototype off-site closing dinner and concert location.",
+      "mapX": 0.8,
+      "mapY": 0.88
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000009",
+      "eventId": "not-alone-summit-2026-prototype",
+      "name": "La Tache",
+      "description": "Prototype red carpet and award-show support area.",
+      "mapX": 0.6,
+      "mapY": 0.42
+    }
+  ],
+  "contentPages": [
+    {
+      "id": "40000000-0000-4000-8000-000000000001",
+      "slug": "prototype-schedule-note",
+      "title": "Prototype Schedule Note",
+      "body": "This app is currently loaded with prototype attendee programming adapted from the 2025 Not Alone Summit production timeline. It is not final 2026 programming.",
+      "published": true,
+      "revision": 2
+    },
+    {
+      "id": "40000000-0000-4000-8000-000000000002",
+      "slug": "venue-room-guide",
+      "title": "Venue Room Guide",
+      "body": "Margaux is the Wisdom Forum main stage. Lafleur and Pomerol are wellness zones. Mouton 2 is the Nourish Room. Registration is the primary help and wayfinding point.",
+      "published": true,
+      "revision": 2
+    },
+    {
+      "id": "40000000-0000-4000-8000-000000000003",
+      "slug": "inspiring-children-foundation",
+      "title": "Inspiring Children Foundation",
+      "body": "Inspiring Children Foundation supports young people in Las Vegas through programs that connect physical health, emotional wellbeing, academics, athletics, creativity, entrepreneurship, and service.",
+      "published": true,
+      "revision": 2
+    }
+  ]
+}

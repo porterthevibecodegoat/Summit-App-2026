@@ -1,0 +1,33 @@
+{
+  "name": "not-alone-summit-platform",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter @not-alone/mobile --filter @not-alone/admin dev",
+    "dev:mobile": "pnpm --filter @not-alone/mobile dev",
+    "dev:admin": "pnpm --filter @not-alone/admin dev",
+    "ios": "pnpm --filter @not-alone/mobile ios",
+    "mobile:web": "pnpm --filter @not-alone/mobile web",
+    "mobile:preview": "node scripts/mobile-preview.mjs",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "snapshot:pull": "node --import tsx scripts/export-snapshot.mjs",
+    "content:export": "pnpm snapshot:pull",
+    "production:readiness": "node --import tsx scripts/production-readiness.mjs",
+    "staging:verify": "node scripts/verify-staging-deployment.mjs",
+    "supabase:check": "node --import tsx scripts/supabase-staging.mjs check",
+    "supabase:seed": "node --import tsx scripts/supabase-staging.mjs seed",
+    "supabase:seed-sql": "node --import tsx scripts/supabase-staging.mjs seed-sql"
+  },
+  "devDependencies": {
+    "@types/node": "26.4.0",
+    "tsx": "4.23.13",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11"
+  }
+}
