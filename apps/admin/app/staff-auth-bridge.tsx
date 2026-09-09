@@ -99,24 +99,19 @@ export function StaffAuthBridge({ children }: { children: ReactNode }) {
       return;
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-    if (!supabaseUrl || !publishableKey) {
-      setAuthMessage("Staff sign-in is not configured in this environment.");
-      return;
-    }
-
     setAuthMessage("Sending a secure sign-in link...");
     try {
-      const response = await fetch(`${supabaseUrl}/auth/v1/otp`, {
+      const response = await fetch("/api/staff/sign-in", {
         method: "POST",
-        headers: { "Content-Type": "application/json", apikey: publishableKey },
-        body: JSON.stringify({ email: normalizedEmail, options: { emailRedirectTo: window.location.origin } })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: normalizedEmail }),
+        cache: "no-store"
       });
       if (!response.ok) {
-        throw new Error("Unable to send the sign-in link.");
+        const result = (await response.json().catch(() => ({}))) as { error?: string };
+        throw new Error(result.error ?? "Unable to send the sign-in link.");
       }
-      setAuthMessage("Check your email for the staff sign-in link.");
+      setAuthMessage("Check your email for the secure staff sign-in link.");
     } catch (error) {
       setAuthMessage(error instanceof Error ? error.message : "Unable to send the sign-in link.");
     }
@@ -140,7 +135,7 @@ export function StaffAuthBridge({ children }: { children: ReactNode }) {
           <div className="loginMark">NA</div>
           <div className="kicker">Not Alone Summit</div>
           <h1>{authState === "checking" ? "Checking your staff access" : "Staff sign in"}</h1>
-          <p>Use an approved staff email. Access and publishing permissions are controlled by your assigned role.</p>
+          <p>Use an invited staff email. Every approved staff account receives administrator access.</p>
           {authState === "signed-out" ? (
             <div className="staffSignIn staffSignInPage">
               <input

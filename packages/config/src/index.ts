@@ -33,6 +33,6 @@ export const publicAppConfig = publicAppConfigSchema.parse({
   featureFlags: {
     attendeeAccess: env.ENABLE_ATTENDEE_ACCESS === "true",
     ai: env.ENABLE_AI === "true",
-    pushDelivery: env.ENABLE_PUSH_DELIVERY === "true"
+    pushDelivery: env.EXPO_PUBLIC_ENABLE_PUSH_DELIVERY === "true" || env.ENABLE_PUSH_DELIVERY === "true"
   }
 });

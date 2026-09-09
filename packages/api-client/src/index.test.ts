@@ -39,7 +39,25 @@ describe("fetchPublishedSnapshot", () => {
     const result = await fetchPublishedSnapshot("https://staff.example.com");
 
     expect(result.revision).toBe(1);
-    expect(fetchMock).toHaveBeenCalledWith("https://staff.example.com/api/snapshot", expect.objectContaining({ signal: expect.any(AbortSignal) }));
+    expect(fetchMock).toHaveBeenCalledWith("https://staff.example.com/api/snapshot", expect.objectContaining({
+      cache: "no-store",
+      headers: { "Cache-Control": "no-cache" },
+      signal: expect.any(AbortSignal)
+    }));
+  });
+
+  it("retrieves a newly published revision on the next refresh", async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => snapshot })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ ...snapshot, revision: 2 }) });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const first = await fetchPublishedSnapshot("https://staff.example.com");
+    const refreshed = await fetchPublishedSnapshot("https://staff.example.com");
+
+    expect(first.revision).toBe(1);
+    expect(refreshed.revision).toBe(2);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it("throws on non-ok responses", async () => {

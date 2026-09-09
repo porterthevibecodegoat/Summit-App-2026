@@ -5,6 +5,7 @@ const easProjectId = process.env.EXPO_PUBLIC_EAS_PROJECT_ID;
 const hasEasProject = Boolean(
   easProjectId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(easProjectId)
 );
+const pushDeliveryEnabled = process.env.EXPO_PUBLIC_ENABLE_PUSH_DELIVERY === "true";
 
 const config: ExpoConfig = {
   name: publicAppConfig.appName,
@@ -39,7 +40,8 @@ const config: ExpoConfig = {
     },
     appEnv: publicAppConfig.environmentName,
     eventId: publicAppConfig.eventId,
-    apiBaseUrl: publicAppConfig.apiBaseUrl
+    apiBaseUrl: publicAppConfig.apiBaseUrl,
+    pushDeliveryEnabled
   },
   plugins: [
     "expo-router",

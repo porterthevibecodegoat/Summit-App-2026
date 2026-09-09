@@ -8,6 +8,7 @@ import { publicAppConfig } from "@not-alone/config";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
 import { demoSnapshot as canonicalSnapshot } from "@not-alone/test-fixtures";
 import { eventSnapshotSchema, type EventSnapshot, type ScheduleItem } from "@not-alone/validation";
+import { selectPublishedSnapshot } from "../lib/snapshot-sync";
 
 const LOCATION_IDS = {
   theater: "827d53e5-a0c6-4fdd-9dd7-bf72f04e8651",
@@ -26,6 +27,12 @@ const PUBLISHED_SNAPSHOT_CACHE_KEY = "not-alone.published-snapshot-cache.v1";
 const SNAPSHOT_REFRESH_MS = 60000;
 const CLOCK_REFRESH_MS = 15000;
 const DEMO_MODE_AVAILABLE = __DEV__ || process.env.EXPO_PUBLIC_ENABLE_DEMO_MODE === "true";
+const configuredApiBaseUrl = Constants.expoConfig?.extra?.apiBaseUrl;
+const mobileApiBaseUrl = typeof configuredApiBaseUrl === "string" && configuredApiBaseUrl.startsWith("https://")
+  ? configuredApiBaseUrl.replace(/\/+$/, "")
+  : publicAppConfig.apiBaseUrl;
+const pushDeliveryEnabled = Constants.expoConfig?.extra?.pushDeliveryEnabled === true ||
+  publicAppConfig.featureFlags.pushDelivery;
 
 export const demoSpeaker = {
   name: "Steve Wozniak",
@@ -86,27 +93,26 @@ export function SummitDemoProvider({ children }: PropsWithChildren) {
     }
 
     try {
-      const remoteSnapshot = await fetchPublishedSnapshot(publicAppConfig.apiBaseUrl, { timeoutMs: 6000 });
+      const remoteSnapshot = await fetchPublishedSnapshot(mobileApiBaseUrl, { timeoutMs: 6000 });
       const syncedAt = new Date().toISOString();
       if (!mountedRef.current) {
         return;
       }
 
       const currentSnapshot = publishedSnapshotRef.current;
-      if (currentSnapshot && remoteSnapshot.revision < currentSnapshot.revision) {
+      const selection = selectPublishedSnapshot(currentSnapshot, remoteSnapshot);
+      if (selection.rejectedStaleRevision !== undefined) {
         setSyncError(
-          `The server returned older revision ${remoteSnapshot.revision}; keeping revision ${currentSnapshot.revision}.`
+          `The server returned older revision ${selection.rejectedStaleRevision}; keeping revision ${selection.snapshot.revision}.`
         );
         return;
       }
 
-      setPublishedSnapshot((current) => {
-        if (current && remoteSnapshot.revision > current.revision) {
-          setLastRevisionUpdateAt(syncedAt);
-        }
-        return remoteSnapshot;
-      });
-      publishedSnapshotRef.current = remoteSnapshot;
+      if (selection.advanced) {
+        setLastRevisionUpdateAt(syncedAt);
+      }
+      setPublishedSnapshot(selection.snapshot);
+      publishedSnapshotRef.current = selection.snapshot;
       setServerClockOffsetMs(new Date(remoteSnapshot.serverTimeUtc).getTime() - Date.now());
       setLastSuccessfulSyncAt(syncedAt);
       setSyncError(undefined);
@@ -226,7 +232,7 @@ export function SummitDemoProvider({ children }: PropsWithChildren) {
   }, [effectiveDemoEnabled, savedSessionIdsLoaded, snapshot.scheduleItems]);
 
   useEffect(() => {
-    if (!publicAppConfig.featureFlags.pushDelivery || Platform.OS !== "ios") {
+    if (!pushDeliveryEnabled || Platform.OS !== "ios") {
       return;
     }
 
@@ -253,7 +259,7 @@ export function SummitDemoProvider({ children }: PropsWithChildren) {
           return;
         }
 
-        await fetch(`${publicAppConfig.apiBaseUrl}/api/devices/register`, {
+        await fetch(`${mobileApiBaseUrl}/api/devices/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

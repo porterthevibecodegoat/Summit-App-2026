@@ -26,6 +26,7 @@ import {
 } from "./live-ops-store";
 import { createPublishPreview } from "./publish-diff";
 import { getBlockingPublishMessages } from "./schedule-quality";
+import { canProvisionAdmin, createAdminProfile, type StaffAuthIdentity } from "./staff-access";
 import { STAFF_ACCESS_COOKIE } from "./staff-session";
 
 type NotificationJob = LiveOpsStore["notificationJobs"][number];
@@ -276,9 +277,9 @@ export async function authenticateStaffAccessToken(
     return context;
   }
 
-  let user: { id: string };
+  let user: StaffAuthIdentity;
   try {
-    user = await supabaseFetch<{ id: string }>("/auth/v1/user", {
+    user = await supabaseFetch<StaffAuthIdentity>("/auth/v1/user", {
       bearerToken: accessToken,
       expectedStatus: 200
     });
@@ -291,11 +292,20 @@ export async function authenticateStaffAccessToken(
   );
   const profile = profiles[0];
 
-  if (!profile) {
-    throw new StaffAuthError(403, "This account does not have a staff profile.");
+  if (!canProvisionAdmin(user, Boolean(profile))) {
+    throw new StaffAuthError(403, "This account must be invited by staff before it can access the portal.");
   }
 
-  const context: StaffContext = { actorId: profile.user_id, role: profile.role, mode: "supabase" };
+  if (profile?.role !== "ADMIN") {
+    await supabaseFetch("/rest/v1/staff_profiles?on_conflict=user_id", {
+      method: "POST",
+      body: [createAdminProfile(user)],
+      expectedStatus: 201,
+      prefer: "resolution=merge-duplicates,return=minimal"
+    });
+  }
+
+  const context: StaffContext = { actorId: user.id, role: "ADMIN", mode: "supabase" };
   requireRole(context, allowedRoles);
   return context;
 }

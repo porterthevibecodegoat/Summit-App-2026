@@ -16,14 +16,22 @@
       "distribution": "internal",
       "channel": "preview",
       "env": {
-        "APP_ENV": "staging"
+        "APP_ENV": "staging",
+        "EXPO_PUBLIC_APP_ENV": "staging",
+        "EXPO_PUBLIC_API_BASE_URL": "https://summit-app-2026-admin.vercel.app",
+        "EXPO_PUBLIC_ENABLE_DEMO_MODE": "false",
+        "EXPO_PUBLIC_ENABLE_PUSH_DELIVERY": "false"
       }
     },
     "production": {
       "channel": "production",
       "autoIncrement": true,
       "env": {
-        "APP_ENV": "production"
+        "APP_ENV": "production",
+        "EXPO_PUBLIC_APP_ENV": "production",
+        "EXPO_PUBLIC_API_BASE_URL": "https://summit-app-2026-admin.vercel.app",
+        "EXPO_PUBLIC_ENABLE_DEMO_MODE": "false",
+        "EXPO_PUBLIC_ENABLE_PUSH_DELIVERY": "false"
       }
     }
   },
