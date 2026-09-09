@@ -1,79 +1,49 @@
 # Production Readiness Audit
 
-Current status: **BLOCKED**
+Current status: **CREDENTIAL-READY, NOT RELEASE-READY**
 
-The local product foundation is active and Supabase staging is connected, but deployed HTTPS hosting, push delivery, OpenAI services, and App Store submission cannot be completed until the remaining external credentials and account decisions are supplied.
-
-Run the audit any time with:
+The non-credential product foundation is implemented. External services remain safely disabled until account credentials, public deployment values, final content, and physical-device validation are supplied.
 
 ```sh
 pnpm production:readiness
-```
-
-The staff API also exposes the same report at:
-
-```txt
-GET /api/production/readiness
-```
-
-Use strict mode in CI when the project is expected to be production-ready:
-
-```sh
 node scripts/production-readiness.mjs --strict
 ```
 
-## Completed Locally
+The authenticated staff API exposes the same report at `GET /api/production/readiness`.
 
-- Attendee app has native Expo/iOS development-build foundation.
-- Attendee app reads a validated event snapshot and polls `EXPO_PUBLIC_API_BASE_URL/api/snapshot`.
-- Staff portal has a drag-and-drop schedule workbench.
-- Staff portal can save draft schedule rows through `/api/live-ops/draft`.
-- Staff portal can publish reviewed rows through `/api/live-ops/publish`.
-- Staff portal shows a publish diff preview through `/api/live-ops/publish-preview`.
-- Staff portal can roll back to the previous published schedule by creating a new revision through `/api/live-ops/rollback`.
-- Staff portal exposes real workflow pages for Ask AI, Make Changes, Import, Emergency, History, Notifications, and Settings.
-- Staff session status verifies against `/api/staff/me` instead of only checking for a browser token.
-- Schedule quality gates detect duplicate IDs, invalid/missing fields, unclear days, missing reminders, and same-room overlaps.
-- Read-only staff pages and `/api/snapshot` can degrade to a local fallback with a redacted backend warning if the configured live backend is unavailable.
-- Published local snapshots are served through `/api/snapshot`.
-- Notification reminder jobs are recalculated as metadata on publish.
-- Device registration route validates future Expo push token registrations.
-- State AI is deterministic, read-only, and can answer current local backend, sync, review, import, and notification status.
-- Official Change AI creates deterministic reviewed proposals for schedule edits without mutating production directly.
-- The attendee concierge has a future server endpoint at `POST /api/ai/attendee`; it currently returns deterministic no-key answers.
-- Notification dispatch has a guarded preflight endpoint at `POST /api/notifications/dispatch`; it intentionally refuses to send in prototype mode.
-- Attendee Ask AI has temporary no-key answers from the published schedule and approved public summit context.
-- Attendee My Schedule selections now persist locally across app restarts using secure local storage.
-- Supabase migrations define staff roles, schedule drafts, revisions, proposals, imports, audit entries, device registrations, notification metadata, and RLS policies.
-- Supabase staging is connected, seeded, and readable by the staff portal API.
-- Staff Auth accounts and `ADMIN` staff profiles are active for staging.
+## Implemented
 
-## Blocked By Missing External Setup
+- Native Expo iOS attendee app and responsive Next.js staff portal.
+- Supabase schema, RLS, staff roles, staging seed, atomic publish/rollback functions, revisions, audit records, import records, attendee devices, notification jobs, and delivery attempts.
+- HttpOnly staff sessions, server route guards, bearer-token compatibility for native/server clients, rate limits, and redacted public health responses.
+- Schedule editing, quality gates, drag/drop and accessible reordering, safe review/publish, revision history, and rollback.
+- Deterministic State AI, attendee concierge, and Official Change AI fallback behavior without external model calls.
+- Strict target matching for Official Change AI; ambiguous or missing sessions produce no mutation proposal.
+- PDF/TXT/CSV extraction and staged import review with file-size/type safeguards and no automatic publishing.
+- Mobile SQLite cache, resilient synchronization, event-clock correction, refresh triggers, stale data rejection, and local My Schedule persistence.
+- Durable push dispatcher and receipt reconciliation code with database claims, retries, attempt audit, and invalid-token handling.
+- Premium app icon/launch art, public privacy/support drafts, and initial reviewer documentation.
 
-- Deployed HTTPS staff/API environment.
-- `EXPO_PUBLIC_API_BASE_URL` pointing at that deployed API.
-- Real EAS project ID.
-- Apple Developer account and push credentials.
-- Real device push testing.
-- Server-side notification dispatch worker activation.
-- OpenAI API key and model choice.
-- Server-side attendee concierge endpoint.
-- Server-side staff State AI and Official Change AI endpoints using structured OpenAI outputs.
-- Production PDF parser and import job processing.
-- Account-backed attendee identity and synced My Schedule.
-- Final 2026 event schedule, speaker content, headshots, map, privacy policy, support URL, App Store reviewer notes, TestFlight, and App Review.
+## Intentionally Inactive Until Credentials
 
-## Current Rule
+- Public HTTPS deployment and production domain.
+- Supabase service-role server environment and production staff accounts.
+- EAS project, Apple/APNs credentials, push feature flags, and physical-device delivery.
+- OpenAI server key, model configuration, AI feature flag, and production eval sign-off.
+- App Store Connect/TestFlight submission credentials and release actions.
 
-Local mode is allowed to prove workflow shape. It must not be presented as production cloud sync or live push delivery.
+## Pending Non-Secret Inputs
 
-Production PASS requires:
+- Approved 2026 schedule, speakers, biographies, headshots, venue/map data, FAQs, contacts, and emergency copy.
+- Legal approval of privacy/support pages and public URLs.
+- Final App Store metadata, screenshots, privacy declarations, age rating, and reviewer contact.
 
-- Supabase mode active.
-- Staff auth and roles active.
-- Mobile app pointed at a deployed HTTPS API.
-- Published changes visible on a device/simulator from the deployed API.
-- Push delivery tested on real devices.
-- OpenAI calls executed only server-side.
-- RLS and route authorization verified.
-- App Store assets and policy URLs finalized.
+## Release Gates
+
+- All `pnpm` quality gates pass and the production-readiness audit passes in strict mode.
+- RLS/role tests prove viewer, editor, publisher, admin, anonymous, and service-role boundaries.
+- Staff publish is visible in a deployed iOS staging build and remains available offline.
+- Push send, receipt, retry, cancellation, and invalid-device behavior is proven on physical devices.
+- AI evals pass and no elevated credential appears in a browser or mobile bundle.
+- Browser, small/standard/Pro/Pro Max iPhone, VoiceOver, Dynamic Type, reduced-motion, and recovery testing are signed off.
+- Zero known P0/P1 defects before TestFlight promotion or App Review.

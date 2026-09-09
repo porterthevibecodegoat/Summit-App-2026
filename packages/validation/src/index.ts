@@ -213,7 +213,10 @@ export const attendeeDeviceRegistrationSchema = z.object({
   id: z.string().uuid(),
   eventId: z.string().min(1),
   attendeeId: z.string().uuid().optional(),
-  expoPushToken: z.string().min(1),
+  expoPushToken: z.string().regex(
+    /^(ExponentPushToken|ExpoPushToken)\[[A-Za-z0-9_-]+\]$/,
+    "Invalid Expo push token."
+  ),
   audienceGroups: z.array(z.string().min(1)),
   platform: z.enum(["ios", "android"]),
   appVersion: z.string().min(1),

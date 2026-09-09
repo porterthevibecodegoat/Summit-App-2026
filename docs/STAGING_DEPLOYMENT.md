@@ -29,7 +29,6 @@ EVENT_TIME_ZONE=America/Los_Angeles
 SUPABASE_URL=https://<project-ref>.supabase.co
 NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<supabase-publishable-key>
-EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<supabase-publishable-key>
 SUPABASE_SERVICE_ROLE_KEY=<supabase-secret-service-role-key>
 
 EXPO_PUBLIC_API_BASE_URL=https://<staging-admin-domain>
@@ -40,6 +39,8 @@ ENABLE_PUSH_DELIVERY=false
 ENABLE_NOTIFICATION_DISPATCH=false
 OPENAI_API_KEY=
 OPENAI_MODEL=
+EXPO_ACCESS_TOKEN=
+CRON_SECRET=<long-random-server-only-value>
 ```
 
 Add these later when they are ready:
@@ -79,7 +80,7 @@ Expected staging result:
 - published revision is at least `2`
 - published schedule contains prototype sessions
 
-Production readiness can remain `BLOCKED` during staging until OpenAI, EAS, push delivery, privacy policy, and support URLs are supplied.
+Production readiness should remain blocked during staging until approved content, OpenAI, EAS, push delivery, privacy policy, support URLs, and release evidence are supplied.
 
 ## What This Unlocks
 
@@ -89,7 +90,9 @@ Once staging is live:
 2. Supabase Auth invite links can return to the deployed portal.
 3. The attendee app can point at `https://<staging-admin-domain>/api/snapshot`.
 4. We can test staff publish to Supabase to attendee app refresh end to end.
-5. Push notifications and real AI can be wired against a deployed server surface.
+5. The already-implemented push and AI server paths can be activated independently against a deployed server surface.
+
+Keep the push and AI flags false for the first deployment. Activate one external service at a time, verify it, and roll its flags back to false if its validation fails.
 
 ## Codex Development Workflow
 

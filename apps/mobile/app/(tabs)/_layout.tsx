@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { colors, typography } from "@not-alone/design-tokens";
 
 const tabScreens = [
-  { name: "index", title: "Today", icon: "clock", activeIcon: "clock.fill" },
+  { name: "index", title: "Home", icon: "house", activeIcon: "house.fill" },
   { name: "schedule", title: "Schedule", icon: "calendar", activeIcon: "calendar" },
   { name: "help", title: "Ask AI", icon: "sparkles", activeIcon: "sparkles" },
   { name: "map", title: "Map", icon: "map", activeIcon: "map.fill" },

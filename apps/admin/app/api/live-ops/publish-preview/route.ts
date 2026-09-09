@@ -3,15 +3,15 @@ import { getStaffContext, previewPublish, StaffAuthError } from "../../../../lib
 import type { StaffDraftSession } from "../../../../lib/live-ops-store";
 
 export async function POST(request: NextRequest) {
-  const body = await request.json().catch(() => ({}));
-  const sessions = Array.isArray(body.sessions) ? (body.sessions as StaffDraftSession[]) : [];
-
-  if (sessions.length === 0) {
-    return NextResponse.json({ ok: false, error: "At least one draft session is required to preview publication." }, { status: 422 });
-  }
-
   try {
     const staff = await getStaffContext(request, ["VIEWER", "EDITOR", "PUBLISHER", "ADMIN"]);
+    const body = await request.json().catch(() => ({}));
+    const sessions = Array.isArray(body.sessions) ? (body.sessions as StaffDraftSession[]) : [];
+
+    if (sessions.length === 0) {
+      return NextResponse.json({ ok: false, error: "At least one draft session is required to preview publication." }, { status: 422 });
+    }
+
     const preview = await previewPublish(sessions, staff);
 
     return NextResponse.json(

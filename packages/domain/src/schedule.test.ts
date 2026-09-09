@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getNowAndUpcoming, toEventTimeRange } from ".";
+import { canSeeScheduleItem, getNowAndUpcoming, toEventTimeRange } from ".";
 import { demoSnapshot } from "@not-alone/test-fixtures";
 import type { ScheduleItem } from "@not-alone/validation";
 
@@ -24,6 +24,14 @@ describe("schedule domain", () => {
 
     expect(result.current).toHaveLength(0);
     expect(result.upcoming[0]?.title).toBe("Registration, Gifting Suite, and Wellness Rooms Open");
+  });
+
+  it("does not grant restricted founder access to a public attendee", () => {
+    const founderSession = demoSnapshot.scheduleItems.find((item) => item.visibilityScope.id === "founders");
+
+    expect(founderSession).toBeDefined();
+    expect(canSeeScheduleItem(founderSession!, ["public"])).toBe(false);
+    expect(canSeeScheduleItem(founderSession!, ["founders"])).toBe(true);
   });
 
   it("renders event-local time with the configured IANA zone", () => {

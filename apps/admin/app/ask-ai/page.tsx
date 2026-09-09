@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { publicAppConfig } from "@not-alone/config";
-import { getReadOnlyLiveOpsState } from "../../lib/live-ops-repository";
+import { getReadOnlyLiveOpsState, hasStaffPageAccess } from "../../lib/live-ops-repository";
 import { createScheduleQualityReport } from "../../lib/schedule-quality";
 import { StaffNav } from "../staff-nav";
 
 export const dynamic = "force-dynamic";
 
 export default async function AskAiPage() {
+  if (!(await hasStaffPageAccess())) return null;
   const state = await getReadOnlyLiveOpsState();
   const quality = createScheduleQualityReport(state.draftSessions);
 

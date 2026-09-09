@@ -47,8 +47,10 @@ Run these files in order:
 1. `supabase/migrations/202608310001_gate0_schema.sql`
 2. `supabase/migrations/202609030001_live_ops_architecture.sql`
 3. `supabase/migrations/202609030002_staff_auth_and_live_ops_rls.sql`
+4. `supabase/migrations/202609090001_atomic_publish_and_function_security.sql`
+5. `supabase/migrations/202609090002_notification_delivery_worker.sql`
 
-If Supabase says `Success. No rows returned`, that means the schema change ran. It does not yet mean the app has event content loaded.
+If Supabase says `Success. No rows returned`, the schema statement ran. It does not by itself prove seed data, RLS boundaries, or function privileges; complete the verification steps below.
 
 ## 3. Seed Prototype Event Content
 
@@ -98,7 +100,7 @@ Invite approved staff emails.
 
 ## 6. Seed Staff Roles
 
-After a user exists, copy their Supabase Auth user ID and run:
+After a user accepts the invitation, copy their Supabase Auth user ID and run:
 
 ```sql
 insert into public.staff_profiles (
@@ -137,12 +139,19 @@ pnpm dev:admin
 
 The staff portal should report `supabase` mode once `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are present.
 
+Also verify:
+
+- Anonymous and authenticated roles cannot execute atomic publish/rollback functions.
+- Only service-role server code can execute those functions.
+- Viewer cannot edit; editor cannot publish; publisher/admin can publish.
+- Public snapshot access cannot reveal drafts, staff profiles, audit entries, device registrations, or delivery attempts.
+
 ## 8. What This Unlocks
 
 - Staff portal can read/write real Supabase drafts.
-- Reviewed publish actions can create real revision records.
+- Reviewed publish actions create atomic revision, audit, and notification-job records.
 - Audit/history can use production tables.
 - Device registrations can be stored server-side.
-- Notification jobs can be tied to published revision IDs.
+- Notification delivery attempts and receipt state can be tracked durably.
 
 Push delivery, OpenAI AI, and App Store/TestFlight still require their own credentials.

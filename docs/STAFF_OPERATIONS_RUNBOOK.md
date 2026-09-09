@@ -1,14 +1,17 @@
 # Staff Operations Runbook
 
-Current local workflow:
+Development workflow:
 
 1. Start staff portal with `pnpm dev:admin`.
 2. Open `http://localhost:3000`.
-3. Use Live Operations for the current demo status.
-4. Use Schedule for the draft control room, drag-and-drop ordering, schedule quality review, publish preview, rollback, file import staging, State AI preview, and Official Change AI proposal workflow.
-5. Use Notifications at `http://localhost:3000/notifications` to inspect queued reminder metadata after a publish.
+3. Use Overview for backend mode, revision, readiness, and operating lanes.
+4. Use Schedule for draft editing, drag-and-drop or up/down ordering, quality review, State AI, and Official Change AI proposals.
+5. Use Import to stage PDF, TXT, or CSV rows for review; imports never publish directly.
+6. Use Review & Publish to inspect the attendee-facing diff, confirm, publish, or create a rollback revision.
+7. Use Notifications to inspect queued jobs, delivery attempts, retries, and receipts. Delivery remains disabled without credentials and feature flags.
+8. Use History for revision and operator audit context.
 
-Production workflow will require Supabase auth, staff roles, explicit publish confirmation, audit records, and notification impact preview.
+The same workflow runs in Supabase mode with authenticated staff roles, atomic publication, and durable audit records.
 
 ## Current Local Adapter
 
@@ -25,13 +28,17 @@ Available local endpoints:
 - `GET /api/notifications/jobs`: local reminder queue metadata.
 - `POST /api/devices/register`: validates future attendee device registrations when push delivery is enabled.
 - `GET /api/staff/me`: verifies the current browser session and authorized staff role.
+- `POST` or `DELETE /api/staff/session`: exchanges/clears the HttpOnly staff session.
+- `POST /api/notifications/dispatch`: claims and dispatches due jobs when production flags are enabled.
+- `POST /api/notifications/receipts`: reconciles Expo tickets with provider receipts.
+- `POST /api/cron/notifications`: secret-authenticated scheduled dispatch and receipt processing.
 
 The admin API now selects storage automatically:
 
 - Local mode: used when `SUPABASE_SERVICE_ROLE_KEY` is absent. Data is written to `work/live-ops-store.json`.
 - Supabase mode: used when `SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are present. Staff mutating routes require an authenticated staff profile and role authorization.
 
-This proves the portal-to-app content loop without exposing credentials or pretending that cloud push delivery is active.
+Local mode proves the portal-to-app content loop without exposing credentials or pretending that cloud delivery is active.
 
 Read-only staff pages and the attendee snapshot endpoint can show a degraded fallback if the configured live backend is unavailable. Mutating routes such as save, publish, rollback, and import still require the proper staff/backend path.
 
@@ -67,10 +74,12 @@ Official changes must follow this path:
 
 State AI must never publish, mutate, or send notifications. Official Change AI must never directly bypass review, audit, or server-side validation.
 
+If a command cannot identify exactly one session with adequate confidence, Official Change AI must return no changes. Staff should identify the session by exact title, speaker, or unambiguous time and then regenerate the proposal.
+
 ## App-Wide Update Requirement
 
 When production backend wiring is enabled, staff portal changes update the whole app by publishing a canonical event snapshot in Supabase. The mobile app must read that published snapshot rather than hardcoded demo data. Existing installed apps should receive the update through snapshot refresh/realtime sync, and push notifications should be dispatched only by the server notification worker.
 
-Push delivery remains disabled until approved credentials and production authorization are configured.
+Push delivery code is present but remains disabled until approved credentials, physical-device testing, and explicit production authorization are complete.
 
 See `docs/PRODUCTION_BACKEND_SETUP.md` for the environment variables, migration order, and credential-dependent production steps.

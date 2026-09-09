@@ -1,85 +1,64 @@
 # Production Backend Setup
 
-The staff portal now has a storage adapter that uses local JSON during development and Supabase when server-side credentials are present. Supabase staging is connected and seeded; the next production-path step is deploying the staff portal/API to a public HTTPS staging URL.
+The server repository selects a local JSON adapter when Supabase server credentials are absent and the Supabase adapter when they are valid. The same repository contract powers staff drafts, published snapshots, imports, history, notification metadata, and attendee synchronization.
 
-Run the production readiness audit before calling the platform production-ready:
+## Credential Classes
 
-```sh
-pnpm production:readiness
-```
+Client-safe configuration:
 
-## Required Environment
-
-Local development can run without Supabase:
-
-- `LOCAL_STAFF_ROLE=ADMIN`
-- `SUPABASE_SERVICE_ROLE_KEY` left blank
-
-Supabase staging/production requires:
-
-- `SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- `EXPO_PUBLIC_SUPABASE_URL`
 - `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
 - `EXPO_PUBLIC_API_BASE_URL`
-
-Useful local checks:
-
-```sh
-pnpm supabase:check
-pnpm supabase:seed
-pnpm production:readiness
-```
-
-`pnpm supabase:check` validates key shape and remote table access without printing secrets.
-
-Staging deployment is documented in `docs/STAGING_DEPLOYMENT.md`.
-
-Push delivery additionally requires:
-
-- real EAS project id in `apps/mobile/app.config.ts`
-- Apple/Expo push credentials
-- `ENABLE_PUSH_DELIVERY=true`
-- server-side notification dispatch worker
-
-AI features additionally require:
-
-- `OPENAI_API_KEY`
-- `OPENAI_MODEL`
-- `ENABLE_AI=true`
-
-App Store/TestFlight readiness additionally requires:
-
 - `EXPO_PUBLIC_EAS_PROJECT_ID`
-- `APP_STORE_PRIVACY_URL`
-- `APP_SUPPORT_URL`
-- Apple Developer account access
-- EAS credentials configured for iOS builds and push notifications
+
+Server-only secrets:
+
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `OPENAI_API_KEY`
+- `EXPO_ACCESS_TOKEN`
+- `CRON_SECRET`
+- hosting and Apple signing credentials
+
+Feature gates stay false until their credential-last validation step:
+
+```txt
+ENABLE_AI=false
+ENABLE_PUSH_DELIVERY=false
+ENABLE_NOTIFICATION_DISPATCH=false
+```
 
 ## Migration Order
 
-Run migrations in order:
+1. `202608310001_gate0_schema.sql`
+2. `202609030001_live_ops_architecture.sql`
+3. `202609030002_staff_auth_and_live_ops_rls.sql`
+4. `202609090001_atomic_publish_and_function_security.sql`
+5. `202609090002_notification_delivery_worker.sql`
 
-1. `supabase/migrations/202608310001_gate0_schema.sql`
-2. `supabase/migrations/202609030001_live_ops_architecture.sql`
-3. `supabase/migrations/202609030002_staff_auth_and_live_ops_rls.sql`
+The final two migrations make publish/rollback atomic, narrow function execution, and add durable delivery claiming and receipt history. Apply migrations to staging before configuring the deployed application.
 
-## Staff Publishing Flow
+## Staff Publishing Contract
 
-1. Staff signs in.
-2. Staff profile gives the user a role: `VIEWER`, `EDITOR`, `PUBLISHER`, or `ADMIN`.
-3. Editors can save draft schedule changes.
-4. Publishers/Admins can publish attendee-facing revisions.
-5. Every publish validates a full event snapshot, writes a new revision, and recalculates notification job metadata.
-6. The attendee app reads only `GET /api/snapshot`, never staff drafts.
+1. Supabase Auth establishes identity.
+2. `staff_profiles` assigns `VIEWER`, `EDITOR`, `PUBLISHER`, or `ADMIN`.
+3. Editors can save drafts and imports.
+4. Publishers/Admins can invoke reviewed atomic publication and rollback.
+5. Every publication validates data, increments the revision, stores an immutable snapshot, appends audit history, and regenerates notification jobs in one transaction.
+6. Attendee clients read only the attendee-safe published snapshot API.
 
-## Still Required Before Real Event Use
+## Verification Commands
 
-- Deploy the staff portal/API to a staging HTTPS URL.
-- Configure Supabase Auth redirect URLs for the staging domain.
-- Run RLS tests against staging data.
-- Replace placeholder EAS project id.
-- Add server-side push worker and delivery audit.
-- Add deployment-layer rate limits.
-- Add a production privacy policy and App Store support URLs.
+```sh
+pnpm supabase:check
+pnpm snapshot:pull
+pnpm production:readiness
+```
+
+Never print server keys. Verify key shape, table access, function privileges, RLS, and route authorization through pass/fail tests.
+
+## Remaining Activation
+
+Deploy a public HTTPS staging environment, configure Auth redirects and staff roles, point a staging mobile build at it, validate publish-to-device behavior, then activate push and AI separately according to `docs/CREDENTIAL_LAST_HANDOFF.md`.

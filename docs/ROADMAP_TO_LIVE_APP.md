@@ -1,80 +1,53 @@
 # Roadmap To Live App
 
-This is the practical path from the current development build to a fully usable Not Alone Summit attendee app, staff control portal, and App Store-ready release.
+The Not Alone Summit product is now in **credential-ready staging**. The product workflows and safety boundaries are implemented; external account credentials, approved 2026 content, deployment, and real-device release validation remain deliberately last.
 
-Current production readiness is tracked in `docs/PRODUCTION_READINESS_AUDIT.md` and can be checked with `pnpm production:readiness`.
+Run the machine-readable audit with:
 
-## Current Foundation
+```sh
+pnpm production:readiness
+```
 
-- The repo is a true monorepo with `apps/mobile`, `apps/admin`, shared typed packages, and Supabase migrations.
-- The attendee app runs as a native Expo development build and reads the same validated event snapshot model as the staff portal.
-- The staff portal has a local live-ops adapter, drag-and-drop schedule workbench, State AI preview, Official Change AI proposal workflow, import staging, publish confirmation, publish diff preview, rollback controls, notification job visibility, and activity history.
-- Staff portal navigation now covers the major operating lanes: overview, schedule, Ask AI, make changes, import, notifications, emergency, history, and settings.
-- Schedule quality gates detect not-ready rows, missing titles/locations, bad times, duplicate session IDs, missing reminder offsets, unclear day labels, and same-room overlaps.
-- The shared demo snapshot export is schema-validated before the mobile app consumes it.
-- Supabase-ready server code exists for drafts, revisions, audit records, attendee device registrations, and notification jobs.
-- Supabase staging is connected, seeded, and readable by the staff portal API.
-- Codex-assisted development is intended to operate through the GitHub/repo workflow, while event staff operate through the deployed staff portal.
+## Completed Product Foundation
 
-## Next Product Milestones
+- Native iOS-first Expo attendee app and separate Next.js staff portal.
+- One shared, Zod-validated published event snapshot for mobile, staff preview, AI grounding, maps, and notifications.
+- Staff authentication and role enforcement through Supabase Auth, HttpOnly cookies, route guards, RLS, and server-side publishing functions.
+- Editable schedule workbench with drag-and-drop plus keyboard-friendly move controls, quality checks, draft save, review, explicit publish confirmation, history, and rollback.
+- Read-only State AI and review-required Official Change AI. The deterministic no-key mode refuses ambiguous edits rather than guessing.
+- PDF, TXT, and CSV import staging with validation, skipped-row reporting, import history, and no direct-to-publish path.
+- Atomic publish transaction, immutable revisions, audit records, notification job regeneration, and restricted database function privileges.
+- SQLite mobile snapshot cache, stale-revision protection, server-clock offset, launch/foreground/interval/manual refresh, notification-open refresh, and corrupt-cache recovery.
+- Local My Schedule persistence with automatic pruning when sessions disappear.
+- Durable push dispatch and receipt worker: guarded claims, retries, Expo batching, delivery attempts, receipt reconciliation, and invalid-device disabling.
+- Premium icon and launch artwork, public privacy/support drafts, responsive staff portal, and attendee information links.
 
-1. Deploy staging staff portal/API.
-   - Use the connected Supabase staging project.
-   - Deploy the Next.js staff portal/API to a public HTTPS staging URL.
-   - Configure Supabase Auth redirect URLs for that staging domain.
-   - Point staging mobile builds at the deployed `/api/snapshot` endpoint.
-   - Run RLS tests against staging data.
+## Remaining Approved Content
 
-2. Formalize Codex collaboration workflow.
-   - Push the current monorepo to the canonical GitHub repository.
-   - Use Codex tasks/branches/pull requests for app-code changes.
-   - Keep staff portal content publishing separate from code deployment.
-   - Require checks and review before merging Codex-generated production code.
-   - Use the staff portal for live schedule/content changes after deployment.
+- Final 2026 schedule and session descriptions.
+- Approved speaker names, biographies, rights-cleared headshots, and sponsor/partner content.
+- Approved venue map, room names, accessibility details, and emergency/help language.
+- Final privacy-policy owner, support contacts, public URLs, and stakeholder sign-off.
+- App Store listing copy, screenshots, age rating, privacy answers, and reviewer contact.
 
-3. Finish production staff operations.
-   - Replace local role fallback with real staff sign-in.
-   - Add import job history for uploaded PDFs and spreadsheets.
-   - Add approval/rejection workflow for AI-generated proposals.
-   - Expand rollback with named restore points, operator notes, and per-revision comparison.
+## Credentials-Last Activation
 
-4. Finish app-wide sync.
-   - Point the mobile app at the deployed snapshot API.
-   - Add realtime or interval refresh for published revisions.
-   - Keep offline cache fallback for schedule, map, help, and event info.
-   - Show a quiet “updated” state when the app receives a new revision.
-   - Move My Schedule from local persistence to account/device synced persistence once attendee accounts are introduced.
+1. Deploy the staff portal/API to a public HTTPS staging domain.
+2. Add the Supabase URL and publishable key to browser/mobile environments and the service-role key only to the server environment.
+3. Configure Supabase Auth redirect URLs and create staff accounts/profile roles.
+4. Point a staging iOS build at the deployed snapshot API and verify publish-to-device sync.
+5. Add EAS/Apple push credentials, enable push flags, and validate delivery and receipts on physical devices.
+6. Add the OpenAI key server-side, enable AI flags, and run structured-output evals before allowing staff use.
+7. Load approved content, complete security/RLS review, and run accessibility/device testing.
+8. Ship an internal TestFlight build, resolve findings, then submit for App Review.
 
-5. Finish push notifications.
-   - Configure EAS project ID and Apple push credentials.
-   - Enable attendee device registration only in production/staging builds.
-   - Build the server-side notification dispatch worker.
-   - Add delivery logs, retry status, and cancel/reschedule behavior.
-   - Test notifications on real devices before App Store submission.
-
-6. Finish real AI.
-   - Add server-side OpenAI credentials.
-   - Ground State AI in published snapshots, drafts, audit logs, notification jobs, and import jobs.
-   - Ground Official Change AI in the same data, but require staff review before mutation.
-   - Add evals for schedule edits, time changes, speaker swaps, audience changes, and notification safety.
-
-7. Professionalize final attendee UX.
-   - Replace all placeholder event facts with approved content.
-   - Add final speaker images, venue maps, FAQ/help copy, sponsor/partner copy, and accessibility review.
-   - Tune iPhone layouts across current small, standard, Pro, and Pro Max devices.
-   - Complete a no-warning native simulator pass and real-device TestFlight pass.
-
-8. Prepare App Store release.
-   - Replace app icon and splash assets.
-   - Add privacy policy, support URL, data inventory, and reviewer notes.
-   - Configure EAS production build profiles.
-   - Submit to TestFlight first, then App Review after stakeholder sign-off.
+See `docs/CREDENTIAL_LAST_HANDOFF.md` for the exact activation order and rollback rules.
 
 ## Definition Of Done
 
-- Staff can safely update schedule, speakers, locations, visibility, event info, map data, and notifications from the portal.
-- Published changes update every attendee app through the canonical published snapshot.
-- Push notifications are sent only by the server worker and are tied to published revision IDs.
-- AI can explain current state and propose official changes, but cannot bypass staff review, audit logs, or publish confirmation.
-- The iOS app works offline for essential event information and refreshes cleanly when connectivity returns.
-- The release has zero known P0/P1 defects, passes required checks, and has native iPhone evidence before App Store submission.
+- Staff changes publish atomically and update attendee devices from the canonical snapshot.
+- No AI, import, notification, or staff workflow can bypass review, authorization, audit, or publish confirmation.
+- Essential event information remains usable offline and self-recovers when connectivity returns.
+- Push is proven on physical devices and failure does not break core attendee information.
+- Approved content, public policy URLs, App Store metadata, and stakeholder sign-off are complete.
+- Required checks pass with zero known P0/P1 defects and evidence from browser, iOS Simulator, TestFlight, RLS, and recovery testing.

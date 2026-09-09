@@ -3,16 +3,16 @@ import { getStaffContext, rollbackPublishedRevision, StaffAuthError } from "../.
 import { DraftPublishError } from "../../../../lib/live-ops-store";
 
 export async function POST(request: NextRequest) {
-  const body = await request.json().catch(() => ({}));
-  const confirmRollback = body.confirmRollback === true;
-  const notifyAttendees = body.notifyAttendees === true;
-
-  if (!confirmRollback) {
-    return NextResponse.json({ ok: false, error: "Explicit staff confirmation is required before rollback." }, { status: 422 });
-  }
-
   try {
     const staff = await getStaffContext(request, ["PUBLISHER", "ADMIN"]);
+    const body = await request.json().catch(() => ({}));
+    const confirmRollback = body.confirmRollback === true;
+    const notifyAttendees = body.notifyAttendees === true;
+
+    if (!confirmRollback) {
+      return NextResponse.json({ ok: false, error: "Explicit staff confirmation is required before rollback." }, { status: 422 });
+    }
+
     const result = await rollbackPublishedRevision({ notifyAttendees, staff });
 
     return NextResponse.json(

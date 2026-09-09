@@ -109,7 +109,7 @@ export default function HelpScreen() {
   const [customQuestion, setCustomQuestion] = useState("");
   const { demoEnabled, snapshot, nowUtc } = useSummitDemo();
   const { current, upcoming } = getNowAndUpcoming({
-    audienceGroups: ["founders"],
+    audienceGroups: ["public"],
     nowUtc,
     snapshot
   });

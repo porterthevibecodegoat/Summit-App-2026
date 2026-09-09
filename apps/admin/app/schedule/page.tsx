@@ -1,11 +1,12 @@
 import { publicAppConfig } from "@not-alone/config";
-import { getReadOnlyLiveOpsState } from "../../lib/live-ops-repository";
+import { getReadOnlyLiveOpsState, hasStaffPageAccess } from "../../lib/live-ops-repository";
 import { StaffNav } from "../staff-nav";
 import { ScheduleWorkbench } from "./schedule-workbench";
 
 export const dynamic = "force-dynamic";
 
 export default async function SchedulePage() {
+  if (!(await hasStaffPageAccess())) return null;
   const state = await getReadOnlyLiveOpsState();
 
   return (

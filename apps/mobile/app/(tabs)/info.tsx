@@ -1,4 +1,4 @@
-import { ImageBackground, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ImageBackground, Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { publicAppConfig } from "@not-alone/config";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
@@ -86,6 +86,18 @@ export default function InfoScreen() {
           <Text style={styles.aboutKicker}>About</Text>
           <Text style={styles.aboutTitle}>{officialContent?.title ?? publicAppConfig.organizationName}</Text>
           <Text style={styles.aboutCopy}>{officialContent?.body}</Text>
+        </View>
+
+        <View style={styles.supportPanel}>
+          <Pressable onPress={() => void Linking.openURL("https://www.inspiringchildren.org/summit")} style={styles.supportLink}>
+            <Text style={styles.supportLinkText}>Official Summit Website</Text>
+          </Pressable>
+          <Pressable onPress={() => void Linking.openURL("https://www.inspiringchildren.org/contact")} style={styles.supportLink}>
+            <Text style={styles.supportLinkText}>Contact Event Support</Text>
+          </Pressable>
+          <Pressable onPress={() => void Linking.openURL(`${publicAppConfig.apiBaseUrl}/privacy`)} style={styles.supportLink}>
+            <Text style={styles.supportLinkText}>Privacy Policy</Text>
+          </Pressable>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -368,5 +380,23 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 23,
     marginTop: spacing.sm
+  },
+  supportPanel: {
+    borderTopColor: colors.border,
+    borderTopWidth: 1,
+    gap: spacing.xs,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.xl,
+    paddingTop: spacing.md
+  },
+  supportLink: {
+    minHeight: 44,
+    justifyContent: "center"
+  },
+  supportLinkText: {
+    color: colors.gold,
+    fontFamily: typography.bold,
+    fontSize: 14,
+    fontWeight: "700"
   }
 });

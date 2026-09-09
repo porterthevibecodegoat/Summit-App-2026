@@ -6,8 +6,10 @@
   --body: #344054;
   --muted: #667085;
   --border: #d9e2ec;
+  --navy: #071029;
   --accent: #0b6f64;
   --accent-strong: #094b46;
+  --green: #12796f;
   --pine: #0e2b38;
   --plum: #5540a3;
   --gold: #bd8b2c;
@@ -59,6 +61,23 @@ body {
   padding: 0;
 }
 
+.staffSignIn {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.staffSignIn input {
+  min-height: 32px;
+  padding: 0 9px;
+  width: 220px;
+}
+
+.staffAuthMessage {
+  color: var(--body);
+  max-width: 260px;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -81,6 +100,20 @@ a {
   font-size: 18px;
   font-weight: 750;
   margin-bottom: 28px;
+}
+
+.navGroup {
+  display: grid;
+  gap: 2px;
+  margin-top: 22px;
+}
+
+.navGroupLabel {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 0 12px 6px;
+  text-transform: uppercase;
 }
 
 .nav a,
@@ -278,6 +311,18 @@ p {
 
 .button:hover {
   background: var(--accent-strong);
+}
+
+.button:disabled {
+  background: #d8e0e8;
+  color: #7b8798;
+  cursor: not-allowed;
+}
+
+.notificationControl {
+  align-items: start;
+  display: grid;
+  gap: 16px;
 }
 
 .ghostButton,
@@ -707,6 +752,13 @@ textarea {
   opacity: 0.68;
 }
 
+.reorderControls {
+  align-items: center;
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+}
+
 .dragHandle {
   align-items: center;
   color: var(--muted);
@@ -714,7 +766,34 @@ textarea {
   display: flex;
   font-size: 18px;
   justify-content: center;
-  letter-spacing: -4px;
+  letter-spacing: 0;
+}
+
+.reorderButton {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 5px;
+  color: var(--body);
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  font-size: 15px;
+  height: 24px;
+  justify-content: center;
+  padding: 0;
+  width: 24px;
+}
+
+.reorderButton:hover:not(:disabled),
+.reorderButton:focus-visible {
+  background: var(--surface-muted);
+  color: var(--accent);
+}
+
+.reorderButton:disabled {
+  cursor: default;
+  opacity: 0.25;
 }
 
 .sessionFields {
@@ -730,11 +809,23 @@ textarea {
 }
 
 .sessionTopline {
-  grid-template-columns: minmax(110px, 0.8fr) minmax(100px, 0.7fr) minmax(100px, 0.7fr);
+  grid-template-columns: minmax(0, 1.15fr) repeat(2, minmax(0, 0.8fr));
 }
 
 .sessionMetaGrid {
-  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 1600px) {
+  .sessionMetaGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1120px) and (min-width: 761px) {
+  .workbenchGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .sessionCard input,
@@ -931,6 +1022,33 @@ textarea {
   margin-top: 4px;
 }
 
+.changeField {
+  align-items: baseline;
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 120px 1fr;
+  margin-top: 6px;
+  padding-top: 8px;
+}
+
+.changeField b {
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.changeField span {
+  text-transform: none;
+}
+
+.publishDecisionGrid {
+  align-items: stretch;
+}
+
+.dangerPanel {
+  border-color: rgba(180, 35, 24, 0.22);
+}
+
 .checkRow {
   align-items: center;
   color: var(--body);
@@ -953,18 +1071,356 @@ textarea {
   margin-top: 10px;
 }
 
+.importWorkspace,
+.importPreview {
+  display: grid;
+  gap: 16px;
+}
+
+.importDropZone {
+  align-items: center;
+  background: #f7f9fc;
+  border: 1px dashed #91a0ba;
+  border-radius: 8px;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto 1fr auto;
+  min-height: 156px;
+  padding: 28px;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.importDropZone.dragging {
+  background: #eef6f5;
+  border-color: var(--green);
+}
+
+.importDropZone h2,
+.importDropZone p {
+  margin: 0;
+}
+
+.importDropZone p {
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.importGlyph {
+  align-items: center;
+  background: var(--navy);
+  border-radius: 50%;
+  color: var(--gold);
+  display: flex;
+  font-size: 28px;
+  height: 52px;
+  justify-content: center;
+  width: 52px;
+}
+
+.importStats {
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 13px;
+  gap: 8px 20px;
+}
+
+.importTableWrap {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.importTable {
+  border-collapse: collapse;
+  min-width: 820px;
+  width: 100%;
+}
+
+.importTable th,
+.importTable td {
+  border-bottom: 1px solid var(--border);
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.importTable th {
+  background: #f7f9fc;
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.importTable td {
+  font-size: 13px;
+}
+
+.importTable td span {
+  color: var(--muted);
+  display: block;
+  margin-top: 3px;
+}
+
+.confirmRow {
+  align-items: flex-start;
+  color: var(--ink);
+  display: flex;
+  font-size: 13px;
+  gap: 10px;
+  line-height: 1.5;
+}
+
+.confirmRow input {
+  height: 18px;
+  margin-top: 1px;
+  width: 18px;
+}
+
+.visuallyHidden {
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.staffLoginShell {
+  align-items: center;
+  background:
+    radial-gradient(circle at 70% 15%, rgba(77, 87, 190, 0.2), transparent 36%),
+    #071029;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.staffLoginPanel {
+  background: #ffffff;
+  border: 1px solid rgba(230, 192, 111, 0.38);
+  border-radius: 8px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.32);
+  max-width: 480px;
+  padding: 42px;
+  width: 100%;
+}
+
+.staffLoginPanel h1 {
+  font-size: 32px;
+  margin: 10px 0;
+}
+
+.staffLoginPanel > p {
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.loginMark {
+  align-items: center;
+  background: var(--navy);
+  border: 1px solid rgba(230, 192, 111, 0.55);
+  border-radius: 50%;
+  color: var(--gold);
+  display: flex;
+  font-family: Georgia, serif;
+  font-size: 18px;
+  height: 54px;
+  justify-content: center;
+  margin-bottom: 24px;
+  width: 54px;
+}
+
+.staffSignInPage {
+  display: grid;
+  gap: 10px;
+}
+
+.staffSignInPage input,
+.staffSignInPage button {
+  border-radius: 6px;
+  min-height: 48px;
+  width: 100%;
+}
+
+.staffSignInPage input {
+  border: 1px solid var(--border);
+  font: inherit;
+  padding: 0 14px;
+}
+
+.staffSignInPage button {
+  background: var(--navy);
+  border: 0;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.loginProgress {
+  animation: loginPulse 900ms ease-in-out infinite alternate;
+  background: var(--gold);
+  border-radius: 2px;
+  height: 3px;
+  margin-top: 28px;
+  transform-origin: left;
+  width: 100%;
+}
+
+@keyframes loginPulse {
+  from { opacity: 0.35; transform: scaleX(0.35); }
+  to { opacity: 1; transform: scaleX(1); }
+}
+
+.publicPageShell {
+  background: #071029;
+  color: #eef2ff;
+  min-height: 100vh;
+  padding: 64px 24px;
+}
+
+.publicDocument {
+  margin: 0 auto;
+  max-width: 760px;
+}
+
+.publicBrand {
+  color: #f2d48d;
+  font-family: Georgia, serif;
+  font-size: 22px;
+  margin-bottom: 32px;
+}
+
+.publicDocument h1 {
+  color: #ffffff;
+  font-family: Georgia, serif;
+  font-size: 48px;
+  font-weight: 500;
+  line-height: 1.08;
+  margin: 10px 0 8px;
+}
+
+.publicDocument h2 {
+  color: #ffffff;
+  font-size: 19px;
+  margin: 34px 0 8px;
+}
+
+.publicDocument p {
+  color: #c7cee2;
+  font-size: 16px;
+  line-height: 1.72;
+}
+
+.publicDocument .publicMeta {
+  color: #8f9ab7;
+  font-size: 13px;
+  margin-bottom: 34px;
+}
+
+.publicActions {
+  border-top: 1px solid rgba(242, 212, 141, 0.28);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 42px;
+  padding-top: 24px;
+}
+
+.publicActions a {
+  color: #f2d48d;
+  font-weight: 700;
+}
+
+.supportGrid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 30px 0;
+}
+
+.supportGrid section {
+  border: 1px solid rgba(199, 206, 226, 0.18);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.supportGrid h2 {
+  margin-top: 0;
+}
+
 @media (max-width: 760px) {
   .shell {
     grid-template-columns: 1fr;
+    max-width: 100vw;
+    min-width: 0;
   }
 
   .nav {
+    align-items: center;
     border-right: 0;
     border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    width: 100vw;
+  }
+
+  .brand {
+    flex: 0 0 auto;
+    margin: 0 12px 0 0;
+    white-space: nowrap;
+  }
+
+  .navGroup {
+    display: contents;
+  }
+
+  .navGroupLabel {
+    display: none;
+  }
+
+  .nav a {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .staffAuthBridge {
+    bottom: 12px;
+    flex-wrap: wrap;
+    left: 12px;
+    right: 12px;
+  }
+
+  .staffSignIn {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .staffSignIn input {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+  }
+
+  .staffAuthMessage {
+    flex: 1 1 100%;
+    max-width: none;
   }
 
   .content {
+    min-width: 0;
     padding: 20px;
+    width: 100%;
   }
 
   .row {
@@ -982,6 +1438,10 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .qualityGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .pageHeader,
   .panelHeader {
     display: block;
@@ -989,9 +1449,34 @@ textarea {
 
   .sessionCard {
     grid-template-columns: 1fr;
+    min-width: 0;
+  }
+
+  .sessionCard input,
+  .sessionCard select,
+  .commandGrid textarea {
+    min-width: 0;
+    width: 100%;
   }
 
   .changeRow {
+    grid-template-columns: 1fr;
+  }
+
+  .importDropZone {
+    grid-template-columns: 1fr;
+    padding: 22px;
+  }
+
+  .publicPageShell {
+    padding: 42px 20px;
+  }
+
+  .publicDocument h1 {
+    font-size: 38px;
+  }
+
+  .supportGrid {
     grid-template-columns: 1fr;
   }
 }

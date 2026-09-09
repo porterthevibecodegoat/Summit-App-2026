@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getLiveOpsState, getStaffContext, StaffAuthError } from "../../../../lib/live-ops-repository";
+import { checkExpoPushReceipts, dispatchDuePushNotifications } from "../../../../lib/push-dispatcher";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,8 +23,7 @@ export async function POST(request: NextRequest) {
           blockers: [
             "ENABLE_PUSH_DELIVERY must be true.",
             "ENABLE_NOTIFICATION_DISPATCH must be true.",
-            "Expo/EAS push credentials must be configured and tested on real devices.",
-            "A server worker must own dispatch, retry, and audit updates."
+            "Expo/EAS push credentials must be configured and tested on real devices."
           ],
           note: "Dispatch is intentionally disabled in local/prototype mode so no attendee receives accidental notifications."
         },
@@ -44,28 +44,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(
-      {
-        ok: false,
-        status: "READY_FOR_WORKER_IMPLEMENTATION",
-        dispatched: 0,
-        dueJobs: dueJobs.length,
-        registeredDevices: state.attendeeDevices,
-        note:
-          "Preflight passed feature flags, but real delivery still needs the dispatch worker implementation that maps jobs to target Expo push tokens, sends through Expo/APNs, records delivery attempts, and retries failures."
-      },
-      {
-        status: 501,
-        headers: {
-          "Cache-Control": "no-store"
-        }
-      }
-    );
+    if (state.mode !== "supabase") {
+      return NextResponse.json(
+        {
+          ok: false,
+          status: "BLOCKED",
+          dispatched: 0,
+          dueJobs: dueJobs.length,
+          blockers: ["Push dispatch requires the Supabase backend so jobs can be claimed once and audited."]
+        },
+        { status: 422, headers: { "Cache-Control": "no-store" } }
+      );
+    }
+
+    const receipts = await checkExpoPushReceipts();
+    const result = await dispatchDuePushNotifications(state.publishedSnapshot);
+    return NextResponse.json({
+      ok: true,
+      status: "DISPATCH_COMPLETE",
+      dueJobs: dueJobs.length,
+      registeredDevices: state.attendeeDevices,
+      receipts,
+      ...result
+    }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     if (error instanceof StaffAuthError) {
       return NextResponse.json({ ok: false, error: error.message }, { status: error.status });
     }
 
-    return NextResponse.json({ ok: false, error: "Unable to run notification dispatch preflight." }, { status: 500 });
+    return NextResponse.json({ ok: false, error: "Unable to dispatch due notifications." }, { status: 500 });
   }
 }

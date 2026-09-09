@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { publicAppConfig } from "@not-alone/config";
-import { getReadOnlyLiveOpsState } from "../../lib/live-ops-repository";
+import { getReadOnlyLiveOpsState, hasStaffPageAccess } from "../../lib/live-ops-repository";
 import { StaffNav } from "../staff-nav";
 
 export const dynamic = "force-dynamic";
 
 export default async function HistoryPage() {
+  if (!(await hasStaffPageAccess())) return null;
   const state = await getReadOnlyLiveOpsState();
 
   return (

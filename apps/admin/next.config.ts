@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   agentRules: false,
   outputFileTracingRoot: workspaceRoot,
   reactStrictMode: true,
+  serverExternalPackages: ["pdf-parse"],
   turbopack: {
     root: workspaceRoot
   },

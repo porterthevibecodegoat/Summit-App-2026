@@ -211,8 +211,8 @@ export function createStateAnswer({
 
   if (matchesAny(normalized, ["pdf", "import", "upload", "file", "spreadsheet", "schedule"])) {
     return [
-      "Text and CSV-style schedule imports can be parsed into review rows now.",
-      "PDF upload is staged in the interface, but production-grade extraction still needs a server parser and import job history before it should publish data.",
+      "PDF, text, and CSV schedule files can be extracted into review rows in the Import Center.",
+      "The portal records each import job and reports rows it excluded or could not confidently parse.",
       "Imported rows remain draft until staff reviews, marks them Ready, confirms, and publishes."
     ].join(" ");
   }
@@ -240,33 +240,52 @@ function findTargetSession(command: string, sessions: DraftSession[], targetTime
   const replacedSpeaker = extractReplacedSpeaker(command);
 
   if (replacedSpeaker) {
-    const speakerMatch = sessions.find((session) => includesNormalized(session.speaker, replacedSpeaker));
-    if (speakerMatch) {
-      return speakerMatch;
+    const speakerMatches = sessions.filter((session) => includesNormalized(session.speaker, replacedSpeaker));
+    if (speakerMatches.length === 1) {
+      return speakerMatches[0];
     }
   }
+
+  const namedSpeakerMatches = sessions.filter((session) => {
+    const speaker = normalizeSearchText(session.speaker);
+    return !isGenericSpeaker(speaker) && speaker.length >= 4 && normalizeSearchText(command).includes(speaker);
+  });
+  if (namedSpeakerMatches.length === 1) return namedSpeakerMatches[0];
+
+  const namedTitleMatches = sessions.filter((session) => {
+    const title = normalizeSearchText(session.title);
+    return title.length >= 8 && normalizeSearchText(command).includes(title);
+  });
+  if (namedTitleMatches.length === 1) return namedTitleMatches[0];
 
   if (targetTime) {
     const targetMinutes = parseTimeToMinutes(formatCommandTime(targetTime, "12:00 PM"));
-    const timeMatch = sessions.find((session) => parseTimeToMinutes(session.start) === targetMinutes);
-    if (timeMatch) {
-      return timeMatch;
+    const timeMatches = sessions.filter((session) => parseTimeToMinutes(session.start) === targetMinutes);
+    if (timeMatches.length === 1) {
+      return timeMatches[0];
     }
+    if (timeMatches.length > 1) return findUniqueScoredSession(normalized, timeMatches);
+    return null;
   }
 
+  return findUniqueScoredSession(normalized, sessions);
+}
+
+function findUniqueScoredSession(command: string, sessions: DraftSession[]) {
   const scored = sessions
-    .map((session) => ({ session, score: scoreSessionMatch(normalized, session) }))
+    .map((session) => ({ session, score: scoreSessionMatch(command, session) }))
     .filter((entry) => entry.score > 0)
     .sort((left, right) => right.score - left.score);
-
-  return scored[0]?.session ?? sessions[0];
+  const best = scored[0];
+  if (!best || best.score < 2 || scored[1]?.score === best.score) return null;
+  return best.session;
 }
 
 function scoreSessionMatch(command: string, session: DraftSession) {
   const searchable = `${session.title} ${session.speaker} ${session.location} ${session.audience}`.toLowerCase();
   return command
     .split(/[^a-z0-9]+/)
-    .filter((word) => word.length > 3)
+    .filter((word) => word.length > 3 && !COMMAND_STOP_WORDS.has(word))
     .reduce((score, word) => score + (searchable.includes(word) ? 1 : 0), 0);
 }
 
@@ -279,13 +298,23 @@ function extractNewStartTime(command: string) {
 }
 
 function extractNewSpeaker(command: string) {
+  const replacement = extractSpeakerReplacement(command);
   return (
+    replacement?.after ??
     command.match(/(?:it is now|speaker is now|speaker changed to|now featuring|replaced by)\s+([A-Z][A-Za-z.'-]*(?:\s+[A-Z][A-Za-z.'-]*){0,4})(?:\s+instead of|\.|,|$)/)?.[1]?.trim() ?? null
   );
 }
 
 function extractReplacedSpeaker(command: string) {
-  return command.match(/instead of\s+([A-Z][A-Za-z.'-]*(?:\s+[A-Z][A-Za-z.'-]*){0,4})(?:\.|,|$)/)?.[1]?.trim() ?? null;
+  return extractSpeakerReplacement(command)?.before ??
+    command.match(/instead of\s+([A-Z][A-Za-z.'-]*(?:\s+[A-Z][A-Za-z.'-]*){0,4})(?:\.|,|$)/)?.[1]?.trim() ?? null;
+}
+
+function extractSpeakerReplacement(command: string) {
+  const match = command.match(
+    /\breplace\s+([A-Z][A-Za-z.'-]*(?:\s+[A-Z][A-Za-z.'-]*){0,3})\s+with\s+([A-Z][A-Za-z.'-]*(?:\s+[A-Z][A-Za-z.'-]*){0,3})(?:\.|,|$)/
+  );
+  return match?.[1] && match[2] ? { before: match[1].trim(), after: match[2].trim() } : null;
 }
 
 function extractNewLocation(command: string) {
@@ -386,6 +415,27 @@ function isRealLocation(value: string) {
 function includesNormalized(value: string, query: string) {
   return value.toLowerCase().includes(query.toLowerCase());
 }
+
+function normalizeSearchText(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function isGenericSpeaker(value: string) {
+  return ["host team", "wellness team", "unassigned"].includes(value);
+}
+
+const COMMAND_STOP_WORDS = new Set([
+  "change",
+  "changed",
+  "instead",
+  "move",
+  "moved",
+  "replace",
+  "speaker",
+  "starts",
+  "this",
+  "with"
+]);
 
 function matchesAny(value: string, terms: string[]) {
   return terms.some((term) => value.includes(term));

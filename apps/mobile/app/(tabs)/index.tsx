@@ -1,5 +1,6 @@
 import { Link } from "expo-router";
-import { Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { Image, ImageBackground, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
 import { getNowAndUpcoming, toEventTimeRange } from "@not-alone/domain";
@@ -11,14 +12,35 @@ const summitArt = require("../../assets/summit-art-v2.png");
 const homePrompts = ["What should I do now?", "Where is the next session?"];
 
 export default function TodayScreen() {
-  const { demoEnabled, snapshot, nowUtc, setDemoEnabled, lastSuccessfulSyncAt, syncError } = useSummitDemo();
+  const [refreshing, setRefreshing] = useState(false);
+  const {
+    demoAvailable,
+    demoEnabled,
+    snapshot,
+    nowUtc,
+    setDemoEnabled,
+    lastSuccessfulSyncAt,
+    lastRevisionUpdateAt,
+    syncing,
+    syncError,
+    refreshPublishedSnapshot
+  } = useSummitDemo();
   const { current, upcoming } = getNowAndUpcoming({
-    audienceGroups: ["founders"],
+    audienceGroups: ["public"],
     nowUtc,
     snapshot
   });
   const currentItem = current[0];
   const nextItem = upcoming[0];
+
+  async function handleRefresh() {
+    setRefreshing(true);
+    try {
+      await refreshPublishedSnapshot();
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
@@ -26,10 +48,17 @@ export default function TodayScreen() {
         style={styles.screen}
         contentContainerStyle={styles.content}
         contentInsetAdjustmentBehavior="automatic"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => void handleRefresh()}
+            tintColor={colors.gold}
+          />
+        }
       >
         <View style={styles.header}>
           <Text style={styles.eyebrow}>{snapshot.event.organizationName}</Text>
-          <Text style={styles.headerTitle}>Today</Text>
+          <Text style={styles.headerTitle}>Home</Text>
           <Text style={styles.headerMeta}>{snapshot.event.dateLabel} · {snapshot.event.venueName}</Text>
         </View>
 
@@ -37,30 +66,36 @@ export default function TodayScreen() {
           <View style={[styles.syncDot, syncError ? styles.syncDotWarn : styles.syncDotReady]} />
           <Text style={styles.syncText}>
             {demoEnabled
-              ? "Demo Mode is previewing a live event timeline."
+              ? "Previewing an event-day timeline."
+              : syncing
+                ? "Checking for the latest schedule."
               : syncError
                 ? "Using saved schedule while reconnecting."
+                : lastRevisionUpdateAt
+                  ? `New schedule received ${formatSyncTime(lastRevisionUpdateAt)}`
                 : lastSuccessfulSyncAt
-                  ? `Updated ${formatSyncTime(lastSuccessfulSyncAt)}`
-                  : "Ready for published event updates."}
+                  ? `Schedule updated ${formatSyncTime(lastSuccessfulSyncAt)}`
+                  : "Your event guide is ready."}
           </Text>
-          <Text style={styles.revisionText}>Rev {snapshot.revision}</Text>
         </View>
 
         {currentItem ? (
-          <LiveSessionCard item={currentItem} />
+          <LiveSessionCard demoEnabled={demoEnabled} item={currentItem} />
         ) : (
           <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.liveImage} style={styles.liveShell}>
             <View style={styles.liveScrim}>
-              <Text style={styles.liveKicker}>Attendee home</Text>
-              <Text style={styles.waitingTitle}>One clear place for the summit.</Text>
+              <Text style={styles.liveKicker}>Welcome to the summit</Text>
+              <Text style={styles.waitingTitle}>You are not alone.</Text>
               <Text style={styles.waitingBody}>
-                Final programming is not published yet. Preview the live experience with temporary demo content while
-                details are being approved.
+                {snapshot.scheduleItems.length > 0
+                  ? "Your schedule, venue guide, and event information are together in one place."
+                  : "Programming will appear here as soon as the event team publishes it."}
               </Text>
-              <Pressable onPress={() => setDemoEnabled(true)} style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}>
-                <Text style={styles.primaryButtonText}>Preview Live Demo</Text>
-              </Pressable>
+              {demoAvailable ? (
+                <Pressable onPress={() => setDemoEnabled(true)} style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}>
+                  <Text style={styles.primaryButtonText}>Preview Live Demo</Text>
+                </Pressable>
+              ) : null}
             </View>
           </ImageBackground>
         )}
@@ -99,7 +134,7 @@ export default function TodayScreen() {
         </View>
 
         <View style={styles.toolsPanel}>
-          <ToolPill href="/schedule" label="Schedule" value={demoEnabled ? `${snapshot.scheduleItems.length} demo sessions` : "Pending"} />
+          <ToolPill href="/schedule" label="Schedule" value={`${snapshot.scheduleItems.length} sessions`} />
           <ToolPill href="/map" label="Map" value={snapshot.event.venueName} />
           <ToolPill href="/help" label="Help" value="Concierge" />
         </View>
@@ -110,7 +145,7 @@ export default function TodayScreen() {
   );
 }
 
-function LiveSessionCard({ item }: { item: ScheduleItem }) {
+function LiveSessionCard({ demoEnabled, item }: { demoEnabled: boolean; item: ScheduleItem }) {
   return (
     <Link href={{ pathname: "/session/[id]", params: { id: item.id } }} asChild>
       <Pressable style={({ pressed }) => [styles.liveShell, pressed && styles.pressed]}>
@@ -121,12 +156,14 @@ function LiveSessionCard({ item }: { item: ScheduleItem }) {
                 <Text style={styles.liveKicker}>Live now</Text>
                 <Text style={styles.liveTime}>{toEventTimeRange(item, item.eventTimeZone)}</Text>
               </View>
-              <View style={styles.portraitFrame}>
-                <Image source={demoSpeaker.image} resizeMode="cover" style={styles.portrait} />
-              </View>
+              {demoEnabled ? (
+                <View style={styles.portraitFrame}>
+                  <Image source={demoSpeaker.image} resizeMode="cover" style={styles.portrait} />
+                </View>
+              ) : null}
             </View>
             <Text style={styles.sessionTitle}>{item.title}</Text>
-            <Text style={styles.speakerLine}>With {demoSpeaker.name} · {demoSpeaker.role}</Text>
+            {demoEnabled ? <Text style={styles.speakerLine}>With {demoSpeaker.name} · {demoSpeaker.role}</Text> : null}
             <Text style={styles.sessionSummary} numberOfLines={2}>{item.summary}</Text>
             <View style={styles.liveFooter}>
               <Text style={styles.locationText}>{item.locationName}</Text>

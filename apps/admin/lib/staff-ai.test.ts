@@ -56,6 +56,17 @@ describe("temporary staff AI", () => {
     });
   });
 
+  it("refuses to guess when a named session does not exist", () => {
+    const proposal = createScheduleProposal(
+      "Move the 6pm speaker to 6:30 and replace Jane Doe with John Doe.",
+      sessions
+    );
+
+    expect(proposal.confidence).toBe("Low");
+    expect(proposal.changes).toEqual([]);
+    expect(proposal.summary).toBe("No matching session was found.");
+  });
+
   it("answers notification state without claiming push delivery is live", () => {
     const answer = createStateAnswer({
       question: "Are notifications sending to phones?",

@@ -1,7 +1,10 @@
 import type { ExpoConfig } from "expo/config";
 import { publicAppConfig } from "@not-alone/config";
 
-const easProjectId = process.env.EXPO_PUBLIC_EAS_PROJECT_ID ?? "replace-with-eas-project-id";
+const easProjectId = process.env.EXPO_PUBLIC_EAS_PROJECT_ID;
+const hasEasProject = Boolean(
+  easProjectId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(easProjectId)
+);
 
 const config: ExpoConfig = {
   name: publicAppConfig.appName,
@@ -10,7 +13,7 @@ const config: ExpoConfig = {
   version: "0.1.0",
   orientation: "portrait",
   userInterfaceStyle: "automatic",
-  icon: "./assets/icon.png",
+  icon: "./assets/icon-premium.png",
   ios: {
     supportsTablet: false,
     bundleIdentifier: publicAppConfig.iosBundleIdentifier,
@@ -19,16 +22,20 @@ const config: ExpoConfig = {
         "Notifications provide schedule reminders and urgent event changes for Not Alone Summit."
     }
   },
-  updates: {
-    url: `https://u.expo.dev/${easProjectId}`,
-    enabled: true,
-    checkAutomatically: "ON_LOAD",
-    fallbackToCacheTimeout: 0
-  },
+  updates: hasEasProject
+    ? {
+        url: `https://u.expo.dev/${easProjectId}`,
+        enabled: true,
+        checkAutomatically: "ON_LOAD",
+        fallbackToCacheTimeout: 0
+      }
+    : {
+        enabled: false
+      },
   runtimeVersion: "0.1.0",
   extra: {
     eas: {
-      projectId: easProjectId
+      projectId: hasEasProject ? easProjectId : undefined
     },
     appEnv: publicAppConfig.environmentName,
     eventId: publicAppConfig.eventId,
@@ -36,16 +43,15 @@ const config: ExpoConfig = {
   },
   plugins: [
     "expo-router",
-    "expo-secure-store",
     "expo-sqlite",
     "expo-notifications",
     "expo-updates",
     [
       "expo-splash-screen",
       {
-        image: "./assets/splash.png",
+        image: "./assets/icon-premium.png",
         resizeMode: "contain",
-        backgroundColor: "#F7F5F0"
+        backgroundColor: "#06102B"
       }
     ]
   ]

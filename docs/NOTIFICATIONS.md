@@ -1,25 +1,42 @@
 # Notifications
 
-Expo notification packages and EAS configuration are present in the mobile app. Push delivery is disabled by default through config.
+The notification delivery system is implemented but disabled by default. No attendee message can be sent until credentials are added and both delivery feature flags are deliberately enabled.
 
-The starter Supabase migration includes `notification_jobs` with idempotency keys, schedule revision linkage, status, attempts, and error fields.
+## Implemented Flow
 
-The local staff portal adapter recalculates reminder job metadata whenever a reviewed draft schedule is published through `POST /api/live-ops/publish`. Those jobs are visible in the staff portal at `http://localhost:3000/notifications` and through `GET /api/notifications/jobs`.
+1. Atomic schedule publication regenerates reminder jobs tied to the new revision.
+2. The worker claims due jobs in the database so overlapping workers cannot send the same job.
+3. Active device registrations are divided into Expo-supported batches of at most 100.
+4. Every provider request and ticket is recorded in `notification_delivery_attempts`.
+5. Ticket IDs are reconciled against Expo receipts in a separate pass.
+6. Transient failures return to the queue with bounded retries and backoff.
+7. Permanent invalid-device responses disable the affected registration.
+8. Staff can inspect queued, claimed, sent, delivered, failed, cancelled, and dead-letter state without exposing provider credentials.
 
-The mobile app includes a guarded Expo push token registration path. It only runs when `ENABLE_PUSH_DELIVERY=true`, validates registrations through `POST /api/devices/register`, and requires a real EAS project id.
+Relevant routes:
 
-No real push notification is sent by this scaffold. Production dispatch requires explicit credentials, a server-side Expo/APNs worker, Supabase audit records, opt-in/permission handling, retries, and explicit authorization.
+- `GET /api/notifications/jobs` for authenticated staff visibility.
+- `POST /api/notifications/dispatch` for authenticated manual dispatch.
+- `POST /api/notifications/receipts` for authenticated receipt reconciliation.
+- `POST /api/cron/notifications` for a secret-authenticated scheduler.
+- `POST /api/devices/register` for rate-limited attendee registration.
 
-## Dispatch Preflight
+## Safety Gates
 
-The staff API includes `POST /api/notifications/dispatch` as a guarded production preflight.
+Push remains blocked unless all required server values are valid and both of these flags are true:
 
-It intentionally returns `BLOCKED` unless all of the following are true:
+```txt
+ENABLE_PUSH_DELIVERY=true
+ENABLE_NOTIFICATION_DISPATCH=true
+```
 
-- `ENABLE_PUSH_DELIVERY=true`
-- `ENABLE_NOTIFICATION_DISPATCH=true`
-- Real EAS project ID is configured
-- Expo/APNs credentials are configured
-- Server dispatch worker implementation has been completed and tested
+The EAS project ID may be public configuration. Apple credentials, Expo access tokens, cron secrets, service-role keys, and provider secrets are server-only.
 
-This prevents accidental attendee notifications during prototype work.
+## Credential-Last Validation
+
+- Confirm iOS permission copy and opt-in behavior.
+- Register at least two physical test devices.
+- Publish a staging revision with known reminder times.
+- Verify one send, one receipt, duplicate-worker safety, retry behavior, cancellation, and invalid-token disabling.
+- Confirm every attempt and operator action appears in audit/history.
+- Leave production flags off until stakeholder approval immediately before event operations.

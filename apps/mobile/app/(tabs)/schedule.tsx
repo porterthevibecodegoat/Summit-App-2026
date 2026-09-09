@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ImageBackground, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
 import { groupScheduleByEventDay, toEventTimeRange } from "@not-alone/domain";
@@ -10,8 +10,24 @@ import { useSummitDemo } from "../../components/demo-mode";
 const summitArt = require("../../assets/summit-art-v2.png");
 
 export default function ScheduleScreen() {
-  const { demoEnabled, snapshot, setDemoEnabled, isSessionSaved, savedSessionIds } = useSummitDemo();
-  const groups = useMemo(() => groupScheduleByEventDay(snapshot.scheduleItems), [snapshot.scheduleItems]);
+  const [refreshing, setRefreshing] = useState(false);
+  const {
+    demoAvailable,
+    demoEnabled,
+    snapshot,
+    setDemoEnabled,
+    isSessionSaved,
+    savedSessionIds,
+    refreshPublishedSnapshot
+  } = useSummitDemo();
+  const [scheduleMode, setScheduleMode] = useState<"all" | "saved">("all");
+  const visibleItems = useMemo(
+    () => scheduleMode === "saved"
+      ? snapshot.scheduleItems.filter((item) => savedSessionIds.includes(item.id))
+      : snapshot.scheduleItems,
+    [savedSessionIds, scheduleMode, snapshot.scheduleItems]
+  );
+  const groups = useMemo(() => groupScheduleByEventDay(visibleItems), [visibleItems]);
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
   const selectedGroup = groups[Math.min(selectedDayIndex, Math.max(groups.length - 1, 0))];
 
@@ -21,12 +37,28 @@ export default function ScheduleScreen() {
     }
   }, [groups.length, selectedDayIndex]);
 
+  async function handleRefresh() {
+    setRefreshing(true);
+    try {
+      await refreshPublishedSnapshot();
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <ScrollView
         style={styles.screen}
         contentContainerStyle={styles.content}
         contentInsetAdjustmentBehavior="automatic"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => void handleRefresh()}
+            tintColor={colors.gold}
+          />
+        }
       >
         <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.introImage} style={styles.intro}>
           <View style={styles.introScrim}>
@@ -42,8 +74,45 @@ export default function ScheduleScreen() {
           </View>
         </ImageBackground>
 
+        <View accessibilityRole="tablist" style={styles.modeControl}>
+          <Pressable
+            accessibilityRole="tab"
+            accessibilityState={{ selected: scheduleMode === "all" }}
+            onPress={() => {
+              setScheduleMode("all");
+              setSelectedDayIndex(0);
+            }}
+            style={[styles.modeButton, scheduleMode === "all" && styles.modeButtonActive]}
+          >
+            <Text style={[styles.modeText, scheduleMode === "all" && styles.modeTextActive]}>Full Schedule</Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="tab"
+            accessibilityState={{ selected: scheduleMode === "saved" }}
+            onPress={() => {
+              setScheduleMode("saved");
+              setSelectedDayIndex(0);
+            }}
+            style={[styles.modeButton, scheduleMode === "saved" && styles.modeButtonActive]}
+          >
+            <Text style={[styles.modeText, scheduleMode === "saved" && styles.modeTextActive]}>
+              My Schedule ({savedSessionIds.length})
+            </Text>
+          </Pressable>
+        </View>
+
         {groups.length === 0 ? (
-          <EmptySchedule onPreview={() => setDemoEnabled(true)} timeZone={snapshot.event.timeZone} tracks={snapshot.event.tracks} />
+          scheduleMode === "saved" ? (
+            <View style={styles.emptyPanel}>
+              <Text style={styles.emptyTitle}>Your schedule is ready to build</Text>
+              <Text style={styles.emptyBody}>Open a session from the full schedule and select Add to My Schedule.</Text>
+              <Pressable onPress={() => setScheduleMode("all")} style={({ pressed }) => [styles.previewButton, pressed && styles.pressed]}>
+                <Text style={styles.previewButtonText}>Browse Full Schedule</Text>
+              </Pressable>
+            </View>
+          ) : (
+            <EmptySchedule demoAvailable={demoAvailable} onPreview={() => setDemoEnabled(true)} timeZone={snapshot.event.timeZone} tracks={snapshot.event.tracks} />
+          )
         ) : (
           <>
             <View style={styles.dayRail}>
@@ -88,10 +157,12 @@ export default function ScheduleScreen() {
 }
 
 function EmptySchedule({
+  demoAvailable,
   onPreview,
   timeZone,
   tracks
 }: {
+  demoAvailable: boolean;
   onPreview: () => void;
   timeZone: string;
   tracks: string[];
@@ -102,9 +173,11 @@ function EmptySchedule({
       <Text style={styles.emptyBody}>
         The schedule is ready for approved session data. Times will display in {timeZone} once records are published.
       </Text>
-      <Pressable onPress={onPreview} style={({ pressed }) => [styles.previewButton, pressed && styles.pressed]}>
-        <Text style={styles.previewButtonText}>Preview Demo Schedule</Text>
-      </Pressable>
+      {demoAvailable ? (
+        <Pressable onPress={onPreview} style={({ pressed }) => [styles.previewButton, pressed && styles.pressed]}>
+          <Text style={styles.previewButtonText}>Preview Demo Schedule</Text>
+        </Pressable>
+      ) : null}
       <View style={styles.trackGrid}>
         {tracks.map((track) => (
           <View key={track} style={styles.trackPill}>
@@ -164,7 +237,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginHorizontal: spacing.lg,
     marginTop: spacing.lg,
-    minHeight: 208,
+    minHeight: 142,
     overflow: "hidden"
   },
   introImage: {
@@ -186,17 +259,47 @@ const styles = StyleSheet.create({
   title: {
     color: colors.ink,
     fontFamily: typography.display,
-    fontSize: 35,
+    fontSize: 27,
     fontWeight: "700",
     letterSpacing: 0,
-    lineHeight: 40,
+    lineHeight: 33,
     marginTop: spacing.xs
   },
   introBody: {
     color: colors.surfaceMuted,
     fontSize: 15,
     lineHeight: 22,
-    marginTop: spacing.md
+    marginTop: spacing.sm
+  },
+  modeControl: {
+    backgroundColor: "rgba(13, 21, 48, 0.78)",
+    borderColor: colors.border,
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: "row",
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.lg,
+    padding: 4
+  },
+  modeButton: {
+    alignItems: "center",
+    borderRadius: 6,
+    flex: 1,
+    justifyContent: "center",
+    minHeight: 42,
+    paddingHorizontal: spacing.sm
+  },
+  modeButtonActive: {
+    backgroundColor: colors.gold
+  },
+  modeText: {
+    color: colors.body,
+    fontFamily: typography.bold,
+    fontSize: 12,
+    fontWeight: "700"
+  },
+  modeTextActive: {
+    color: colors.midnight
   },
   dayRail: {
     flexDirection: "row",

@@ -6,6 +6,10 @@ Live operations migration: `supabase/migrations/202609030001_live_ops_architectu
 
 Staff auth/RLS hardening migration: `supabase/migrations/202609030002_staff_auth_and_live_ops_rls.sql`.
 
+Atomic publication/function hardening: `supabase/migrations/202609090001_atomic_publish_and_function_security.sql`.
+
+Notification delivery worker state: `supabase/migrations/202609090002_notification_delivery_worker.sql`.
+
 Implemented starter tables:
 
 - `events`
@@ -25,9 +29,12 @@ Implemented live-ops foundation tables:
 - `schedule_revisions`
 - `production_audit_entries`
 - `attendee_device_registrations`
+- `notification_delivery_attempts`
 
-The live-ops migration also extends `notification_jobs` with source, payload, delivery, and supersession metadata, and adds `publish_event_snapshot_revision` as the first transactional publication function.
+The live-ops migration extends `notification_jobs` with source, payload, delivery, and supersession metadata. The atomic hardening migration replaces the early publication path with validated publish and rollback transactions that update the event, immutable revision, audit entry, and reminder jobs together.
 
 The staff auth/RLS migration adds helper functions for staff role lookup and policies for draft editing, proposal review, revision/audit reads, notification job management, and attendee device registration reads. Attendee device writes stay server-side through the admin API service role path.
 
-The migrations enable RLS. Public attendee reads should use controlled published snapshot APIs rather than broad table access to revision history, because future revisions may include restricted event data.
+The delivery migration adds database-backed job claims, claim expiry, provider ticket tracking, receipt state, bounded retries, and attempt-level history.
+
+The migrations enable RLS and revoke elevated function execution from anonymous/authenticated clients. Public attendee reads use the controlled published snapshot API rather than broad table access to revisions or operational tables, because those records may include restricted data.

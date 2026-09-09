@@ -1,10 +1,13 @@
 import { NextRequest } from "next/server";
+import { cookies } from "next/headers";
 import { publicAppConfig } from "@not-alone/config";
 import {
   attendeeDeviceRegistrationSchema,
+  documentImportJobSchema,
   eventSnapshotSchema,
   type AttendeeDeviceRegistration,
   type ChangeSource,
+  type DocumentImportJob,
   type EventSnapshot,
   type StaffRole
 } from "@not-alone/validation";
@@ -14,6 +17,7 @@ import {
   DraftPublishError,
   publishDraftSessions,
   readLiveOpsStore,
+  recordDocumentImport,
   registerAttendeeDevice,
   rollbackLastPublishedSnapshot,
   saveDraftSessions,
@@ -22,6 +26,7 @@ import {
 } from "./live-ops-store";
 import { createPublishPreview } from "./publish-diff";
 import { getBlockingPublishMessages } from "./schedule-quality";
+import { STAFF_ACCESS_COOKIE } from "./staff-session";
 
 type NotificationJob = LiveOpsStore["notificationJobs"][number];
 
@@ -35,7 +40,13 @@ export type LiveOpsState = {
   lastPublishedMessage?: string;
   attendeeDevices: number;
   notificationJobs: NotificationJob[];
+  notificationDelivery: {
+    accepted: number;
+    delivered: number;
+    failed: number;
+  };
   activityLog: LiveOpsStore["activityLog"];
+  importJobs: DocumentImportJob[];
   adapterWarning?: string;
   degraded?: boolean;
 };
@@ -74,7 +85,9 @@ export async function getLiveOpsState(): Promise<LiveOpsState> {
     publishedSnapshot: store.publishedSnapshot,
     attendeeDevices: store.attendeeDevices.length,
     notificationJobs: store.notificationJobs,
-    activityLog: store.activityLog
+    notificationDelivery: { accepted: 0, delivered: 0, failed: 0 },
+    activityLog: store.activityLog,
+    importJobs: store.importJobs
   }, store.lastPublishedAt, store.lastPublishedMessage);
 }
 
@@ -91,7 +104,9 @@ export async function getReadOnlyLiveOpsState(): Promise<LiveOpsState> {
       publishedSnapshot: store.publishedSnapshot,
       attendeeDevices: store.attendeeDevices.length,
       notificationJobs: store.notificationJobs,
+      notificationDelivery: { accepted: 0, delivered: 0, failed: 0 },
       activityLog: store.activityLog,
+      importJobs: store.importJobs,
       adapterWarning: `Configured live backend is unavailable: ${redactOperationalError(error)}`,
       degraded: true
     }, store.lastPublishedAt, store.lastPublishedMessage);
@@ -176,6 +191,64 @@ export async function registerDevice(registration: AttendeeDeviceRegistration) {
   };
 }
 
+export async function recordScheduleImport(
+  input: {
+    id: string;
+    fileName: string;
+    fileType: DocumentImportJob["fileType"];
+    detectedEventCount: number;
+    requiresReviewCount: number;
+    sessions: StaffDraftSession[];
+  },
+  staff: StaffContext
+) {
+  requireRole(staff, ["EDITOR", "PUBLISHER", "ADMIN"]);
+  const nowUtc = new Date().toISOString();
+  const job = documentImportJobSchema.parse({
+    id: input.id,
+    eventId: publicAppConfig.eventId,
+    fileName: input.fileName,
+    fileType: input.fileType,
+    status: "READY_FOR_REVIEW",
+    detectedEventCount: input.detectedEventCount,
+    addedCount: input.detectedEventCount,
+    modifiedCount: 0,
+    removedCount: 0,
+    requiresReviewCount: input.requiresReviewCount,
+    createdAt: nowUtc
+  });
+
+  if (!hasSupabaseServerConfig()) {
+    return recordDocumentImport(job);
+  }
+
+  await supabaseFetch("/rest/v1/document_import_jobs", {
+    method: "POST",
+    body: [{
+      id: job.id,
+      event_id: job.eventId,
+      file_name: job.fileName,
+      file_type: job.fileType,
+      storage_path: `inline-extraction/${job.id}`,
+      status: job.status,
+      detected_event_count: job.detectedEventCount,
+      added_count: job.addedCount,
+      modified_count: job.modifiedCount,
+      removed_count: job.removedCount,
+      requires_review_count: job.requiresReviewCount,
+      extracted_snapshot: { draftSessions: input.sessions },
+      diff: { added: job.addedCount, modified: 0, removed: 0 },
+      created_by: staff.actorId ?? null,
+      created_at: nowUtc,
+      updated_at: nowUtc
+    }],
+    expectedStatus: 201,
+    prefer: "return=minimal"
+  });
+
+  return job;
+}
+
 export async function getStaffContext(request: NextRequest, allowedRoles: StaffRole[]): Promise<StaffContext> {
   if (!hasSupabaseServerConfig()) {
     const localRole = parseLocalRole();
@@ -184,15 +257,34 @@ export async function getStaffContext(request: NextRequest, allowedRoles: StaffR
     return context;
   }
 
-  const bearerToken = getBearerToken(request);
+  const bearerToken = getBearerToken(request) ?? request.cookies.get(STAFF_ACCESS_COOKIE)?.value;
   if (!bearerToken) {
     throw new StaffAuthError(401, "Staff authentication is required.");
   }
 
-  const user = await supabaseFetch<{ id: string }>("/auth/v1/user", {
-    bearerToken,
-    expectedStatus: 200
-  });
+  return authenticateStaffAccessToken(bearerToken, allowedRoles);
+}
+
+export async function authenticateStaffAccessToken(
+  accessToken: string,
+  allowedRoles: StaffRole[]
+): Promise<StaffContext> {
+  if (!hasSupabaseServerConfig()) {
+    const localRole = parseLocalRole();
+    const context: StaffContext = { role: localRole, mode: "local-adapter" };
+    requireRole(context, allowedRoles);
+    return context;
+  }
+
+  let user: { id: string };
+  try {
+    user = await supabaseFetch<{ id: string }>("/auth/v1/user", {
+      bearerToken: accessToken,
+      expectedStatus: 200
+    });
+  } catch {
+    throw new StaffAuthError(401, "The staff session is invalid or expired.");
+  }
   const profiles = await supabaseFetch<Array<{ user_id: string; role: StaffRole }>>(
     `/rest/v1/staff_profiles?user_id=eq.${encodeURIComponent(user.id)}&select=user_id,role`,
     { expectedStatus: 200 }
@@ -208,6 +300,25 @@ export async function getStaffContext(request: NextRequest, allowedRoles: StaffR
   return context;
 }
 
+export async function hasStaffPageAccess(allowedRoles: StaffRole[] = ["VIEWER", "EDITOR", "PUBLISHER", "ADMIN"]) {
+  if (!hasSupabaseServerConfig()) {
+    return true;
+  }
+
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get(STAFF_ACCESS_COOKIE)?.value;
+  if (!accessToken) {
+    return false;
+  }
+
+  try {
+    await authenticateStaffAccessToken(accessToken, allowedRoles);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function requireRole(context: StaffContext, allowedRoles: StaffRole[]) {
   if (!allowedRoles.includes(context.role)) {
     throw new StaffAuthError(403, `Role ${context.role} cannot perform this action.`);
@@ -215,7 +326,7 @@ function requireRole(context: StaffContext, allowedRoles: StaffRole[]) {
 }
 
 async function readSupabaseState(): Promise<LiveOpsState> {
-  const [draftRows, revisionRows, deviceRows, notificationRows, auditRows] = await Promise.all([
+  const [draftRows, revisionRows, deviceRows, notificationRows, auditRows, importRows, deliveryRows] = await Promise.all([
     supabaseFetch<Array<{ working_snapshot: unknown; updated_at: string }>>(
       `/rest/v1/schedule_drafts?event_id=eq.${encodeURIComponent(publicAppConfig.eventId)}&select=working_snapshot,updated_at&order=updated_at.desc&limit=1`,
       { expectedStatus: 200 }
@@ -228,12 +339,32 @@ async function readSupabaseState(): Promise<LiveOpsState> {
       `/rest/v1/attendee_device_registrations?event_id=eq.${encodeURIComponent(publicAppConfig.eventId)}&select=id`,
       { expectedStatus: 200 }
     ),
-    supabaseFetch<Array<{ id: string; schedule_item_id: string; audience_scope: string; send_after_utc: string; status: string; idempotency_key: string }>>(
+    supabaseFetch<Array<{ id: string; schedule_item_id: string | null; audience_scope: string; send_after_utc: string; status: string; idempotency_key: string }>>(
       `/rest/v1/notification_jobs?event_id=eq.${encodeURIComponent(publicAppConfig.eventId)}&select=id,schedule_item_id,audience_scope,send_after_utc,status,idempotency_key&order=send_after_utc.asc`,
       { expectedStatus: 200 }
     ),
     supabaseFetch<Array<{ id: string; action: string; actor_role: string; created_at: string; publication_revision: number | null }>>(
       `/rest/v1/production_audit_entries?event_id=eq.${encodeURIComponent(publicAppConfig.eventId)}&select=id,action,actor_role,created_at,publication_revision&order=created_at.desc&limit=25`,
+      { expectedStatus: 200 }
+    ),
+    supabaseFetch<Array<{
+      id: string;
+      event_id: string;
+      file_name: string;
+      file_type: DocumentImportJob["fileType"];
+      status: DocumentImportJob["status"];
+      detected_event_count: number;
+      added_count: number;
+      modified_count: number;
+      removed_count: number;
+      requires_review_count: number;
+      created_at: string;
+    }>>(
+      `/rest/v1/document_import_jobs?event_id=eq.${encodeURIComponent(publicAppConfig.eventId)}&select=id,event_id,file_name,file_type,status,detected_event_count,added_count,modified_count,removed_count,requires_review_count,created_at&order=created_at.desc&limit=25`,
+      { expectedStatus: 200 }
+    ),
+    supabaseFetch<Array<{ status: "accepted" | "delivered" | "failed" }>>(
+      `/rest/v1/notification_delivery_attempts?event_id=eq.${encodeURIComponent(publicAppConfig.eventId)}&select=status`,
       { expectedStatus: 200 }
     )
   ]);
@@ -243,10 +374,10 @@ async function readSupabaseState(): Promise<LiveOpsState> {
   const draftSessions = parseDraftSessions(draftRows[0]?.working_snapshot, snapshot);
   const notificationJobs = notificationRows.map((job) => ({
     id: job.id,
-    scheduleItemId: job.schedule_item_id,
+    scheduleItemId: job.schedule_item_id ?? job.idempotency_key.split(":r")[0] ?? "unlinked",
     audienceScope: job.audience_scope,
     sendAfterUtc: job.send_after_utc,
-    status: job.status === "superseded" ? "superseded" as const : "scheduled" as const,
+    status: toNotificationJobStatus(job.status),
     idempotencyKey: job.idempotency_key
   }));
 
@@ -258,11 +389,29 @@ async function readSupabaseState(): Promise<LiveOpsState> {
     publishedSnapshot: snapshot,
     attendeeDevices: deviceRows.length,
     notificationJobs,
+    notificationDelivery: {
+      accepted: deliveryRows.filter((row) => row.status === "accepted").length,
+      delivered: deliveryRows.filter((row) => row.status === "delivered").length,
+      failed: deliveryRows.filter((row) => row.status === "failed").length
+    },
     activityLog: auditRows.map((row) => ({
       id: row.id,
       action: row.action,
       actorRole: row.actor_role,
       detail: row.publication_revision ? `Published revision ${row.publication_revision}.` : row.action,
+      createdAt: row.created_at
+    })),
+    importJobs: importRows.map((row) => documentImportJobSchema.parse({
+      id: row.id,
+      eventId: row.event_id,
+      fileName: row.file_name,
+      fileType: row.file_type,
+      status: row.status,
+      detectedEventCount: row.detected_event_count,
+      addedCount: row.added_count,
+      modifiedCount: row.modified_count,
+      removedCount: row.removed_count,
+      requiresReviewCount: row.requires_review_count,
       createdAt: row.created_at
     }))
   }, revisionRow?.published_at, revisionRow ? "Latest published revision loaded from Supabase." : "No Supabase revision has been published yet.");
@@ -326,57 +475,16 @@ async function publishSupabaseDraft(
   const preview = createPublishPreview(state.publishedSnapshot, sessions, nowUtc);
   const changesCount = preview.counts.added + preview.counts.changed + preview.counts.removed;
 
-  const revision = await supabaseFetch<{ revision: number; published_at: string }>(
-    "/rest/v1/rpc/publish_event_snapshot_revision",
-    {
-      method: "POST",
-      body: {
-        p_event_id: publicAppConfig.eventId,
-        p_expected_previous_revision: state.publishedSnapshot.revision,
-        p_snapshot: snapshot,
-        p_source: options.source,
-        p_changes_count: changesCount,
-        p_notification_jobs_updated: notificationJobs.length
-      },
-      expectedStatus: 200
-    }
-  );
-
-  if (notificationJobs.length > 0) {
-    await supabaseFetch("/rest/v1/notification_jobs", {
-      method: "POST",
-      body: notificationJobs.map((job) => ({
-        id: job.id,
-        event_id: publicAppConfig.eventId,
-        schedule_item_id: job.scheduleItemId,
-        schedule_revision: revision.revision,
-        audience_scope: job.audienceScope,
-        send_after_utc: job.sendAfterUtc,
-        status: "scheduled",
-        idempotency_key: job.idempotencyKey,
-        source: options.source,
-        payload: {
-          revision: revision.revision,
-          notifyAttendees: options.notifyAttendees
-        }
-      })),
-      expectedStatus: 201,
-      prefer: "resolution=ignore-duplicates"
-    });
-  }
-
-  await supabaseFetch(
-    `/rest/v1/schedule_drafts?event_id=eq.${encodeURIComponent(publicAppConfig.eventId)}&status=neq.ARCHIVED`,
-    {
-      method: "PATCH",
-      body: {
-        status: "PUBLISHED",
-        updated_by: options.staff.actorId ?? null,
-        updated_at: nowUtc
-      },
-      expectedStatus: 204
-    }
-  );
+  const revision = await publishAtomicSupabaseRevision({
+    expectedPreviousRevision: state.publishedSnapshot.revision,
+    snapshot,
+    source: options.source,
+    changesCount,
+    notificationJobs,
+    notifyAttendees: options.notifyAttendees,
+    staff: options.staff,
+    rollbackOfRevision: null
+  });
 
   return {
     mode: "supabase" as const,
@@ -418,46 +526,19 @@ async function rollbackSupabaseRevision(options: { notifyAttendees: boolean; sta
     }))
   });
   const notificationJobs = createNotificationJobs(rollbackSnapshot);
-  const revision = await supabaseFetch<{ revision: number; published_at: string }>(
-    "/rest/v1/rpc/publish_event_snapshot_revision",
-    {
-      method: "POST",
-      body: {
-        p_event_id: publicAppConfig.eventId,
-        p_expected_previous_revision: currentState.publishedSnapshot.revision,
-        p_snapshot: rollbackSnapshot,
-        p_source: "MANUAL_EDITOR",
-        p_changes_count: rollbackSnapshot.scheduleItems.length,
-        p_notification_jobs_updated: notificationJobs.length
-      },
-      expectedStatus: 200
+  const revision = await publishAtomicSupabaseRevision({
+    expectedPreviousRevision: currentState.publishedSnapshot.revision,
+    snapshot: rollbackSnapshot,
+    source: "MANUAL_EDITOR",
+    changesCount: rollbackSnapshot.scheduleItems.length,
+    notificationJobs,
+    notifyAttendees: options.notifyAttendees,
+    staff: options.staff,
+    rollbackOfRevision: currentState.publishedSnapshot.revision,
+    extraJobPayload: {
+      restoredRevision: previousRevisionRow.revision
     }
-  );
-
-  if (notificationJobs.length > 0) {
-    await supabaseFetch("/rest/v1/notification_jobs", {
-      method: "POST",
-      body: notificationJobs.map((job) => ({
-        id: job.id,
-        event_id: publicAppConfig.eventId,
-        schedule_item_id: job.scheduleItemId,
-        schedule_revision: revision.revision,
-        audience_scope: job.audienceScope,
-        send_after_utc: job.sendAfterUtc,
-        status: "scheduled",
-        idempotency_key: job.idempotencyKey,
-        source: "MANUAL_EDITOR",
-        payload: {
-          revision: revision.revision,
-          rollbackOfRevision: currentState.publishedSnapshot.revision,
-          restoredRevision: previousRevisionRow.revision,
-          notifyAttendees: options.notifyAttendees
-        }
-      })),
-      expectedStatus: 201,
-      prefer: "resolution=ignore-duplicates"
-    });
-  }
+  });
 
   return {
     mode: "supabase" as const,
@@ -468,6 +549,45 @@ async function rollbackSupabaseRevision(options: { notifyAttendees: boolean; sta
     notificationJobsCount: notificationJobs.length,
     snapshotUrl: "/api/snapshot"
   };
+}
+
+async function publishAtomicSupabaseRevision(options: {
+  expectedPreviousRevision: number;
+  snapshot: EventSnapshot;
+  source: ChangeSource;
+  changesCount: number;
+  notificationJobs: NotificationJob[];
+  notifyAttendees: boolean;
+  staff: StaffContext;
+  rollbackOfRevision: number | null;
+  extraJobPayload?: Record<string, unknown>;
+}) {
+  return supabaseFetch<{ revision: number; published_at: string }>(
+    "/rest/v1/rpc/publish_event_snapshot_revision_v2",
+    {
+      method: "POST",
+      body: {
+        p_event_id: publicAppConfig.eventId,
+        p_expected_previous_revision: options.expectedPreviousRevision,
+        p_snapshot: options.snapshot,
+        p_source: options.source,
+        p_changes_count: options.changesCount,
+        p_notification_jobs: options.notificationJobs.map((job) => ({
+          id: job.id,
+          schedule_item_id: job.scheduleItemId,
+          audience_scope: job.audienceScope,
+          send_after_utc: job.sendAfterUtc,
+          idempotency_key: job.idempotencyKey,
+          payload: options.extraJobPayload ?? {}
+        })),
+        p_notify_attendees: options.notifyAttendees,
+        p_actor_id: options.staff.actorId ?? null,
+        p_actor_role: options.staff.role,
+        p_rollback_of_revision: options.rollbackOfRevision
+      },
+      expectedStatus: 200
+    }
+  );
 }
 
 async function registerSupabaseDevice(registration: AttendeeDeviceRegistration) {
@@ -525,6 +645,13 @@ function parseDraftSessions(value: unknown, snapshot: EventSnapshot): StaffDraft
   }));
 }
 
+function toNotificationJobStatus(value: string): NotificationJob["status"] {
+  return value === "processing" || value === "accepted" || value === "failed" ||
+    value === "canceled" || value === "superseded"
+    ? value
+    : "scheduled";
+}
+
 async function supabaseFetch<T>(
   path: string,
   options: {
@@ -565,7 +692,8 @@ async function supabaseFetch<T>(
     return undefined as T;
   }
 
-  return response.json() as Promise<T>;
+  const responseText = await response.text();
+  return (responseText ? JSON.parse(responseText) : undefined) as T;
 }
 
 function hasSupabaseServerConfig() {

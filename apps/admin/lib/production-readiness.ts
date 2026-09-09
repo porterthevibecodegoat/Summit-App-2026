@@ -113,16 +113,20 @@ function createChecks(rootDir: string, env: Record<string, string | undefined>):
       pass:
         existsSync(resolve(rootDir, "supabase/migrations/202608310001_gate0_schema.sql")) &&
         existsSync(resolve(rootDir, "supabase/migrations/202609030001_live_ops_architecture.sql")) &&
-        existsSync(resolve(rootDir, "supabase/migrations/202609030002_staff_auth_and_live_ops_rls.sql")),
+        existsSync(resolve(rootDir, "supabase/migrations/202609030002_staff_auth_and_live_ops_rls.sql")) &&
+        existsSync(resolve(rootDir, "supabase/migrations/202609090001_atomic_publish_and_function_security.sql")) &&
+        existsSync(resolve(rootDir, "supabase/migrations/202609090002_notification_delivery_worker.sql")),
       blocker: false,
       detail:
         "Migrations define the live event, staff roles, revisions, audit, device registrations, and RLS foundation."
     }),
     createCheck({
       name: "Native icon and splash assets present",
-      pass: existsSync(resolve(rootDir, "apps/mobile/assets/icon.png")) && existsSync(resolve(rootDir, "apps/mobile/assets/splash.png")),
+      pass:
+        existsSync(resolve(rootDir, "apps/mobile/assets/icon-premium.png")) &&
+        existsSync(resolve(rootDir, "apps/mobile/assets/launch-art-premium.png")),
       blocker: false,
-      detail: "Final brand approval is still a human review step before TestFlight/App Store submission."
+      detail: "Premium native icon and launch artwork are present; final stakeholder approval remains a release step."
     })
   ];
 }

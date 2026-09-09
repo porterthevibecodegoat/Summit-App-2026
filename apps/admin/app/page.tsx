@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { publicAppConfig } from "@not-alone/config";
 import { getNowAndUpcoming, toEventTimeRange } from "@not-alone/domain";
-import { getReadOnlyLiveOpsState } from "../lib/live-ops-repository";
+import { getReadOnlyLiveOpsState, hasStaffPageAccess } from "../lib/live-ops-repository";
 import { createProductionReadinessReport } from "../lib/production-readiness";
 import { StaffNav } from "./staff-nav";
 
 export const dynamic = "force-dynamic";
 
 export default async function LiveOperationsPage() {
+  if (!(await hasStaffPageAccess())) return null;
   const state = await getReadOnlyLiveOpsState();
   const readiness = createProductionReadinessReport();
   const snapshot = state.publishedSnapshot;

@@ -6,6 +6,7 @@ import {
   eventSnapshotSchema,
   type AttendeeDeviceRegistration,
   type ChangeSource,
+  type DocumentImportJob,
   type EventSnapshot,
   type ScheduleItem
 } from "@not-alone/validation";
@@ -38,7 +39,7 @@ export type LiveOpsStore = {
     scheduleItemId: string;
     audienceScope: string;
     sendAfterUtc: string;
-    status: "scheduled" | "superseded";
+    status: "scheduled" | "processing" | "accepted" | "failed" | "canceled" | "superseded";
     idempotencyKey: string;
   }>;
   activityLog: Array<{
@@ -48,6 +49,7 @@ export type LiveOpsStore = {
     detail: string;
     createdAt: string;
   }>;
+  importJobs: DocumentImportJob[];
 };
 
 const storePath = resolve(process.cwd(), "../../work/live-ops-store.json");
@@ -69,7 +71,8 @@ export async function readLiveOpsStore(): Promise<LiveOpsStore> {
       revisionHistory: (parsed.revisionHistory ?? []).map((snapshot) => eventSnapshotSchema.parse(snapshot)),
       attendeeDevices: parsed.attendeeDevices ?? [],
       notificationJobs: parsed.notificationJobs ?? [],
-      activityLog: parsed.activityLog ?? []
+      activityLog: parsed.activityLog ?? [],
+      importJobs: parsed.importJobs ?? []
     };
   } catch {
     const initialStore: LiveOpsStore = {
@@ -83,7 +86,8 @@ export async function readLiveOpsStore(): Promise<LiveOpsStore> {
       revision: demoSnapshot.revision,
       attendeeDevices: [],
       notificationJobs: [],
-      activityLog: []
+      activityLog: [],
+      importJobs: []
     };
     await writeLiveOpsStore(initialStore);
     return initialStore;
@@ -242,6 +246,21 @@ export async function registerAttendeeDevice(registration: AttendeeDeviceRegistr
   };
   await writeLiveOpsStore(nextStore);
   return nextStore;
+}
+
+export async function recordDocumentImport(job: DocumentImportJob) {
+  const store = await readLiveOpsStore();
+  const nextStore: LiveOpsStore = {
+    ...store,
+    importJobs: [job, ...store.importJobs].slice(0, 50),
+    activityLog: addActivity(store.activityLog, {
+      action: "IMPORT_SCHEDULE_DOCUMENT",
+      actorRole: "EDITOR",
+      detail: `${job.fileName} produced ${job.detectedEventCount} draft row(s); ${job.requiresReviewCount} require review.`
+    })
+  };
+  await writeLiveOpsStore(nextStore);
+  return job;
 }
 
 function createInitialDraftSessions(): StaffDraftSession[] {

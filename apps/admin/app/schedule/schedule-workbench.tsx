@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState, type DragEvent } from "react";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import type { EventSnapshot } from "@not-alone/validation";
 import {
   createScheduleProposal,
@@ -38,25 +39,6 @@ type LiveOpsState = {
   lastPublishedMessage?: string;
   notificationJobsCount: number;
   attendeeDevices: number;
-};
-
-type PublishPreview = {
-  currentRevision: number;
-  nextRevision: number;
-  notificationJobsCount: number;
-  counts: {
-    added: number;
-    removed: number;
-    changed: number;
-    unchanged: number;
-  };
-  changes: Array<{
-    id: string;
-    type: "added" | "removed" | "changed";
-    title: string;
-    summary: string;
-    fields: Array<{ label: string; before: string; after: string }>;
-  }>;
 };
 
 const fallbackDraftSessions: DraftSession[] = [
@@ -133,31 +115,24 @@ export function ScheduleWorkbench({
   const [draggedId, setDraggedId] = useState<string | null>(null);
   const [stateQuestion, setStateQuestion] = useState("What is live, what is ready, and what still needs review?");
   const [stateAnswer, setStateAnswer] = useState<string | null>(null);
-  const [command, setCommand] = useState("The 3pm speaker has now changed to 3:30 and it is now Mike Tyson instead of Steve Wozniak.");
+  const [command, setCommand] = useState("");
   const [proposal, setProposal] = useState<Proposal | null>(null);
-  const [importMessage, setImportMessage] = useState("Drop TXT, CSV, or PDF schedule files here. Text-based files can be parsed now; PDF extraction is queued for the backend parser.");
   const [publishState, setPublishState] = useState<PublishState | null>(null);
   const [apiStatus, setApiStatus] = useState("Loading live-ops adapter...");
   const [backendMode, setBackendMode] = useState<LiveOpsState["mode"]>("local-adapter");
   const [draftDirty, setDraftDirty] = useState(false);
-  const [notifyAttendees, setNotifyAttendees] = useState(false);
-  const [publishConfirmed, setPublishConfirmed] = useState(false);
-  const [publishPreview, setPublishPreview] = useState<PublishPreview | null>(null);
-  const [previewStatus, setPreviewStatus] = useState("Publish preview will appear after the live-ops adapter loads.");
-  const [rollbackConfirmed, setRollbackConfirmed] = useState(false);
   const qualityReport = useMemo(() => createScheduleQualityReport(sessions), [sessions]);
   const readyCount = qualityReport.readySessions;
   const reminderCount = qualityReport.reminderReadySessions;
   const needsReviewCount = qualityReport.needsReviewSessions;
   const publishIssues = qualityReport.issues.filter((issue) => issue.severity === "blocking").map((issue) => issue.message);
-  const canPublish = publishIssues.length === 0 && publishConfirmed;
 
   useEffect(() => {
     let mounted = true;
 
     async function loadLiveOpsState() {
       try {
-        const response = await fetch("/api/live-ops/state", { cache: "no-store" });
+        const response = await fetch("/api/live-ops/state", { headers: getStaffAuthHeaders(), cache: "no-store" });
         if (!response.ok) {
           throw new Error(`Live-ops state returned ${response.status}`);
         }
@@ -197,58 +172,6 @@ export function ScheduleWorkbench({
     };
   }, []);
 
-  useEffect(() => {
-    let mounted = true;
-    const controller = new AbortController();
-
-    async function loadPublishPreview() {
-      if (sessions.length === 0) {
-        setPublishPreview(null);
-        setPreviewStatus("Add at least one draft session to preview publication.");
-        return;
-      }
-
-      try {
-        const response = await fetch("/api/live-ops/publish-preview", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", ...getStaffAuthHeaders() },
-          body: JSON.stringify({ sessions }),
-          cache: "no-store",
-          signal: controller.signal
-        });
-        const result = (await response.json()) as { ok?: boolean; preview?: PublishPreview; error?: string };
-
-        if (!response.ok || !result.ok || !result.preview) {
-          throw new Error(result.error ?? `Publish preview returned ${response.status}`);
-        }
-
-        if (!mounted) {
-          return;
-        }
-
-        setPublishPreview(result.preview);
-        setPreviewStatus(
-          `Previewing revision ${result.preview.currentRevision} -> ${result.preview.nextRevision}; ${result.preview.notificationJobsCount} reminder job(s) would be prepared.`
-        );
-      } catch (error) {
-        if (mounted && !(error instanceof DOMException && error.name === "AbortError")) {
-          setPublishPreview(null);
-          setPreviewStatus(error instanceof Error ? error.message : "Unable to load publish preview.");
-        }
-      }
-    }
-
-    const timeout = window.setTimeout(() => {
-      void loadPublishPreview();
-    }, 300);
-
-    return () => {
-      mounted = false;
-      controller.abort();
-      window.clearTimeout(timeout);
-    };
-  }, [sessions]);
-
   function moveSession(targetId: string) {
     if (!draggedId || draggedId === targetId) {
       return;
@@ -267,7 +190,27 @@ export function ScheduleWorkbench({
       return next;
     });
     setDraftDirty(true);
-    setPublishConfirmed(false);
+  }
+
+  function moveSessionByOffset(id: string, offset: -1 | 1) {
+    setSessions((current) => {
+      const sourceIndex = current.findIndex((session) => session.id === id);
+      const targetIndex = sourceIndex + offset;
+      if (sourceIndex < 0 || targetIndex < 0 || targetIndex >= current.length) {
+        return current;
+      }
+
+      const next = [...current];
+      const source = next[sourceIndex];
+      const target = next[targetIndex];
+      if (!source || !target) {
+        return current;
+      }
+      next[sourceIndex] = target;
+      next[targetIndex] = source;
+      return next;
+    });
+    setDraftDirty(true);
   }
 
   function updateSession(id: string, field: keyof DraftSession, value: string) {
@@ -275,13 +218,11 @@ export function ScheduleWorkbench({
       current.map((session) => (session.id === id ? { ...session, [field]: value, status: "Needs review" } : session))
     );
     setDraftDirty(true);
-    setPublishConfirmed(false);
   }
 
   function markSessionStatus(id: string, status: DraftSession["status"]) {
     setSessions((current) => current.map((session) => (session.id === id ? { ...session, status } : session)));
     setDraftDirty(true);
-    setPublishConfirmed(false);
   }
 
   function addSession(afterId?: string) {
@@ -301,7 +242,6 @@ export function ScheduleWorkbench({
       return next;
     });
     setDraftDirty(true);
-    setPublishConfirmed(false);
   }
 
   function duplicateSession(id: string) {
@@ -323,13 +263,11 @@ export function ScheduleWorkbench({
       return next;
     });
     setDraftDirty(true);
-    setPublishConfirmed(false);
   }
 
   function deleteSession(id: string) {
     setSessions((current) => current.filter((session) => session.id !== id));
     setDraftDirty(true);
-    setPublishConfirmed(false);
   }
 
   async function runCommand() {
@@ -355,7 +293,7 @@ export function ScheduleWorkbench({
     try {
       const response = await fetch("/api/ai/state", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getStaffAuthHeaders() },
         body: JSON.stringify({ question: stateQuestion, sessions, publishState })
       });
       const result = (await response.json()) as { answer?: string };
@@ -445,135 +383,6 @@ export function ScheduleWorkbench({
     );
     setProposal(null);
     setDraftDirty(true);
-    setPublishConfirmed(false);
-  }
-
-  async function publishGlobally() {
-    if (!canPublish) {
-      return;
-    }
-
-    setApiStatus("Publishing reviewed draft revision...");
-    try {
-      const response = await fetch("/api/live-ops/publish", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", ...getStaffAuthHeaders() },
-        body: JSON.stringify({ sessions, source: "MANUAL_EDITOR", notifyAttendees, confirmPublish: publishConfirmed })
-      });
-      const result = (await response.json()) as {
-        ok?: boolean;
-        revision?: number;
-        lastPublishedAt?: string;
-        message?: string;
-        error?: string;
-        issues?: string[];
-        notificationJobsCount?: number;
-      };
-
-      if (!response.ok || !result.ok || !result.revision) {
-        throw new Error(result.issues?.join(" ") ?? result.error ?? `Publish returned ${response.status}`);
-      }
-
-      setPublishState({
-        revision: result.revision,
-        message:
-          result.message ??
-          "Published revision to the local attendee snapshot. Production delivery will use Supabase realtime and server push workers.",
-        updatedAt: result.lastPublishedAt ? new Date(result.lastPublishedAt).toLocaleString() : new Date().toLocaleString()
-      });
-      setDraftDirty(false);
-      setPublishConfirmed(false);
-      setApiStatus(`Published revision ${result.revision}; ${result.notificationJobsCount ?? 0} notification job(s) reconciled.`);
-      setRollbackConfirmed(false);
-    } catch (error) {
-      setApiStatus(error instanceof Error ? error.message : "Publish failed.");
-    }
-  }
-
-  async function rollbackPublished() {
-    if (!rollbackConfirmed) {
-      return;
-    }
-
-    setApiStatus("Rolling back by publishing the previous attendee snapshot...");
-    try {
-      const response = await fetch("/api/live-ops/rollback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", ...getStaffAuthHeaders() },
-        body: JSON.stringify({ confirmRollback: rollbackConfirmed, notifyAttendees })
-      });
-      const result = (await response.json()) as {
-        ok?: boolean;
-        revision?: number;
-        lastPublishedAt?: string;
-        message?: string;
-        error?: string;
-        issues?: string[];
-        notificationJobsCount?: number;
-      };
-
-      if (!response.ok || !result.ok || !result.revision) {
-        throw new Error(result.issues?.join(" ") ?? result.error ?? `Rollback returned ${response.status}`);
-      }
-
-      setPublishState({
-        revision: result.revision,
-        message: result.message ?? "Previous published schedule was restored as a new attendee-facing revision.",
-        updatedAt: result.lastPublishedAt ? new Date(result.lastPublishedAt).toLocaleString() : new Date().toLocaleString()
-      });
-      setRollbackConfirmed(false);
-      setPublishConfirmed(false);
-      setDraftDirty(false);
-      setApiStatus(`Rollback published revision ${result.revision}; ${result.notificationJobsCount ?? 0} reminder job(s) reconciled.`);
-
-      const stateResponse = await fetch("/api/live-ops/state", { cache: "no-store" });
-      const state = (await stateResponse.json()) as LiveOpsState;
-      if (state.draftSessions.length > 0) {
-        setSessions(state.draftSessions);
-      }
-    } catch (error) {
-      setApiStatus(error instanceof Error ? error.message : "Rollback failed.");
-    }
-  }
-
-  function handleDragOver(event: DragEvent<HTMLDivElement>) {
-    event.preventDefault();
-  }
-
-  function handleDrop(event: DragEvent<HTMLDivElement>) {
-    event.preventDefault();
-    const file = event.dataTransfer.files[0];
-
-    if (!file) {
-      return;
-    }
-
-    if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
-      setImportMessage(`${file.name} received. Production PDF parsing needs the backend parser before it can publish attendee data.`);
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const text = String(reader.result ?? "");
-      const response = await fetch("/api/import/schedule", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", ...getStaffAuthHeaders() },
-        body: JSON.stringify({ fileName: file.name, text })
-      });
-      const result = (await response.json()) as { ok?: boolean; message?: string; sessions?: DraftSession[]; error?: string };
-      const parsed = result.sessions ?? [];
-      if (!response.ok || !result.ok || parsed.length === 0) {
-        setImportMessage(result.message ?? result.error ?? `${file.name} loaded, but no schedule rows matched the current parser.`);
-        return;
-      }
-
-      setSessions(parsed);
-      setDraftDirty(true);
-      setPublishConfirmed(false);
-      setImportMessage(result.message ?? `${file.name} imported into draft review with ${parsed.length} parsed session(s).`);
-    };
-    reader.readAsText(file);
   }
 
   return (
@@ -681,7 +490,9 @@ export function ScheduleWorkbench({
               onChange={(event) => setCommand(event.target.value)}
               placeholder="Example: Move the 3pm keynote to 3:30 and change the speaker to Mike Tyson."
             />
-            <button className="button" type="button" onClick={runCommand}>Generate Proposal</button>
+            <button className="button" disabled={command.trim().length < 8} type="button" onClick={runCommand}>
+              Generate Proposal
+            </button>
           </div>
           {proposal ? (
             <div className="proposalBox">
@@ -705,7 +516,9 @@ export function ScheduleWorkbench({
                 </div>
               ) : null}
               <div className="proposalActions">
-                <button className="button" type="button" onClick={applyProposal}>Apply to Draft</button>
+                {proposal.changes.length > 0 ? (
+                  <button className="button" type="button" onClick={applyProposal}>Apply to Draft</button>
+                ) : null}
                 <button className="ghostButton" type="button" onClick={() => setProposal(null)}>Dismiss</button>
               </div>
             </div>
@@ -730,7 +543,6 @@ export function ScheduleWorkbench({
                 onClick={() => {
                   setSessions((current) => current.map((session) => ({ ...session, status: "Ready" })));
                   setDraftDirty(true);
-                  setPublishConfirmed(false);
                 }}
               >
                 Mark All Ready
@@ -742,17 +554,39 @@ export function ScheduleWorkbench({
           </div>
 
           <div className="sessionList">
-            {sessions.map((session) => (
+            {sessions.map((session, index) => (
               <article
                 className={`sessionCard ${draggedId === session.id ? "dragging" : ""}`}
                 draggable
                 key={session.id}
                 onDragStart={() => setDraggedId(session.id)}
                 onDragEnd={() => setDraggedId(null)}
-                onDragOver={handleDragOver}
+                onDragOver={(event) => event.preventDefault()}
                 onDrop={() => moveSession(session.id)}
               >
-                <div className="dragHandle" aria-hidden="true">::</div>
+                <div className="reorderControls">
+                  <div className="dragHandle" aria-hidden="true">::</div>
+                  <button
+                    aria-label={`Move ${session.title} up`}
+                    className="reorderButton"
+                    disabled={index === 0}
+                    onClick={() => moveSessionByOffset(session.id, -1)}
+                    title="Move session up"
+                    type="button"
+                  >
+                    ↑
+                  </button>
+                  <button
+                    aria-label={`Move ${session.title} down`}
+                    className="reorderButton"
+                    disabled={index === sessions.length - 1}
+                    onClick={() => moveSessionByOffset(session.id, 1)}
+                    title="Move session down"
+                    type="button"
+                  >
+                    ↓
+                  </button>
+                </div>
                 <div className="sessionFields">
                   <div className="sessionTopline">
                     <input value={session.day} onChange={(event) => updateSession(session.id, "day", event.target.value)} aria-label="Day" />
@@ -796,117 +630,23 @@ export function ScheduleWorkbench({
         </section>
 
         <aside className="sideStack">
-          <section className="panel importPanel" onDragOver={handleDragOver} onDrop={handleDrop}>
+          <section className="panel importPanel">
             <div className="label">Schedule import</div>
-            <h2>Drop updated agenda files</h2>
-            <p>{importMessage}</p>
-            <div className="dropZone">
-              <strong>Drop PDF, TXT, or CSV</strong>
-              <span>Imported rows stay draft until reviewed.</span>
-            </div>
+            <h2>Bring in an updated agenda</h2>
+            <p>Use the focused import center to extract PDF, TXT, or CSV rows and inspect them before replacing this draft.</p>
+            <Link className="buttonLink fullWidthButton" href="/import">Open Import Center</Link>
           </section>
 
           <section className="panel publishPanel">
-            <div className="label">Attendee app publishing</div>
-            <h2>Controlled rollout path</h2>
-            <ol className="publishSteps">
-              <li>Staff edits draft agenda.</li>
-              <li>AI/import changes become reviewable proposals.</li>
-              <li>Authorized staff publishes a snapshot revision.</li>
-              <li>Mobile app refreshes the published schedule from /api/snapshot.</li>
-              <li>Notification jobs are recalculated for the future server worker.</li>
-            </ol>
-            <div className="publishPreview">
-              <div className="panelHeader compactPanelHeader">
-                <div>
-                  <div className="label">Publish preview</div>
-                  <h3>What will change</h3>
-                </div>
-                {publishPreview ? <span className="badge mutedBadge">r{publishPreview.nextRevision}</span> : null}
-              </div>
-              <p className="tinyNote">{previewStatus}</p>
-              {publishPreview ? (
-                <>
-                  <div className="previewCounts">
-                    <span>{publishPreview.counts.added} added</span>
-                    <span>{publishPreview.counts.changed} changed</span>
-                    <span>{publishPreview.counts.removed} removed</span>
-                    <span>{publishPreview.counts.unchanged} unchanged</span>
-                  </div>
-                  <div className="previewChangeList">
-                    {publishPreview.changes.slice(0, 4).map((change) => (
-                      <div className={`previewChange ${change.type}`} key={change.id}>
-                        <strong>{change.title}</strong>
-                        <span>{change.type} - {change.summary}</span>
-                      </div>
-                    ))}
-                    {publishPreview.changes.length > 4 ? (
-                      <p className="tinyNote">+{publishPreview.changes.length - 4} more change(s) in this revision.</p>
-                    ) : null}
-                  </div>
-                </>
-              ) : null}
-            </div>
-            <div className="publishControls">
-              <label className="checkRow">
-                <input
-                  checked={notifyAttendees}
-                  onChange={(event) => setNotifyAttendees(event.target.checked)}
-                  type="checkbox"
-                />
-                <span>Queue notification jobs for this revision</span>
-              </label>
-              <label className="checkRow">
-                <input
-                  checked={publishConfirmed}
-                  onChange={(event) => setPublishConfirmed(event.target.checked)}
-                  type="checkbox"
-                />
-                <span>I reviewed this draft and want it attendee-facing</span>
-              </label>
-            </div>
-            {publishState ? (
-              <div className="publishResult">
-                <div className="label">Published revision {publishState.revision}</div>
-                <p>{publishState.message}</p>
-                <span>{publishState.updatedAt}</span>
-              </div>
-            ) : null}
-            <button
-              className={canPublish ? "button fullWidthButton" : "disabledButton"}
-              disabled={!canPublish}
-              type="button"
-              onClick={publishGlobally}
-            >
-              {publishIssues.length > 0
-                ? "Resolve review items before publish"
-                : publishConfirmed
-                  ? "Publish Attendee Snapshot"
-                  : "Confirm reviewed draft before publish"}
-            </button>
-            <div className="rollbackBox">
-              <div>
-                <div className="label">Emergency correction</div>
-                <p>Restore the previous published schedule by creating a new revision.</p>
-              </div>
-              <label className="checkRow">
-                <input
-                  checked={rollbackConfirmed}
-                  onChange={(event) => setRollbackConfirmed(event.target.checked)}
-                  type="checkbox"
-                />
-                <span>I understand rollback will update the attendee snapshot</span>
-              </label>
-              <button
-                className={rollbackConfirmed ? "ghostButton fullWidthButton" : "disabledButton"}
-                disabled={!rollbackConfirmed}
-                type="button"
-                onClick={rollbackPublished}
-              >
-                Roll Back to Previous Published Revision
-              </button>
-            </div>
-            {draftDirty ? <p className="tinyNote">Unsaved draft changes are present.</p> : null}
+            <div className="label">Release control</div>
+            <h2>{draftDirty ? "Save before review" : "Draft ready for review"}</h2>
+            <p>
+              Publishing and rollback are isolated from editing so staff can inspect attendee impact without changing
+              schedule fields at the same time.
+            </p>
+            <Link className="buttonLink fullWidthButton" href="/changes">
+              Open Review &amp; Publish
+            </Link>
           </section>
         </aside>
       </div>

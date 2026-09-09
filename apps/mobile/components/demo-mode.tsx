@@ -1,8 +1,8 @@
-import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, type PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AppState, Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
-import * as SecureStore from "expo-secure-store";
+import Storage from "expo-sqlite/kv-store";
 import { fetchPublishedSnapshot } from "@not-alone/api-client";
 import { publicAppConfig } from "@not-alone/config";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
@@ -24,6 +24,8 @@ const SPEAKER_IDS = {
 const SAVED_SESSION_IDS_KEY = "not-alone.saved-session-ids.v1";
 const PUBLISHED_SNAPSHOT_CACHE_KEY = "not-alone.published-snapshot-cache.v1";
 const SNAPSHOT_REFRESH_MS = 60000;
+const CLOCK_REFRESH_MS = 15000;
+const DEMO_MODE_AVAILABLE = __DEV__ || process.env.EXPO_PUBLIC_ENABLE_DEMO_MODE === "true";
 
 export const demoSpeaker = {
   name: "Steve Wozniak",
@@ -34,13 +36,17 @@ export const demoSpeaker = {
 } as const;
 
 type DemoModeContextValue = {
+  demoAvailable: boolean;
   demoEnabled: boolean;
   snapshot: EventSnapshot;
   nowUtc: string;
   lastSuccessfulSyncAt: string | undefined;
+  lastRevisionUpdateAt: string | undefined;
+  syncing: boolean;
   syncError: string | undefined;
   savedSessionIds: string[];
   refreshDemoTimeline: () => void;
+  refreshPublishedSnapshot: () => Promise<void>;
   isSessionSaved: (sessionId: string) => boolean;
   toggleSavedSession: (sessionId: string) => void;
   setDemoEnabled: (enabled: boolean) => void;
@@ -54,52 +60,91 @@ export function SummitDemoProvider({ children }: PropsWithChildren) {
   const [demoCreatedAt, setDemoCreatedAt] = useState(() => new Date());
   const [publishedSnapshot, setPublishedSnapshot] = useState<EventSnapshot | null>(null);
   const [lastSuccessfulSyncAt, setLastSuccessfulSyncAt] = useState<string | undefined>();
+  const [lastRevisionUpdateAt, setLastRevisionUpdateAt] = useState<string | undefined>();
+  const [syncing, setSyncing] = useState(false);
   const [syncError, setSyncError] = useState<string | undefined>();
+  const [serverClockOffsetMs, setServerClockOffsetMs] = useState(0);
+  const [clockTick, setClockTick] = useState(() => Date.now());
   const [savedSessionIds, setSavedSessionIds] = useState<string[]>([]);
   const [savedSessionIdsLoaded, setSavedSessionIdsLoaded] = useState(false);
+  const mountedRef = useRef(true);
+  const syncInFlightRef = useRef(false);
+  const publishedSnapshotRef = useRef<EventSnapshot | null>(null);
   const demoState = useMemo(() => createLiveDemoSnapshot(demoCreatedAt), [demoCreatedAt]);
-  const snapshot = demoEnabled ? demoState.snapshot : publishedSnapshot ?? canonicalSnapshot;
-  const nowUtc = demoEnabled ? demoState.nowUtc : canonicalSnapshot.serverTimeUtc;
+  const effectiveDemoEnabled = DEMO_MODE_AVAILABLE && demoEnabled;
+  const snapshot = effectiveDemoEnabled ? demoState.snapshot : publishedSnapshot ?? canonicalSnapshot;
+  const nowUtc = effectiveDemoEnabled ? demoState.nowUtc : new Date(clockTick + serverClockOffsetMs).toISOString();
 
-  useEffect(() => {
-    let active = true;
-
-    async function loadCachedSnapshot() {
-      try {
-        const cached = await SecureStore.getItemAsync(PUBLISHED_SNAPSHOT_CACHE_KEY);
-        if (!active || !cached) {
-          return;
-        }
-
-        const parsed = eventSnapshotSchema.parse(JSON.parse(cached));
-        setPublishedSnapshot(parsed);
-        setLastSuccessfulSyncAt(parsed.serverTimeUtc);
-      } catch {
-        // Invalid local cache should not block the bundled fallback or a fresh API sync.
-      }
+  const syncPublishedSnapshot = useCallback(async () => {
+    if (effectiveDemoEnabled || syncInFlightRef.current) {
+      return;
     }
 
-    async function syncPublishedSnapshot() {
-      if (demoEnabled) {
+    syncInFlightRef.current = true;
+    if (mountedRef.current) {
+      setSyncing(true);
+    }
+
+    try {
+      const remoteSnapshot = await fetchPublishedSnapshot(publicAppConfig.apiBaseUrl, { timeoutMs: 6000 });
+      const syncedAt = new Date().toISOString();
+      if (!mountedRef.current) {
         return;
       }
 
-      try {
-        const remoteSnapshot = await fetchPublishedSnapshot(publicAppConfig.apiBaseUrl, { timeoutMs: 6000 });
-        if (!active) {
-          return;
-        }
+      const currentSnapshot = publishedSnapshotRef.current;
+      if (currentSnapshot && remoteSnapshot.revision < currentSnapshot.revision) {
+        setSyncError(
+          `The server returned older revision ${remoteSnapshot.revision}; keeping revision ${currentSnapshot.revision}.`
+        );
+        return;
+      }
 
-        setPublishedSnapshot(remoteSnapshot);
-        setLastSuccessfulSyncAt(new Date().toISOString());
-        setSyncError(undefined);
-        void SecureStore.setItemAsync(PUBLISHED_SNAPSHOT_CACHE_KEY, JSON.stringify(remoteSnapshot)).catch(() => undefined);
-      } catch (error) {
-        if (!active) {
-          return;
+      setPublishedSnapshot((current) => {
+        if (current && remoteSnapshot.revision > current.revision) {
+          setLastRevisionUpdateAt(syncedAt);
         }
-
+        return remoteSnapshot;
+      });
+      publishedSnapshotRef.current = remoteSnapshot;
+      setServerClockOffsetMs(new Date(remoteSnapshot.serverTimeUtc).getTime() - Date.now());
+      setLastSuccessfulSyncAt(syncedAt);
+      setSyncError(undefined);
+      void Storage.setItemAsync(
+        PUBLISHED_SNAPSHOT_CACHE_KEY,
+        JSON.stringify({ snapshot: remoteSnapshot, syncedAt })
+      ).catch(() => undefined);
+    } catch (error) {
+      if (mountedRef.current) {
         setSyncError(error instanceof Error ? error.message : "Unable to synchronize the published event snapshot.");
+      }
+    } finally {
+      syncInFlightRef.current = false;
+      if (mountedRef.current) {
+        setSyncing(false);
+      }
+    }
+  }, [effectiveDemoEnabled]);
+
+  useEffect(() => {
+    mountedRef.current = true;
+
+    async function loadCachedSnapshot() {
+      try {
+        const cached = await Storage.getItemAsync(PUBLISHED_SNAPSHOT_CACHE_KEY);
+        if (!mountedRef.current || !cached) {
+          return;
+        }
+
+        const cachedValue = JSON.parse(cached) as { snapshot?: unknown; syncedAt?: unknown };
+        const parsed = eventSnapshotSchema.parse(cachedValue.snapshot ?? cachedValue);
+        setPublishedSnapshot(parsed);
+        publishedSnapshotRef.current = parsed;
+        setLastSuccessfulSyncAt(typeof cachedValue.syncedAt === "string" ? cachedValue.syncedAt : undefined);
+        setServerClockOffsetMs(0);
+      } catch {
+        // Invalid local cache should not block the bundled fallback or a fresh API sync.
+        void Storage.removeItemAsync(PUBLISHED_SNAPSHOT_CACHE_KEY).catch(() => undefined);
       }
     }
 
@@ -115,18 +160,30 @@ export function SummitDemoProvider({ children }: PropsWithChildren) {
     }, SNAPSHOT_REFRESH_MS);
 
     return () => {
-      active = false;
+      mountedRef.current = false;
       subscription.remove();
       clearInterval(interval);
     };
-  }, [demoEnabled]);
+  }, [syncPublishedSnapshot]);
+
+  useEffect(() => {
+    const interval = setInterval(() => setClockTick(Date.now()), CLOCK_REFRESH_MS);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const subscription = Notifications.addNotificationResponseReceivedListener(() => {
+      void syncPublishedSnapshot();
+    });
+    return () => subscription.remove();
+  }, [syncPublishedSnapshot]);
 
   useEffect(() => {
     let active = true;
 
     async function loadSavedSessionIds() {
       try {
-        const rawValue = await SecureStore.getItemAsync(SAVED_SESSION_IDS_KEY);
+        const rawValue = await Storage.getItemAsync(SAVED_SESSION_IDS_KEY);
         if (!active) {
           return;
         }
@@ -156,8 +213,17 @@ export function SummitDemoProvider({ children }: PropsWithChildren) {
       return;
     }
 
-    void SecureStore.setItemAsync(SAVED_SESSION_IDS_KEY, JSON.stringify(savedSessionIds)).catch(() => undefined);
+    void Storage.setItemAsync(SAVED_SESSION_IDS_KEY, JSON.stringify(savedSessionIds)).catch(() => undefined);
   }, [savedSessionIds, savedSessionIdsLoaded]);
+
+  useEffect(() => {
+    if (!savedSessionIdsLoaded || effectiveDemoEnabled) return;
+    const publishedIds = new Set(snapshot.scheduleItems.map((item) => item.id));
+    setSavedSessionIds((current) => {
+      const next = current.filter((id) => publishedIds.has(id));
+      return next.length === current.length ? current : next;
+    });
+  }, [effectiveDemoEnabled, savedSessionIdsLoaded, snapshot.scheduleItems]);
 
   useEffect(() => {
     if (!publicAppConfig.featureFlags.pushDelivery || Platform.OS !== "ios") {
@@ -216,22 +282,40 @@ export function SummitDemoProvider({ children }: PropsWithChildren) {
 
   const value = useMemo(
     () => ({
-      demoEnabled,
+      demoAvailable: DEMO_MODE_AVAILABLE,
+      demoEnabled: effectiveDemoEnabled,
       snapshot,
       nowUtc,
       lastSuccessfulSyncAt,
+      lastRevisionUpdateAt,
+      syncing,
       syncError,
       savedSessionIds,
       refreshDemoTimeline: () => setDemoCreatedAt(new Date()),
+      refreshPublishedSnapshot: syncPublishedSnapshot,
       isSessionSaved: (sessionId: string) => savedSessionIds.includes(sessionId),
       toggleSavedSession: (sessionId: string) =>
         setSavedSessionIds((current) =>
           current.includes(sessionId) ? current.filter((id) => id !== sessionId) : [...current, sessionId]
         ),
-      setDemoEnabled,
-      toggleDemoMode: () => setDemoEnabled((current) => !current)
+      setDemoEnabled: (enabled: boolean) => setDemoEnabled(DEMO_MODE_AVAILABLE && enabled),
+      toggleDemoMode: () => {
+        if (DEMO_MODE_AVAILABLE) {
+          setDemoEnabled((current) => !current);
+        }
+      }
     }),
-    [demoEnabled, snapshot, nowUtc, lastSuccessfulSyncAt, syncError, savedSessionIds]
+    [
+      effectiveDemoEnabled,
+      snapshot,
+      nowUtc,
+      lastSuccessfulSyncAt,
+      lastRevisionUpdateAt,
+      syncing,
+      syncError,
+      savedSessionIds,
+      syncPublishedSnapshot
+    ]
   );
 
   return (
@@ -253,7 +337,11 @@ export function useSummitDemo() {
 
 export function DemoModeControl() {
   const [editorOpen, setEditorOpen] = useState(false);
-  const { demoEnabled, setDemoEnabled } = useSummitDemo();
+  const { demoAvailable, demoEnabled, setDemoEnabled } = useSummitDemo();
+
+  if (!demoAvailable) {
+    return null;
+  }
 
   return (
     <View style={styles.dockWrap}>

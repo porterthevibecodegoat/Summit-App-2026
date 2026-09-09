@@ -27,4 +27,6 @@ minimumReleaseAgeExclude:
   - expo-updates@57.0.21
 overrides:
   "@react-native/metro-config": "0.86.3"
+  "query-string>decode-uri-component": "0.5.0"
   "react-native-reanimated": "4.5.1"
+  "xcode>uuid": "11.1.1"
