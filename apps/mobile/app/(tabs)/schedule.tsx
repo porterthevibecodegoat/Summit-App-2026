@@ -146,12 +146,12 @@ export default function ScheduleScreen() {
                   <Text style={styles.dayTotal}>{selectedGroup.items.length}</Text>
                 </View>
                 <View style={styles.timeline}>
-                  {selectedGroup.items.map((item, index) => (
-                    <ScheduleRow
-                      key={`${item.id}-${item.startUtc}-${index}`}
-                      item={item}
-                      last={index === selectedGroup.items.length - 1}
-                      saved={isSessionSaved(item.id)}
+                  {groupItemsByStart(selectedGroup.items).map((items, index, timeGroups) => (
+                    <ScheduleTimeGroup
+                      key={items[0]?.startUtc}
+                      items={items}
+                      last={index === timeGroups.length - 1}
+                      isSaved={isSessionSaved}
                     />
                   ))}
                 </View>
@@ -210,32 +210,65 @@ function EmptySchedule({
   );
 }
 
-function ScheduleRow({ item, last, saved }: { item: ScheduleItem; last: boolean; saved: boolean }) {
+function ScheduleTimeGroup({
+  items,
+  last,
+  isSaved
+}: {
+  items: ScheduleItem[];
+  last: boolean;
+  isSaved: (id: string) => boolean;
+}) {
+  const firstItem = items[0];
+
+  if (!firstItem) {
+    return null;
+  }
+
+  const start = formatTime(firstItem.startUtc, firstItem.eventTimeZone);
+
+  return (
+    <View style={[styles.timeGroup, last && styles.timeGroupLast]}>
+      <View style={styles.timeColumn}>
+        <Text style={styles.timeStart}>{start.time}</Text>
+        <Text style={styles.timePeriod}>{start.period}</Text>
+        <View style={[styles.timelineDot, items.some((item) => item.featured) && styles.timelineDotFeatured]} />
+        {!last ? <View style={styles.timelineLine} /> : null}
+      </View>
+
+      <View style={styles.itemStack}>
+        {items.map((item) => (
+          <ScheduleCard key={item.id} item={item} saved={isSaved(item.id)} />
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function ScheduleCard({ item, saved }: { item: ScheduleItem; saved: boolean }) {
   const start = formatTime(item.startUtc, item.eventTimeZone);
   const end = formatTime(item.endUtc, item.eventTimeZone);
   const canceled = item.status === "canceled";
 
   return (
     <Link href={{ pathname: "/session/[id]", params: { id: item.id } }} asChild>
-      <Pressable style={({ pressed }) => [styles.item, last && styles.itemLast, pressed && styles.pressed]}>
-        <View style={styles.timeColumn}>
-          <Text style={styles.timeStart}>{start.time}</Text>
-          <Text style={styles.timePeriod}>{start.period}</Text>
-          <Text style={styles.timeEnd}>to {end.time}</Text>
-          <View style={[styles.timelineDot, item.featured && styles.timelineDotFeatured]} />
-          {!last ? <View style={styles.timelineLine} /> : null}
-        </View>
-
+      <Pressable
+        accessibilityLabel={`${start.time} ${start.period} to ${end.time} ${end.period}. ${item.title}. ${item.locationName}. ${item.visibilityScope.label}`}
+        style={({ pressed }) => [pressed && styles.pressed]}
+      >
         <View style={[styles.itemMain, item.featured && styles.itemMainFeatured, canceled && styles.itemMainCanceled]}>
           <View style={styles.badgeRow}>
-            {item.featured ? <Text style={styles.featuredText}>Featured</Text> : null}
-            {saved ? (
-              <View style={styles.savedLabel}>
-                <SymbolView name="bookmark.fill" size={11} tintColor={colors.gold} />
-                <Text style={styles.savedText}>Saved</Text>
-              </View>
-            ) : null}
-            {canceled ? <Text style={styles.canceledText}>Canceled</Text> : null}
+            <View style={styles.statusRow}>
+              {item.featured ? <Text style={styles.featuredText}>Featured</Text> : null}
+              {saved ? (
+                <View style={styles.savedLabel}>
+                  <SymbolView name="bookmark.fill" size={11} tintColor={colors.gold} />
+                  <Text style={styles.savedText}>Saved</Text>
+                </View>
+              ) : null}
+              {canceled ? <Text style={styles.canceledText}>Canceled</Text> : null}
+            </View>
+            <Text style={styles.endTime}>Until {end.time} {end.period}</Text>
           </View>
 
           <View style={styles.titleRow}>
@@ -252,6 +285,20 @@ function ScheduleRow({ item, last, saved }: { item: ScheduleItem; last: boolean;
       </Pressable>
     </Link>
   );
+}
+
+function groupItemsByStart(items: ScheduleItem[]) {
+  return items.reduce<ScheduleItem[][]>((timeGroups, item) => {
+    const currentGroup = timeGroups[timeGroups.length - 1];
+
+    if (currentGroup?.[0]?.startUtc === item.startUtc) {
+      currentGroup.push(item);
+    } else {
+      timeGroups.push([item]);
+    }
+
+    return timeGroups;
+  }, []);
 }
 
 function parseDay(item: ScheduleItem | undefined) {
@@ -371,12 +418,11 @@ const styles = StyleSheet.create({
   dayTitle: { color: colors.ink, fontFamily: typography.displayRegular, fontSize: 23, fontWeight: "400", marginTop: spacing.xs },
   dayTotal: { color: colors.gold, fontFamily: typography.displayRegular, fontSize: 28, lineHeight: 31 },
   timeline: { gap: 0 },
-  item: { flexDirection: "row", gap: spacing.md, minHeight: 132 },
-  itemLast: { minHeight: 112 },
+  timeGroup: { alignItems: "stretch", flexDirection: "row", gap: spacing.md, marginBottom: spacing.md },
+  timeGroupLast: { marginBottom: 0 },
   timeColumn: { alignItems: "flex-start", paddingTop: spacing.md, position: "relative", width: 62 },
   timeStart: { color: colors.ink, fontFamily: typography.bold, fontSize: 14, fontWeight: "700" },
   timePeriod: { color: colors.gold, fontFamily: typography.bold, fontSize: 10, fontWeight: "700", marginTop: 1 },
-  timeEnd: { color: colors.muted, fontSize: 10, marginTop: spacing.xs },
   timelineDot: {
     backgroundColor: colors.canvas,
     borderColor: colors.muted,
@@ -390,19 +436,21 @@ const styles = StyleSheet.create({
     zIndex: 2
   },
   timelineDotFeatured: { backgroundColor: colors.gold, borderColor: colors.gold },
-  timelineLine: { backgroundColor: colors.border, bottom: -18, left: 57, position: "absolute", top: 25, width: 1 },
+  timelineLine: { backgroundColor: colors.border, bottom: -spacing.md, left: 57, position: "absolute", top: 25, width: 1 },
+  itemStack: { flex: 1, gap: spacing.sm },
   itemMain: {
     backgroundColor: "rgba(13, 21, 48, 0.78)",
     borderColor: colors.border,
     borderRadius: 8,
     borderWidth: 1,
     flex: 1,
-    marginBottom: spacing.md,
     padding: spacing.md
   },
   itemMainFeatured: { backgroundColor: "rgba(26, 35, 66, 0.96)", borderColor: "rgba(230, 192, 111, 0.48)" },
   itemMainCanceled: { opacity: 0.62 },
-  badgeRow: { alignItems: "center", flexDirection: "row", gap: spacing.sm, minHeight: 14 },
+  badgeRow: { alignItems: "center", flexDirection: "row", justifyContent: "space-between", minHeight: 14 },
+  statusRow: { alignItems: "center", flexDirection: "row", gap: spacing.sm },
+  endTime: { color: colors.muted, fontFamily: typography.medium, fontSize: 9, textTransform: "uppercase" },
   featuredText: { color: colors.gold, fontFamily: typography.bold, fontSize: 9, fontWeight: "800", textTransform: "uppercase" },
   savedLabel: { alignItems: "center", flexDirection: "row", gap: 4 },
   savedText: { color: colors.gold, fontFamily: typography.bold, fontSize: 9, fontWeight: "800", textTransform: "uppercase" },
