@@ -6,6 +6,7 @@ import { colors, spacing, typography } from "@not-alone/design-tokens";
 import { getNowAndUpcoming, toEventTimeRange } from "@not-alone/domain";
 import type { ScheduleItem } from "@not-alone/validation";
 import { DemoModeControl, demoSpeaker, useSummitDemo } from "../../components/demo-mode";
+import { OpeningGreeting } from "../../components/opening-greeting";
 
 const summitArt = require("../../assets/summit-art-v2.png");
 
@@ -44,6 +45,7 @@ export default function TodayScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
+      <OpeningGreeting />
       <ScrollView
         style={styles.screen}
         contentContainerStyle={styles.content}
