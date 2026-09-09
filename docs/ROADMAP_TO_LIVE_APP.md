@@ -1,6 +1,6 @@
 # Roadmap To Live App
 
-The Not Alone Summit product is now in **credential-ready staging**. The product workflows and safety boundaries are implemented; external account credentials, approved 2026 content, deployment, and real-device release validation remain deliberately last.
+The Not Alone Summit product now has a **live HTTPS staging backend**. Supabase, staff authentication, atomic publishing, the public snapshot API, and native iOS snapshot refresh are connected. Push credentials, external-model AI, approved 2026 content, and release validation remain deliberately last.
 
 Run the machine-readable audit with:
 
@@ -21,6 +21,9 @@ pnpm production:readiness
 - Local My Schedule persistence with automatic pruning when sessions disappear.
 - Durable push dispatch and receipt worker: guarded claims, retries, Expo batching, delivery attempts, receipt reconciliation, and invalid-device disabling.
 - Premium icon and launch artwork, public privacy/support drafts, responsive staff portal, and attendee information links.
+- HTTPS staff portal/API deployment backed by the staging Supabase project.
+- Invite-only staff sign-in; authenticated invited staff are automatically activated as `ADMIN` by the current product policy.
+- Production-path sync proof: an unchanged staff publish advanced the canonical snapshot to revision 3, the HTTPS API returned revision 3, and the running iOS Simulator app refreshed its SQLite cache from revision 2 to revision 3 with all 34 sessions.
 
 ## Remaining Approved Content
 
@@ -32,14 +35,19 @@ pnpm production:readiness
 
 ## Credentials-Last Activation
 
-1. Deploy the staff portal/API to a public HTTPS staging domain.
-2. Add the Supabase URL and publishable key to browser/mobile environments and the service-role key only to the server environment.
-3. Configure Supabase Auth redirect URLs and create staff accounts/profile roles.
-4. Point a staging iOS build at the deployed snapshot API and verify publish-to-device sync.
-5. Add EAS/Apple push credentials, enable push flags, and validate delivery and receipts on physical devices.
-6. Add the OpenAI key server-side, enable AI flags, and run structured-output evals before allowing staff use.
-7. Load approved content, complete security/RLS review, and run accessibility/device testing.
-8. Ship an internal TestFlight build, resolve findings, then submit for App Review.
+Completed:
+
+- Deploy the staff portal/API to a public HTTPS staging domain.
+- Configure Supabase client/server environments and Auth redirects.
+- Activate invite-only staff accounts as administrators.
+- Point mobile preview/production configuration at the HTTPS snapshot API and verify publish-to-Simulator sync.
+
+Remaining:
+
+1. Create the EAS project, add Apple push credentials, enable push flags, and validate delivery and receipts on physical devices.
+2. Add the OpenAI key server-side, enable AI flags, and run structured-output evals before allowing staff use.
+3. Load approved content, complete security/RLS review, and run accessibility/device testing.
+4. Ship an internal TestFlight build, resolve findings, then submit for App Review.
 
 See `docs/CREDENTIAL_LAST_HANDOFF.md` for the exact activation order and rollback rules.
 

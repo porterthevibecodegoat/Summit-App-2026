@@ -1,8 +1,8 @@
 # Production Readiness Audit
 
-Current status: **CREDENTIAL-READY, NOT RELEASE-READY**
+Current status: **LIVE STAGING BACKEND, NOT RELEASE-READY**
 
-The non-credential product foundation is implemented. External services remain safely disabled until account credentials, public deployment values, final content, and physical-device validation are supplied.
+The staff portal/API is deployed over HTTPS and connected to Supabase. Staff authentication, atomic publishing, the public snapshot API, and native mobile refresh are active. Push and external-model AI remain safely disabled until their separate credentials and validation gates are complete.
 
 ```sh
 pnpm production:readiness
@@ -23,11 +23,17 @@ The authenticated staff API exposes the same report at `GET /api/production/read
 - Mobile SQLite cache, resilient synchronization, event-clock correction, refresh triggers, stale data rejection, and local My Schedule persistence.
 - Durable push dispatcher and receipt reconciliation code with database claims, retries, attempt audit, and invalid-token handling.
 - Premium app icon/launch art, public privacy/support drafts, and initial reviewer documentation.
+- Invite-only staff sign-in with automatic `ADMIN` activation for approved invited identities.
+- Deployed Supabase publish-to-mobile proof completed on 2026-09-09: canonical revision 3, HTTPS snapshot revision 3, and native SQLite cache revision 3 with 34 schedule items.
+
+## Active Staging Services
+
+- Public HTTPS staff portal and API deployment.
+- Supabase client/server environment, Auth redirects, staff sessions, publish RPC, audit trail, and public snapshot reads.
+- Mobile preview/production API configuration targeting the deployed HTTPS service.
 
 ## Intentionally Inactive Until Credentials
 
-- Public HTTPS deployment and production domain.
-- Supabase service-role server environment and production staff accounts.
 - EAS project, Apple/APNs credentials, push feature flags, and physical-device delivery.
 - OpenAI server key, model configuration, AI feature flag, and production eval sign-off.
 - App Store Connect/TestFlight submission credentials and release actions.

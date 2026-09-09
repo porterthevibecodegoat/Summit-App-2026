@@ -4,6 +4,8 @@ Use this sequence only after the non-secret build and approved event content are
 
 ## 1. Deploy The Safe Baseline
 
+Status: completed for staging on 2026-09-09. The portal/API is live over HTTPS, Supabase credentials are configured in their correct client/server boundaries, Auth redirects target the deployed portal, invite-only staff activation grants `ADMIN`, and publish-to-native snapshot sync has been verified through revision 3.
+
 - Apply all five Supabase migrations to staging.
 - Deploy the staff portal/API over HTTPS with AI and push flags false.
 - Configure client-safe URLs/keys and server-only Supabase service credentials in the host secret store.
