@@ -1,13 +1,12 @@
 import { Link } from "expo-router";
+import { SymbolView } from "expo-symbols";
 import { useEffect, useMemo, useState } from "react";
-import { ImageBackground, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
-import { groupScheduleByEventDay, toEventTimeRange } from "@not-alone/domain";
+import { groupScheduleByEventDay } from "@not-alone/domain";
 import type { ScheduleItem } from "@not-alone/validation";
 import { useSummitDemo } from "../../components/demo-mode";
-
-const summitArt = require("../../assets/summit-art-v2.png");
 
 export default function ScheduleScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -60,54 +59,47 @@ export default function ScheduleScreen() {
           />
         }
       >
-        <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.introImage} style={styles.intro}>
-          <View style={styles.introScrim}>
-            <Text style={styles.kicker}>Schedule</Text>
-            <Text style={styles.title}>{demoEnabled ? "Live agenda preview" : snapshot.event.dateLabel}</Text>
-            <Text style={styles.introBody}>
-              {demoEnabled
-                ? `A temporary sample agenda with ${savedSessionIds.length} saved session(s) in My Schedule.`
-                : snapshot.scheduleItems.length > 0
-                  ? `${savedSessionIds.length} saved session(s). Updates come from the staff-published schedule.`
-                  : "Sessions will appear here after the staff team publishes the approved agenda."}
-            </Text>
+        <View style={styles.header}>
+          <View style={styles.headerTopline}>
+            <Text style={styles.kicker}>{demoEnabled ? "Live demo" : "Summit agenda"}</Text>
+            <View style={styles.headerCount}>
+              <Text style={styles.headerCountText}>{snapshot.scheduleItems.length} sessions</Text>
+            </View>
           </View>
-        </ImageBackground>
+          <Text style={styles.title}>Plan your time</Text>
+          <Text style={styles.headerBody}>
+            {demoEnabled
+              ? "A live-day preview of sessions, locations, and timing."
+              : `${snapshot.event.dateLabel} at ${snapshot.event.venueName}`}
+          </Text>
+        </View>
 
         <View accessibilityRole="tablist" style={styles.modeControl}>
-          <Pressable
-            accessibilityRole="tab"
-            accessibilityState={{ selected: scheduleMode === "all" }}
+          <ModeButton
+            active={scheduleMode === "all"}
+            label="Full schedule"
             onPress={() => {
               setScheduleMode("all");
               setSelectedDayIndex(0);
             }}
-            style={[styles.modeButton, scheduleMode === "all" && styles.modeButtonActive]}
-          >
-            <Text style={[styles.modeText, scheduleMode === "all" && styles.modeTextActive]}>Full Schedule</Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="tab"
-            accessibilityState={{ selected: scheduleMode === "saved" }}
+          />
+          <ModeButton
+            active={scheduleMode === "saved"}
+            label={`My schedule  ${savedSessionIds.length}`}
             onPress={() => {
               setScheduleMode("saved");
               setSelectedDayIndex(0);
             }}
-            style={[styles.modeButton, scheduleMode === "saved" && styles.modeButtonActive]}
-          >
-            <Text style={[styles.modeText, scheduleMode === "saved" && styles.modeTextActive]}>
-              My Schedule ({savedSessionIds.length})
-            </Text>
-          </Pressable>
+          />
         </View>
 
         {groups.length === 0 ? (
           scheduleMode === "saved" ? (
             <View style={styles.emptyPanel}>
-              <Text style={styles.emptyTitle}>Your schedule is ready to build</Text>
-              <Text style={styles.emptyBody}>Open a session from the full schedule and select Add to My Schedule.</Text>
+              <Text style={styles.emptyTitle}>Build your personal agenda</Text>
+              <Text style={styles.emptyBody}>Open any session and save it here for a focused view of your summit.</Text>
               <Pressable onPress={() => setScheduleMode("all")} style={({ pressed }) => [styles.previewButton, pressed && styles.pressed]}>
-                <Text style={styles.previewButtonText}>Browse Full Schedule</Text>
+                <Text style={styles.previewButtonText}>Browse all sessions</Text>
               </Pressable>
             </View>
           ) : (
@@ -115,28 +107,44 @@ export default function ScheduleScreen() {
           )
         ) : (
           <>
-            <View style={styles.dayRail}>
-              {groups.map((group, index) => (
-                <Pressable
-                  accessibilityRole="tab"
-                  accessibilityState={{ selected: selectedDayIndex === index }}
-                  key={group.dayLabel}
-                  onPress={() => setSelectedDayIndex(index)}
-                  style={({ pressed }) => [
-                    styles.dayPill,
-                    selectedDayIndex === index && styles.dayPillActive,
-                    pressed && styles.pressed
-                  ]}
-                >
-                  <Text style={[styles.dayPillText, selectedDayIndex === index && styles.dayPillTextActive]}>
-                    {demoEnabled && index === 0 ? "Today" : group.dayLabel.split(",")[0]}
-                  </Text>
-                </Pressable>
-              ))}
+            <View accessibilityRole="tablist" style={styles.dayRail}>
+              {groups.map((group, index) => {
+                const day = parseDay(group.items[0]);
+                const selected = selectedDayIndex === index;
+
+                return (
+                  <Pressable
+                    accessibilityRole="tab"
+                    accessibilityState={{ selected }}
+                    key={group.dayLabel}
+                    onPress={() => setSelectedDayIndex(index)}
+                    style={({ pressed }) => [
+                      styles.dayTab,
+                      selected && styles.dayTabActive,
+                      pressed && styles.pressed
+                    ]}
+                  >
+                    <Text style={[styles.dayName, selected && styles.dayNameActive]}>
+                      {demoEnabled && index === 0 ? "Today" : day.weekday}
+                    </Text>
+                    <Text style={[styles.dayDate, selected && styles.dayDateActive]}>{day.date}</Text>
+                    <Text style={[styles.dayCount, selected && styles.dayCountActive]}>
+                      {group.items.length} {group.items.length === 1 ? "event" : "events"}
+                    </Text>
+                  </Pressable>
+                );
+              })}
             </View>
+
             {selectedGroup ? (
               <View key={selectedGroup.dayLabel} style={styles.day}>
-                <Text style={styles.dayTitle}>{selectedGroup.dayLabel}</Text>
+                <View style={styles.dayHeading}>
+                  <View>
+                    <Text style={styles.dayEyebrow}>Selected day</Text>
+                    <Text style={styles.dayTitle}>{selectedGroup.dayLabel}</Text>
+                  </View>
+                  <Text style={styles.dayTotal}>{selectedGroup.items.length}</Text>
+                </View>
                 <View style={styles.timeline}>
                   {selectedGroup.items.map((item, index) => (
                     <ScheduleRow
@@ -153,6 +161,19 @@ export default function ScheduleScreen() {
         )}
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function ModeButton({ active, label, onPress }: { active: boolean; label: string; onPress: () => void }) {
+  return (
+    <Pressable
+      accessibilityRole="tab"
+      accessibilityState={{ selected: active }}
+      onPress={onPress}
+      style={[styles.modeButton, active && styles.modeButtonActive]}
+    >
+      <Text style={[styles.modeText, active && styles.modeTextActive]}>{label}</Text>
+    </Pressable>
   );
 }
 
@@ -175,7 +196,7 @@ function EmptySchedule({
       </Text>
       {demoAvailable ? (
         <Pressable onPress={onPreview} style={({ pressed }) => [styles.previewButton, pressed && styles.pressed]}>
-          <Text style={styles.previewButtonText}>Preview Demo Schedule</Text>
+          <Text style={styles.previewButtonText}>Preview demo schedule</Text>
         </Pressable>
       ) : null}
       <View style={styles.trackGrid}>
@@ -190,89 +211,118 @@ function EmptySchedule({
 }
 
 function ScheduleRow({ item, last, saved }: { item: ScheduleItem; last: boolean; saved: boolean }) {
+  const start = formatTime(item.startUtc, item.eventTimeZone);
+  const end = formatTime(item.endUtc, item.eventTimeZone);
+  const canceled = item.status === "canceled";
+
   return (
     <Link href={{ pathname: "/session/[id]", params: { id: item.id } }} asChild>
       <Pressable style={({ pressed }) => [styles.item, last && styles.itemLast, pressed && styles.pressed]}>
         <View style={styles.timeColumn}>
-          <Text style={styles.time}>{toEventTimeRange(item, item.eventTimeZone)}</Text>
-          <View style={styles.timelineDot} />
+          <Text style={styles.timeStart}>{start.time}</Text>
+          <Text style={styles.timePeriod}>{start.period}</Text>
+          <Text style={styles.timeEnd}>to {end.time}</Text>
+          <View style={[styles.timelineDot, item.featured && styles.timelineDotFeatured]} />
+          {!last ? <View style={styles.timelineLine} /> : null}
         </View>
-        <View style={styles.itemMain}>
-          <View style={styles.itemHeader}>
-            <Text style={styles.itemTitle}>{item.title}</Text>
-            {item.featured ? (
-              <View style={styles.featuredBadge}>
-                <Text style={styles.featuredText}>Featured</Text>
-              </View>
-            ) : null}
+
+        <View style={[styles.itemMain, item.featured && styles.itemMainFeatured, canceled && styles.itemMainCanceled]}>
+          <View style={styles.badgeRow}>
+            {item.featured ? <Text style={styles.featuredText}>Featured</Text> : null}
             {saved ? (
-              <View style={styles.savedBadge}>
+              <View style={styles.savedLabel}>
+                <SymbolView name="bookmark.fill" size={11} tintColor={colors.gold} />
                 <Text style={styles.savedText}>Saved</Text>
               </View>
             ) : null}
+            {canceled ? <Text style={styles.canceledText}>Canceled</Text> : null}
           </View>
-          <Text style={styles.summary}>{item.summary}</Text>
-          <Text style={styles.meta}>{item.locationName} · {item.visibilityScope.label}</Text>
+
+          <View style={styles.titleRow}>
+            <Text numberOfLines={3} style={[styles.itemTitle, canceled && styles.itemTitleCanceled]}>{item.title}</Text>
+            <SymbolView name="chevron.right" size={14} tintColor={colors.muted} />
+          </View>
+
+          <View style={styles.metaRow}>
+            <SymbolView name="location.fill" size={12} tintColor={colors.gold} />
+            <Text numberOfLines={1} style={styles.meta}>{item.locationName}</Text>
+          </View>
+          <Text numberOfLines={1} style={styles.access}>{item.visibilityScope.label}</Text>
         </View>
       </Pressable>
     </Link>
   );
 }
 
+function parseDay(item: ScheduleItem | undefined) {
+  if (!item) {
+    return { weekday: "Day", date: "--" };
+  }
+
+  const date = new Date(item.startUtc);
+  return {
+    weekday: new Intl.DateTimeFormat("en-US", { weekday: "short", timeZone: item.eventTimeZone }).format(date),
+    date: new Intl.DateTimeFormat("en-US", { day: "numeric", month: "short", timeZone: item.eventTimeZone }).format(date)
+  };
+}
+
+function formatTime(iso: string, timeZone: string) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone
+  }).formatToParts(new Date(iso));
+
+  return {
+    time: `${parts.find((part) => part.type === "hour")?.value ?? ""}:${parts.find((part) => part.type === "minute")?.value ?? ""}`,
+    period: parts.find((part) => part.type === "dayPeriod")?.value ?? ""
+  };
+}
+
 const styles = StyleSheet.create({
-  safeArea: {
-    backgroundColor: colors.canvas,
-    flex: 1
-  },
-  screen: {
-    backgroundColor: colors.canvas
-  },
-  content: {
-    paddingBottom: 116
-  },
-  intro: {
-    backgroundColor: colors.midnight,
-    borderColor: "rgba(230, 192, 111, 0.18)",
-    borderRadius: 8,
-    borderWidth: 1,
+  safeArea: { backgroundColor: colors.canvas, flex: 1 },
+  screen: { backgroundColor: colors.canvas },
+  content: { paddingBottom: 116 },
+  header: {
+    borderBottomColor: "rgba(230, 192, 111, 0.2)",
+    borderBottomWidth: 1,
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
-    minHeight: 142,
-    overflow: "hidden"
+    paddingBottom: spacing.lg,
+    paddingTop: spacing.lg
   },
-  introImage: {
-    borderRadius: 8
-  },
-  introScrim: {
-    backgroundColor: "rgba(5, 10, 30, 0.62)",
-    flex: 1,
-    justifyContent: "flex-end",
-    padding: spacing.lg
-  },
+  headerTopline: { alignItems: "center", flexDirection: "row", justifyContent: "space-between" },
   kicker: {
     color: colors.gold,
     fontFamily: typography.bold,
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: "700",
     textTransform: "uppercase"
   },
+  headerCount: {
+    borderColor: "rgba(230, 192, 111, 0.28)",
+    borderRadius: 20,
+    borderWidth: 1,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 6
+  },
+  headerCountText: { color: colors.surfaceMuted, fontFamily: typography.semibold, fontSize: 11, fontWeight: "600" },
   title: {
     color: colors.ink,
-    fontFamily: typography.display,
-    fontSize: 27,
-    fontWeight: "700",
-    letterSpacing: 0,
-    lineHeight: 33,
+    fontFamily: typography.displayRegular,
+    fontSize: 34,
+    fontWeight: "400",
+    lineHeight: 40,
+    marginTop: spacing.md
+  },
+  headerBody: {
+    color: colors.body,
+    fontFamily: typography.medium,
+    fontSize: 13,
+    lineHeight: 20,
     marginTop: spacing.xs
   },
-  introBody: {
-    color: colors.surfaceMuted,
-    fontSize: 15,
-    lineHeight: 22,
-    marginTop: spacing.sm
-  },
   modeControl: {
-    backgroundColor: "rgba(13, 21, 48, 0.78)",
+    backgroundColor: colors.surface,
     borderColor: colors.border,
     borderRadius: 8,
     borderWidth: 1,
@@ -286,148 +336,92 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     flex: 1,
     justifyContent: "center",
-    minHeight: 42,
+    minHeight: 40,
     paddingHorizontal: spacing.sm
   },
-  modeButtonActive: {
-    backgroundColor: colors.gold
-  },
-  modeText: {
-    color: colors.body,
-    fontFamily: typography.bold,
-    fontSize: 12,
-    fontWeight: "700"
-  },
-  modeTextActive: {
-    color: colors.midnight
-  },
-  dayRail: {
-    flexDirection: "row",
-    gap: spacing.sm,
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.lg
-  },
-  dayPill: {
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
+  modeButtonActive: { backgroundColor: colors.gold },
+  modeText: { color: colors.body, fontFamily: typography.semibold, fontSize: 12, fontWeight: "600" },
+  modeTextActive: { color: colors.midnight, fontFamily: typography.bold, fontWeight: "700" },
+  dayRail: { flexDirection: "row", gap: spacing.sm, marginHorizontal: spacing.lg, marginTop: spacing.md },
+  dayTab: {
+    backgroundColor: "rgba(13, 21, 48, 0.7)",
     borderColor: colors.border,
     borderRadius: 8,
     borderWidth: 1,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm
+    flex: 1,
+    minHeight: 84,
+    padding: spacing.md
   },
-  dayPillActive: {
-    backgroundColor: colors.gold
-  },
-  dayPillText: {
-    color: colors.body,
+  dayTabActive: { backgroundColor: "#F2D28B", borderColor: "#F2D28B" },
+  dayName: { color: colors.body, fontFamily: typography.bold, fontSize: 12, fontWeight: "700" },
+  dayNameActive: { color: colors.midnight },
+  dayDate: { color: colors.ink, fontFamily: typography.semibold, fontSize: 14, fontWeight: "600", marginTop: 3 },
+  dayDateActive: { color: colors.midnight },
+  dayCount: { color: colors.muted, fontSize: 10, marginTop: 6 },
+  dayCountActive: { color: "rgba(5, 10, 30, 0.65)" },
+  day: { paddingHorizontal: spacing.lg, paddingTop: spacing.xl },
+  dayHeading: { alignItems: "flex-end", flexDirection: "row", justifyContent: "space-between", marginBottom: spacing.md },
+  dayEyebrow: {
+    color: colors.muted,
     fontFamily: typography.bold,
-    fontSize: 12,
-    fontWeight: "700"
-  },
-  dayPillTextActive: {
-    color: colors.midnight
-  },
-  day: {
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg
-  },
-  dayTitle: {
-    color: colors.ink,
-    fontFamily: typography.bold,
-    fontSize: 20,
+    fontSize: 10,
     fontWeight: "700",
-    marginBottom: spacing.md
+    textTransform: "uppercase"
   },
-  timeline: {
-    backgroundColor: "rgba(13, 21, 48, 0.72)",
-    borderColor: colors.border,
-    borderRadius: 8,
-    borderWidth: 1,
-    overflow: "hidden"
-  },
-  item: {
-    borderBottomColor: colors.border,
-    borderBottomWidth: 1,
-    flexDirection: "row",
-    gap: spacing.md,
-    padding: spacing.lg
-  },
-  itemLast: {
-    borderBottomWidth: 0
-  },
-  timeColumn: {
-    width: 76
-  },
-  time: {
-    color: colors.gold,
-    fontFamily: typography.bold,
-    fontSize: 12,
-    fontWeight: "700",
-    lineHeight: 17
-  },
+  dayTitle: { color: colors.ink, fontFamily: typography.displayRegular, fontSize: 23, fontWeight: "400", marginTop: spacing.xs },
+  dayTotal: { color: colors.gold, fontFamily: typography.displayRegular, fontSize: 28, lineHeight: 31 },
+  timeline: { gap: 0 },
+  item: { flexDirection: "row", gap: spacing.md, minHeight: 132 },
+  itemLast: { minHeight: 112 },
+  timeColumn: { alignItems: "flex-start", paddingTop: spacing.md, position: "relative", width: 62 },
+  timeStart: { color: colors.ink, fontFamily: typography.bold, fontSize: 14, fontWeight: "700" },
+  timePeriod: { color: colors.gold, fontFamily: typography.bold, fontSize: 10, fontWeight: "700", marginTop: 1 },
+  timeEnd: { color: colors.muted, fontSize: 10, marginTop: spacing.xs },
   timelineDot: {
-    backgroundColor: colors.gold,
+    backgroundColor: colors.canvas,
+    borderColor: colors.muted,
     borderRadius: 8,
-    height: 8,
-    marginTop: spacing.md,
-    width: 8
+    borderWidth: 2,
+    height: 9,
+    left: 53,
+    position: "absolute",
+    top: 17,
+    width: 9,
+    zIndex: 2
   },
+  timelineDotFeatured: { backgroundColor: colors.gold, borderColor: colors.gold },
+  timelineLine: { backgroundColor: colors.border, bottom: -18, left: 57, position: "absolute", top: 25, width: 1 },
   itemMain: {
-    flex: 1
+    backgroundColor: "rgba(13, 21, 48, 0.78)",
+    borderColor: colors.border,
+    borderRadius: 8,
+    borderWidth: 1,
+    flex: 1,
+    marginBottom: spacing.md,
+    padding: spacing.md
   },
-  itemHeader: {
-    gap: spacing.sm
-  },
+  itemMainFeatured: { backgroundColor: "rgba(26, 35, 66, 0.96)", borderColor: "rgba(230, 192, 111, 0.48)" },
+  itemMainCanceled: { opacity: 0.62 },
+  badgeRow: { alignItems: "center", flexDirection: "row", gap: spacing.sm, minHeight: 14 },
+  featuredText: { color: colors.gold, fontFamily: typography.bold, fontSize: 9, fontWeight: "800", textTransform: "uppercase" },
+  savedLabel: { alignItems: "center", flexDirection: "row", gap: 4 },
+  savedText: { color: colors.gold, fontFamily: typography.bold, fontSize: 9, fontWeight: "800", textTransform: "uppercase" },
+  canceledText: { color: colors.warning, fontFamily: typography.bold, fontSize: 9, fontWeight: "800", textTransform: "uppercase" },
+  titleRow: { alignItems: "flex-start", flexDirection: "row", gap: spacing.sm, marginTop: spacing.xs },
   itemTitle: {
     color: colors.ink,
-    fontFamily: typography.bold,
-    fontSize: 19,
-    fontWeight: "700",
-    lineHeight: 24
+    flex: 1,
+    fontFamily: typography.semibold,
+    fontSize: 16,
+    fontWeight: "600",
+    lineHeight: 21
   },
-  featuredBadge: {
-    alignSelf: "flex-start",
-    backgroundColor: colors.gold,
-    borderRadius: 8,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs
-  },
-  savedBadge: {
-    alignSelf: "flex-start",
-    borderColor: "rgba(230, 192, 111, 0.34)",
-    borderRadius: 8,
-    borderWidth: 1,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs
-  },
-  savedText: {
-    color: colors.gold,
-    fontFamily: typography.bold,
-    fontSize: 10,
-    fontWeight: "800",
-    textTransform: "uppercase"
-  },
-  featuredText: {
-    color: colors.midnight,
-    fontFamily: typography.bold,
-    fontSize: 10,
-    fontWeight: "800",
-    textTransform: "uppercase"
-  },
-  summary: {
-    color: colors.body,
-    fontSize: 14,
-    lineHeight: 21,
-    marginTop: spacing.sm
-  },
-  meta: {
-    color: colors.muted,
-    fontSize: 13,
-    lineHeight: 19,
-    marginTop: spacing.sm
-  },
+  itemTitleCanceled: { textDecorationLine: "line-through" },
+  metaRow: { alignItems: "center", flexDirection: "row", gap: 5, marginTop: spacing.sm },
+  meta: { color: colors.surfaceMuted, flex: 1, fontFamily: typography.medium, fontSize: 11, lineHeight: 16 },
+  access: { color: colors.muted, fontSize: 10, marginTop: 5 },
   emptyPanel: {
-    backgroundColor: "rgba(13, 21, 48, 0.8)",
+    backgroundColor: colors.surface,
     borderColor: colors.border,
     borderRadius: 8,
     borderWidth: 1,
@@ -435,19 +429,8 @@ const styles = StyleSheet.create({
     marginTop: spacing.lg,
     padding: spacing.lg
   },
-  emptyTitle: {
-    color: colors.ink,
-    fontFamily: typography.bold,
-    fontSize: 22,
-    fontWeight: "700",
-    letterSpacing: 0
-  },
-  emptyBody: {
-    color: colors.body,
-    fontSize: 15,
-    lineHeight: 22,
-    marginTop: spacing.sm
-  },
+  emptyTitle: { color: colors.ink, fontFamily: typography.displayRegular, fontSize: 24, fontWeight: "400" },
+  emptyBody: { color: colors.body, fontSize: 14, lineHeight: 21, marginTop: spacing.sm },
   previewButton: {
     alignSelf: "flex-start",
     backgroundColor: colors.gold,
@@ -456,31 +439,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md
   },
-  previewButtonText: {
-    color: colors.midnight,
-    fontFamily: typography.bold,
-    fontSize: 13,
-    fontWeight: "800"
-  },
-  trackGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.sm,
-    marginTop: spacing.lg
-  },
-  trackPill: {
-    backgroundColor: colors.goldSoft,
-    borderRadius: 8,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm
-  },
-  trackText: {
-    color: colors.body,
-    fontFamily: typography.semibold,
-    fontSize: 13,
-    fontWeight: "600"
-  },
-  pressed: {
-    opacity: 0.84
-  }
+  previewButtonText: { color: colors.midnight, fontFamily: typography.bold, fontSize: 12, fontWeight: "800" },
+  trackGrid: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm, marginTop: spacing.lg },
+  trackPill: { backgroundColor: colors.goldSoft, borderRadius: 8, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
+  trackText: { color: colors.body, fontFamily: typography.semibold, fontSize: 12, fontWeight: "600" },
+  pressed: { opacity: 0.8 }
 });
