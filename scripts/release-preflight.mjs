@@ -1,4 +1,3 @@
-import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -86,11 +85,17 @@ async function checkJson(name, url, validate) {
 }
 
 function imageDimensions(path) {
-  const output = execFileSync("sips", ["-g", "pixelWidth", "-g", "pixelHeight", "-g", "hasAlpha", path], { encoding: "utf8" });
+  const image = readFileSync(path);
+  const pngSignature = "89504e470d0a1a0a";
+  if (image.subarray(0, 8).toString("hex") !== pngSignature || image.subarray(12, 16).toString("ascii") !== "IHDR") {
+    return { width: 0, height: 0, hasAlpha: true };
+  }
+
+  const colorType = image[25];
   return {
-    width: Number(output.match(/pixelWidth:\s*(\d+)/)?.[1] ?? 0),
-    height: Number(output.match(/pixelHeight:\s*(\d+)/)?.[1] ?? 0),
-    hasAlpha: output.match(/hasAlpha:\s*(yes|no)/)?.[1] === "yes"
+    width: image.readUInt32BE(16),
+    height: image.readUInt32BE(20),
+    hasAlpha: colorType === 4 || colorType === 6 || image.includes(Buffer.from("tRNS"))
   };
 }
 
