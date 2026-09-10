@@ -28,7 +28,7 @@ export const publicAppConfig = publicAppConfigSchema.parse({
   eventId: env.EVENT_ID ?? "not-alone-summit-2026-prototype",
   eventTimeZone: env.EVENT_TIME_ZONE ?? "America/Los_Angeles",
   environmentName: env.APP_ENV ?? env.EXPO_PUBLIC_APP_ENV ?? "local",
-  apiBaseUrl: env.EXPO_PUBLIC_API_BASE_URL ?? "http://localhost:3000",
+  apiBaseUrl: env.EXPO_PUBLIC_API_BASE_URL ?? "https://summit-app-2026-admin.vercel.app",
   iosBundleIdentifier: env.IOS_BUNDLE_IDENTIFIER ?? "org.inspiringchildren.notalonesummit",
   featureFlags: {
     attendeeAccess: env.ENABLE_ATTENDEE_ACCESS === "true",

@@ -89,13 +89,13 @@ export default function InfoScreen() {
         </View>
 
         <View style={styles.supportPanel}>
-          <Pressable onPress={() => void Linking.openURL("https://www.inspiringchildren.org/summit")} style={styles.supportLink}>
+          <Pressable accessibilityRole="link" onPress={() => void Linking.openURL("https://www.inspiringchildren.org/summit")} style={styles.supportLink}>
             <Text style={styles.supportLinkText}>Official Summit Website</Text>
           </Pressable>
-          <Pressable onPress={() => void Linking.openURL("https://www.inspiringchildren.org/contact")} style={styles.supportLink}>
+          <Pressable accessibilityRole="link" onPress={() => void Linking.openURL("https://www.inspiringchildren.org/contact")} style={styles.supportLink}>
             <Text style={styles.supportLinkText}>Contact Event Support</Text>
           </Pressable>
-          <Pressable onPress={() => void Linking.openURL(`${publicAppConfig.apiBaseUrl}/privacy`)} style={styles.supportLink}>
+          <Pressable accessibilityRole="link" onPress={() => void Linking.openURL(`${publicAppConfig.apiBaseUrl}/privacy`)} style={styles.supportLink}>
             <Text style={styles.supportLinkText}>Privacy Policy</Text>
           </Pressable>
         </View>

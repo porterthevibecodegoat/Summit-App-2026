@@ -1,6 +1,6 @@
 # Staging Deployment
 
-This project should use a deployed staging staff portal/API before TestFlight or App Store submission. The deployed admin app is the public HTTPS bridge between Supabase and the attendee app.
+The staging staff portal/API is deployed at `https://summit-app-2026-admin.vercel.app`. It is the public HTTPS bridge between Supabase and the attendee app.
 
 ## Recommended Host
 
@@ -43,12 +43,17 @@ EXPO_ACCESS_TOKEN=
 CRON_SECRET=<long-random-server-only-value>
 ```
 
-Add these later when they are ready:
+Public release URLs are now available:
+
+```sh
+APP_STORE_PRIVACY_URL=https://summit-app-2026-admin.vercel.app/privacy
+APP_SUPPORT_URL=https://summit-app-2026-admin.vercel.app/support
+```
+
+Add the EAS project ID later when it is ready:
 
 ```sh
 EXPO_PUBLIC_EAS_PROJECT_ID=<real-eas-project-id>
-APP_STORE_PRIVACY_URL=<privacy-policy-url>
-APP_SUPPORT_URL=<support-url>
 ```
 
 ## Supabase Auth Redirect URLs
@@ -80,7 +85,7 @@ Expected staging result:
 - published revision is at least `2`
 - published schedule contains prototype sessions
 
-Production readiness should remain blocked during staging until approved content, OpenAI, EAS, push delivery, privacy policy, support URLs, and release evidence are supplied.
+Production readiness remains blocked until OpenAI and EAS credentials are supplied. Legal approval, approved content, physical-device push testing, accessibility review, and TestFlight evidence remain release gates.
 
 ## What This Unlocks
 

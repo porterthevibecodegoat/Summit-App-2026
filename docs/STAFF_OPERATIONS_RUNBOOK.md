@@ -1,5 +1,9 @@
 # Staff Operations Runbook
 
+Live staging portal: `https://summit-app-2026-admin.vercel.app`
+
+Approved staff must be invited through Supabase Auth. The current product policy automatically activates every invited staff identity as `ADMIN` on successful portal sign-in. Uninvited email addresses cannot create portal accounts.
+
 Development workflow:
 
 1. Start staff portal with `pnpm dev:admin`.
@@ -13,7 +17,7 @@ Development workflow:
 
 The same workflow runs in Supabase mode with authenticated staff roles, atomic publication, and durable audit records.
 
-## Current Local Adapter
+## Local Adapter
 
 The staff portal now has a local live-ops adapter for development. It writes draft and published state to `work/live-ops-store.json`.
 
@@ -38,7 +42,7 @@ The admin API now selects storage automatically:
 - Local mode: used when `SUPABASE_SERVICE_ROLE_KEY` is absent. Data is written to `work/live-ops-store.json`.
 - Supabase mode: used when `SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are present. Staff mutating routes require an authenticated staff profile and role authorization.
 
-Local mode proves the portal-to-app content loop without exposing credentials or pretending that cloud delivery is active.
+Local mode supports development without exposing credentials. The deployed staging portal uses Supabase mode; it is the canonical path for shared staff work and attendee publication.
 
 Read-only staff pages and the attendee snapshot endpoint can show a degraded fallback if the configured live backend is unavailable. Mutating routes such as save, publish, rollback, and import still require the proper staff/backend path.
 

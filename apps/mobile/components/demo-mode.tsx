@@ -268,7 +268,7 @@ export function SummitDemoProvider({ children }: PropsWithChildren) {
             expoPushToken: token.data,
             audienceGroups: ["public"],
             platform: "ios",
-            appVersion: "0.1.0",
+            appVersion: Constants.nativeAppVersion ?? "1.0.0",
             lastSeenAt: new Date().toISOString()
           })
         });
@@ -352,6 +352,7 @@ export function DemoModeControl() {
   return (
     <View style={styles.dockWrap}>
       <Pressable
+        accessibilityLabel={demoEnabled ? "Edit Demo Mode" : "Enable Demo Mode"}
         accessibilityRole="button"
         onPress={() => (demoEnabled ? setEditorOpen(true) : setDemoEnabled(true))}
         style={({ pressed }) => [styles.dockButton, pressed && styles.pressed]}
@@ -384,6 +385,7 @@ function DemoModeEditor({ open, onClose }: { open: boolean; onClose: () => void 
             staff portal.
           </Text>
           <Pressable
+            accessibilityRole="button"
             onPress={() => {
               refreshDemoTimeline();
               onClose();
@@ -393,6 +395,7 @@ function DemoModeEditor({ open, onClose }: { open: boolean; onClose: () => void 
             <Text style={styles.editorPrimaryText}>Refresh Live Timeline</Text>
           </Pressable>
           <Pressable
+            accessibilityRole="button"
             onPress={() => {
               setDemoEnabled(false);
               onClose();
@@ -401,7 +404,7 @@ function DemoModeEditor({ open, onClose }: { open: boolean; onClose: () => void 
           >
             <Text style={styles.editorSecondaryText}>Exit Demo Mode</Text>
           </Pressable>
-          <Pressable onPress={onClose} style={({ pressed }) => [styles.editorClose, pressed && styles.pressed]}>
+          <Pressable accessibilityRole="button" onPress={onClose} style={({ pressed }) => [styles.editorClose, pressed && styles.pressed]}>
             <Text style={styles.editorCloseText}>Close</Text>
           </Pressable>
         </Pressable>

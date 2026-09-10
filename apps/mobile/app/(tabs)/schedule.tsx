@@ -98,7 +98,7 @@ export default function ScheduleScreen() {
             <View style={styles.emptyPanel}>
               <Text style={styles.emptyTitle}>Build your personal agenda</Text>
               <Text style={styles.emptyBody}>Open any session and save it here for a focused view of your summit.</Text>
-              <Pressable onPress={() => setScheduleMode("all")} style={({ pressed }) => [styles.previewButton, pressed && styles.pressed]}>
+              <Pressable accessibilityRole="button" onPress={() => setScheduleMode("all")} style={({ pressed }) => [styles.previewButton, pressed && styles.pressed]}>
                 <Text style={styles.previewButtonText}>Browse all sessions</Text>
               </Pressable>
             </View>
@@ -114,6 +114,7 @@ export default function ScheduleScreen() {
 
                 return (
                   <Pressable
+                    accessibilityLabel={`${demoEnabled && index === 0 ? "Today" : day.weekday}, ${day.date}, ${group.items.length} events`}
                     accessibilityRole="tab"
                     accessibilityState={{ selected }}
                     key={group.dayLabel}
@@ -195,7 +196,7 @@ function EmptySchedule({
         The schedule is ready for approved session data. Times will display in {timeZone} once records are published.
       </Text>
       {demoAvailable ? (
-        <Pressable onPress={onPreview} style={({ pressed }) => [styles.previewButton, pressed && styles.pressed]}>
+        <Pressable accessibilityRole="button" onPress={onPreview} style={({ pressed }) => [styles.previewButton, pressed && styles.pressed]}>
           <Text style={styles.previewButtonText}>Preview demo schedule</Text>
         </Pressable>
       ) : null}
@@ -254,6 +255,7 @@ function ScheduleCard({ item, saved }: { item: ScheduleItem; saved: boolean }) {
     <Link href={{ pathname: "/session/[id]", params: { id: item.id } }} asChild>
       <Pressable
         accessibilityLabel={`${start.time} ${start.period} to ${end.time} ${end.period}. ${item.title}. ${item.locationName}. ${item.visibilityScope.label}`}
+        accessibilityRole="button"
         style={({ pressed }) => [pressed && styles.pressed]}
       >
         <View style={[styles.itemMain, item.featured && styles.itemMainFeatured, canceled && styles.itemMainCanceled]}>

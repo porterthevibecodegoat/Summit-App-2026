@@ -54,9 +54,11 @@ export default function PrivacyPage() {
 
         <h2>Contact</h2>
         <p>
-          Privacy and support requests can be submitted through the Inspiring Children Foundation contact page.
+          Privacy and support requests can be sent to music@inspiringchildren.org or submitted through the Inspiring
+          Children Foundation contact page.
         </p>
         <div className="publicActions">
+          <a href="mailto:music@inspiringchildren.org?subject=Not%20Alone%20Summit%20Privacy">Email Privacy Support</a>
           <a href="https://www.inspiringchildren.org/contact">Contact Inspiring Children Foundation</a>
           <a href="/support">App Support</a>
         </div>

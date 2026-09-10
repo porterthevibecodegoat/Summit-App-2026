@@ -29,6 +29,9 @@ export default function SessionDetailScreen() {
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.summary}>{item.summary}</Text>
         <Pressable
+          accessibilityLabel={isSessionSaved(item.id) ? "Remove from My Schedule" : "Save to My Schedule"}
+          accessibilityRole="button"
+          accessibilityState={{ selected: isSessionSaved(item.id) }}
           onPress={() => toggleSavedSession(item.id)}
           style={({ pressed }) => [styles.saveButton, isSessionSaved(item.id) && styles.saveButtonActive, pressed && styles.pressed]}
         >
@@ -59,13 +62,13 @@ export default function SessionDetailScreen() {
 
       <View style={styles.actionGrid}>
         <Link href="/map" asChild>
-          <Pressable style={({ pressed }) => [styles.actionButton, pressed && styles.pressed]}>
+          <Pressable accessibilityLabel="Open map and find this room" accessibilityRole="button" style={({ pressed }) => [styles.actionButton, pressed && styles.pressed]}>
             <Text style={styles.actionLabel}>Map</Text>
             <Text style={styles.actionText}>Find the room</Text>
           </Pressable>
         </Link>
         <Link href="/help" asChild>
-          <Pressable style={({ pressed }) => [styles.actionButton, pressed && styles.pressed]}>
+          <Pressable accessibilityLabel="Ask the summit concierge what to do next" accessibilityRole="button" style={({ pressed }) => [styles.actionButton, pressed && styles.pressed]}>
             <Text style={styles.actionLabel}>Concierge</Text>
             <Text style={styles.actionText}>Ask what to do next</Text>
           </Pressable>

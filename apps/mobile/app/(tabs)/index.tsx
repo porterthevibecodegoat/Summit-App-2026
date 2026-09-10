@@ -94,7 +94,7 @@ export default function TodayScreen() {
                   : "Programming will appear here as soon as the event team publishes it."}
               </Text>
               {demoAvailable ? (
-                <Pressable onPress={() => setDemoEnabled(true)} style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}>
+                <Pressable accessibilityRole="button" onPress={() => setDemoEnabled(true)} style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}>
                   <Text style={styles.primaryButtonText}>Preview Live Demo</Text>
                 </Pressable>
               ) : null}
@@ -118,7 +118,7 @@ export default function TodayScreen() {
                 <Text style={styles.aiTitle}>Fast answers, grounded in the agenda.</Text>
               </View>
               <Link href="/help" asChild>
-                <Pressable style={({ pressed }) => [styles.smallButton, pressed && styles.pressed]}>
+                <Pressable accessibilityLabel="Ask the summit concierge" accessibilityRole="button" style={({ pressed }) => [styles.smallButton, pressed && styles.pressed]}>
                   <Text style={styles.smallButtonText}>Ask</Text>
                 </Pressable>
               </Link>
@@ -126,7 +126,7 @@ export default function TodayScreen() {
             <View style={styles.promptRow}>
               {homePrompts.map((prompt) => (
                 <Link key={prompt} href="/help" asChild>
-                  <Pressable style={({ pressed }) => [styles.promptChip, pressed && styles.pressed]}>
+                  <Pressable accessibilityLabel={`Ask: ${prompt}`} accessibilityRole="button" style={({ pressed }) => [styles.promptChip, pressed && styles.pressed]}>
                     <Text style={styles.promptText}>{prompt}</Text>
                   </Pressable>
                 </Link>
@@ -150,7 +150,11 @@ export default function TodayScreen() {
 function LiveSessionCard({ demoEnabled, item }: { demoEnabled: boolean; item: ScheduleItem }) {
   return (
     <Link href={{ pathname: "/session/[id]", params: { id: item.id } }} asChild>
-      <Pressable style={({ pressed }) => [styles.liveShell, pressed && styles.pressed]}>
+      <Pressable
+        accessibilityLabel={`Live now. ${item.title}. ${item.locationName}`}
+        accessibilityRole="button"
+        style={({ pressed }) => [styles.liveShell, pressed && styles.pressed]}
+      >
         <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.liveImage} style={styles.liveBackground}>
           <View style={styles.liveScrim}>
             <View style={styles.liveTop}>
@@ -191,7 +195,7 @@ function MiniStatus({
 }) {
   return (
     <Link href={href} asChild>
-      <Pressable style={({ pressed }) => [styles.miniStatus, pressed && styles.pressed]}>
+      <Pressable accessibilityLabel={`${title}. ${value}. ${meta}`} accessibilityRole="button" style={({ pressed }) => [styles.miniStatus, pressed && styles.pressed]}>
         <View style={styles.statusRail}>
           <Text style={styles.statusRailText}>Next</Text>
         </View>
@@ -208,7 +212,7 @@ function MiniStatus({
 function ToolPill({ href, label, value }: { href: "/schedule" | "/map" | "/help"; label: string; value: string }) {
   return (
     <Link href={href} asChild>
-      <Pressable style={({ pressed }) => [styles.toolPill, pressed && styles.pressed]}>
+      <Pressable accessibilityLabel={`${label}. ${value}`} accessibilityRole="button" style={({ pressed }) => [styles.toolPill, pressed && styles.pressed]}>
         <Text style={styles.toolLabel}>{label}</Text>
         <Text style={styles.toolValue} numberOfLines={1}>{value}</Text>
       </Pressable>

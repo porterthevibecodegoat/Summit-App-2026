@@ -41,7 +41,7 @@ function createChecks(rootDir: string, env: Record<string, string | undefined>):
   return [
     createCheck({
       name: "Supabase project URL",
-      pass: hasEnv(env, "SUPABASE_URL") || hasEnv(env, "NEXT_PUBLIC_SUPABASE_URL"),
+      pass: hasPublicHttpsUrl(env.SUPABASE_URL) || hasPublicHttpsUrl(env.NEXT_PUBLIC_SUPABASE_URL),
       blocker: true,
       detail: "Required before staff changes can publish through a real cloud backend."
     }),
@@ -92,19 +92,19 @@ function createChecks(rootDir: string, env: Record<string, string | undefined>):
     }),
     createCheck({
       name: "Public API base URL",
-      pass: hasEnv(env, "EXPO_PUBLIC_API_BASE_URL") && !String(env.EXPO_PUBLIC_API_BASE_URL).includes("localhost"),
+      pass: hasPublicHttpsUrl(env.EXPO_PUBLIC_API_BASE_URL),
       blocker: true,
       detail: "Production mobile builds must point at a deployed HTTPS API, not localhost."
     }),
     createCheck({
       name: "Privacy policy URL",
-      pass: hasEnv(env, "APP_STORE_PRIVACY_URL"),
+      pass: hasPublicHttpsUrl(env.APP_STORE_PRIVACY_URL),
       blocker: true,
       detail: "Required before App Store submission."
     }),
     createCheck({
       name: "Support URL",
-      pass: hasEnv(env, "APP_SUPPORT_URL"),
+      pass: hasPublicHttpsUrl(env.APP_SUPPORT_URL),
       blocker: true,
       detail: "Required before App Store submission."
     }),
@@ -158,6 +158,19 @@ function hasServerSupabaseKey(env: Record<string, string | undefined>, name: str
 function hasRealEasProjectId(env: Record<string, string | undefined>) {
   const projectId = env.EXPO_PUBLIC_EAS_PROJECT_ID ?? env.EAS_PROJECT_ID ?? "";
   return Boolean(projectId && !projectId.includes("replace-with"));
+}
+
+function hasPublicHttpsUrl(value: string | undefined) {
+  if (!value || value.includes("replace-with")) {
+    return false;
+  }
+
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname !== "localhost" && url.hostname !== "127.0.0.1";
+  } catch {
+    return false;
+  }
 }
 
 function loadDotEnv(rootDir: string) {

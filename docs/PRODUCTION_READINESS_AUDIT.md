@@ -25,6 +25,11 @@ The authenticated staff API exposes the same report at `GET /api/production/read
 - Premium app icon/launch art, public privacy/support drafts, and initial reviewer documentation.
 - Invite-only staff sign-in with automatic `ADMIN` activation for approved invited identities.
 - Deployed Supabase publish-to-mobile proof completed on 2026-09-09: canonical revision 3, HTTPS snapshot revision 3, and native SQLite cache revision 3 with 34 schedule items.
+- Live disposable-identity RLS matrix passes 17/17 checks across anonymous, viewer, editor, publisher, admin, and protected publish-RPC boundaries, with automatic cleanup.
+- Public privacy and support pages are live; App Store metadata, privacy-answer draft, QA matrix, and incident response runbook are prepared.
+- Release preflight passes configuration, asset, policy URL, live API, and secret-boundary checks.
+- Credential-free native Release compilation and Apple bundle validation pass; compiled-bundle verification is repeatable with `pnpm mobile:release-verify`.
+- Production dependency advisory scan reports no known vulnerabilities.
 
 ## Active Staging Services
 
@@ -41,7 +46,7 @@ The authenticated staff API exposes the same report at `GET /api/production/read
 ## Pending Non-Secret Inputs
 
 - Approved 2026 schedule, speakers, biographies, headshots, venue/map data, FAQs, contacts, and emergency copy.
-- Legal approval of privacy/support pages and public URLs.
+- Legal approval of the published privacy/support language and proposed retention policy.
 - Final App Store metadata, screenshots, privacy declarations, age rating, and reviewer contact.
 
 ## Release Gates

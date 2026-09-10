@@ -24,7 +24,7 @@ See `docs/PRIVACY_DATA_INVENTORY.md` for the working disclosure inventory.
 ## Before Production
 
 - Require MFA for publisher/admin roles and document recovery/offboarding.
-- Execute role-by-role RLS and API authorization tests against staging.
+- Keep `pnpm security:rls` passing against staging. It uses disposable identities and records, verifies the role matrix and protected publish function, and cleans up afterward.
 - Rotate all credentials after initial setup and after staff/offboarding events.
 - Configure hosting headers, request logging/redaction, alerting, backups, and retention.
 - Complete dependency, secret, abuse, privacy, and incident-response reviews.

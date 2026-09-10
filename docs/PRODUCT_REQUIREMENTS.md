@@ -8,4 +8,6 @@ Current implementation status:
 - Demo schedule/content is labeled as demo in `packages/test-fixtures`.
 - Attendee app is Expo React Native with native stack navigation through Expo Router.
 - Staff portal is a separate Next.js app.
-- Phase 1 currently contains the first schedule vertical-slice foundation, not a production release.
+- The HTTPS staging portal, Supabase publishing path, public snapshot API, offline native cache, day-separated schedule, session details, map, information, deterministic concierge, and staff operating workflows are implemented.
+- Credential-independent release preflight, live RLS verification, policy pages, App Store metadata drafts, and incident/rollback procedures are implemented.
+- EAS/Apple physical-device delivery, external-model AI, approved 2026 content, TestFlight, and App Review remain release gates.

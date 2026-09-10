@@ -148,6 +148,8 @@ export default function HelpScreen() {
           <View style={styles.chipGrid}>
             {promptChips.map((prompt) => (
               <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ selected: selectedPrompt === prompt }}
                 key={prompt}
                 onPress={() => {
                   setSelectedPrompt(prompt);
@@ -202,7 +204,7 @@ export default function HelpScreen() {
             <View style={styles.answerList}>
               {answer.items.map((item, index) => (
                 <Link key={`${item.id}-${item.startUtc}-${index}`} href={{ pathname: "/session/[id]", params: { id: item.id } }} asChild>
-                  <Pressable style={({ pressed }) => [styles.answerItem, pressed && styles.pressed]}>
+                  <Pressable accessibilityLabel={`${item.title}. ${toEventTimeRange(item, snapshot.event.timeZone)}. ${item.locationName}`} accessibilityRole="button" style={({ pressed }) => [styles.answerItem, pressed && styles.pressed]}>
                     <Text style={styles.answerItemTime}>{toEventTimeRange(item, snapshot.event.timeZone)}</Text>
                     <Text style={styles.answerItemTitle}>{item.title}</Text>
                     <Text style={styles.answerItemMeta}>{item.locationName}</Text>
@@ -220,7 +222,7 @@ export default function HelpScreen() {
         </View>
 
         <Link href="/schedule" asChild>
-          <Pressable style={({ pressed }) => [styles.scheduleLink, pressed && styles.pressed]}>
+          <Pressable accessibilityLabel="Open full schedule" accessibilityRole="button" style={({ pressed }) => [styles.scheduleLink, pressed && styles.pressed]}>
             <Text style={styles.scheduleLinkText}>Open Full Schedule</Text>
           </Pressable>
         </Link>

@@ -1,6 +1,6 @@
 # App Store Reviewer Notes
 
-Replace every bracketed value before submission.
+Replace the remaining bracketed owner details before submission.
 
 ## App Purpose
 
@@ -21,19 +21,19 @@ The attendee app does not require an account. The separate staff portal is not i
 
 ## Notification Test
 
-[Provide a controlled reviewer notification window and exact expected message, or state that no scheduled notification will be sent during review.]
+No scheduled notification will be sent during review unless the reviewer contact arranges a controlled test window in advance. The app remains fully usable when notification permission is declined.
 
 ## Safety And Privacy
 
 - The concierge is limited to published event information and is not medical, emergency, or crisis care.
 - The app does not request camera, microphone, contacts, photos, or precise location.
 - Saved sessions remain on the device in the current release.
-- Privacy policy: `[PUBLIC_HTTPS_PRIVACY_URL]`
-- Support URL: `[PUBLIC_HTTPS_SUPPORT_URL]`
+- Privacy policy: `https://summit-app-2026-admin.vercel.app/privacy`
+- Support URL: `https://summit-app-2026-admin.vercel.app/support`
 
 ## Contact
 
 - Review contact name: `[NAME]`
-- Email: `[EMAIL]`
+- Email: `music@inspiringchildren.org`
 - Phone: `[PHONE]`
 - Test date/time zone: `[DATE AND TIME ZONE]`

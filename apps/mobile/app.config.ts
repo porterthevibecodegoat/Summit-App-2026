@@ -6,19 +6,22 @@ const hasEasProject = Boolean(
   easProjectId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(easProjectId)
 );
 const pushDeliveryEnabled = process.env.EXPO_PUBLIC_ENABLE_PUSH_DELIVERY === "true";
+const appVersion = "1.0.0";
 
 const config: ExpoConfig = {
   name: publicAppConfig.appName,
   slug: publicAppConfig.appSlug,
   scheme: "notalone",
-  version: "0.1.0",
+  version: appVersion,
   orientation: "portrait",
   userInterfaceStyle: "automatic",
   icon: "./assets/icon-premium.png",
   ios: {
     supportsTablet: false,
     bundleIdentifier: publicAppConfig.iosBundleIdentifier,
+    buildNumber: "1",
     infoPlist: {
+      ITSAppUsesNonExemptEncryption: false,
       NSUserNotificationsUsageDescription:
         "Notifications provide schedule reminders and urgent event changes for Not Alone Summit."
     }
@@ -33,7 +36,7 @@ const config: ExpoConfig = {
     : {
         enabled: false
       },
-  runtimeVersion: "0.1.0",
+  runtimeVersion: appVersion,
   extra: {
     eas: {
       projectId: hasEasProject ? easProjectId : undefined

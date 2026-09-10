@@ -33,6 +33,7 @@ export default function SupportPage() {
         </p>
 
         <div className="publicActions">
+          <a href="mailto:music@inspiringchildren.org?subject=Not%20Alone%20Summit%20App%20Support">Email App Support</a>
           <a href="https://www.inspiringchildren.org/contact">Contact Event Support</a>
           <a href="https://www.inspiringchildren.org/summit">Summit Website</a>
           <a href="/privacy">Privacy Policy</a>

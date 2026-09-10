@@ -55,10 +55,13 @@ The final two migrations make publish/rollback atomic, narrow function execution
 pnpm supabase:check
 pnpm snapshot:pull
 pnpm production:readiness
+pnpm security:rls
+pnpm release:preflight
+pnpm mobile:sync-verify
 ```
 
 Never print server keys. Verify key shape, table access, function privileges, RLS, and route authorization through pass/fail tests.
 
-## Remaining Activation
+## Current Activation
 
-Deploy a public HTTPS staging environment, configure Auth redirects and staff roles, point a staging mobile build at it, validate publish-to-device behavior, then activate push and AI separately according to `docs/CREDENTIAL_LAST_HANDOFF.md`.
+The HTTPS staging portal, Supabase Auth redirects, invite-only administrator activation, atomic publication, public snapshot API, and Simulator sync are active. Remaining activation is limited to EAS/Apple physical-device delivery, external-model AI credentials/evals, final approved content, and App Store release ownership.

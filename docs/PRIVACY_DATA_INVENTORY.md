@@ -26,3 +26,13 @@ Contacts, photos, camera, microphone, precise location, health records, payment 
 - Confirm whether host logs collect IP addresses and disclose as required.
 - Complete App Store privacy labels from the shipped production behavior, not prototype assumptions.
 - Add account deletion only if attendee accounts are introduced.
+
+## Proposed Retention Baseline
+
+- Attendee push registrations: delete 30 days after the event; disable invalid tokens immediately.
+- Notification delivery attempts: delete 90 days after the event after operational review.
+- Staff publication and audit history: retain 12 months after the event.
+- Concierge questions: do not store in application tables by default.
+- Device-local saved sessions and snapshot cache: remain until removed in the app or with app data.
+
+These are conservative engineering defaults and require legal/privacy owner approval before production activation.
