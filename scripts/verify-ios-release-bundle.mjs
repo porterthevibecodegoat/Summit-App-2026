@@ -3,11 +3,14 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 
 const rootDir = findRepoRoot(process.cwd());
-const appPath = resolve(
-  rootDir,
-  process.argv.find((argument) => argument.endsWith(".app")) ??
-    "../work/release-derived-data/Build/Products/Release-iphonesimulator/NotAloneSummit.app"
-);
+const suppliedAppPath = process.argv.find((argument) => argument.endsWith(".app"));
+const defaultAppPaths = [
+  resolve(rootDir, "work/DerivedData/Build/Products/Release-iphonesimulator/NotAloneSummit.app"),
+  resolve(rootDir, "../work/release-derived-data/Build/Products/Release-iphonesimulator/NotAloneSummit.app")
+];
+const appPath = suppliedAppPath
+  ? resolve(rootDir, suppliedAppPath)
+  : (defaultAppPaths.find((candidate) => existsSync(candidate)) ?? defaultAppPaths[0]);
 
 if (!existsSync(appPath)) fail(`Release app bundle not found at ${appPath}.`);
 
@@ -32,6 +35,12 @@ check(
 check(
   "Compiled app contains the linked EAS project identity",
   expoConfig.extra?.eas?.projectId === "5a79b65b-7080-4c27-84e1-8eb5e9d119fd"
+);
+check(
+  "Compiled app disables Expo Router's debug sitemap",
+  expoConfig.plugins?.some(
+    (plugin) => Array.isArray(plugin) && plugin[0] === "expo-router" && plugin[1]?.sitemap === false
+  )
 );
 
 const forbidden = [

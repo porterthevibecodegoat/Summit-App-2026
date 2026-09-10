@@ -49,7 +49,12 @@ const config: ExpoConfig = {
     pushDeliveryEnabled
   },
   plugins: [
-    "expo-router",
+    [
+      "expo-router",
+      {
+        sitemap: false
+      }
+    ],
     "expo-sqlite",
     "expo-notifications",
     "expo-updates",
