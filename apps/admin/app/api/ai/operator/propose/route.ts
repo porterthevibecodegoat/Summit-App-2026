@@ -3,12 +3,14 @@ import { operatorAiCreateProposal } from "@not-alone/domain";
 import { getLiveOpsState, getStaffContext, StaffAuthError } from "../../../../../lib/live-ops-repository";
 import { createScheduleProposal } from "../../../../../lib/staff-ai";
 import { staffDraftSessionsSchema } from "../../../../../lib/live-ops-store";
+import { createOpenAiScheduleProposal } from "../../../../../lib/openai-event-ai";
+import { isOpenAiEnabled } from "../../../../../lib/openai-server";
 
 export async function POST(request: NextRequest) {
   try {
     await getStaffContext(request, ["EDITOR", "PUBLISHER", "ADMIN"]);
     const body = await request.json().catch(() => ({}));
-    const commandText = typeof body.commandText === "string" ? body.commandText : "";
+    const commandText = typeof body.commandText === "string" ? body.commandText.trim().slice(0, 1_000) : "";
     const state = await getLiveOpsState();
     const parsedSessions = body.sessions === undefined
       ? { success: true as const, data: state.draftSessions }
@@ -17,7 +19,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: "Invalid draft sessions supplied to Operator AI." }, { status: 422 });
     }
     const sessions = parsedSessions.data;
-    const proposal = createScheduleProposal(commandText || "No command supplied.", sessions);
+    const fallbackProposal = createScheduleProposal(commandText || "No command supplied.", sessions);
+    let proposal = fallbackProposal;
+    let engine: "openai" | "deterministic-fallback" = "deterministic-fallback";
+    if (isOpenAiEnabled() && commandText.trim().length > 0) {
+      try {
+        proposal = await createOpenAiScheduleProposal(commandText, sessions);
+        engine = "openai";
+      } catch {
+        // Keep the reviewed deterministic proposal path available during model outages.
+      }
+    }
 
     const structuredProposal = operatorAiCreateProposal({
       proposalId: crypto.randomUUID(),
@@ -31,6 +43,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         aiSystem: "EVENT_OPERATOR_AI",
+        engine,
         productionMutated: false,
         proposal,
         structuredProposal,

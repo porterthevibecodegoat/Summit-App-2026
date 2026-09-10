@@ -65,8 +65,12 @@ export default async function AskAiPage() {
               <div className="readinessRow">
                 <span className="statusDot warn" />
                 <div>
-                  <strong>Temporary local mode</strong>
-                  <span>Real OpenAI calls remain disabled until a server-side key and evals are approved.</span>
+                  <strong>{process.env.ENABLE_AI === "true" ? "Live grounded answers" : "Deterministic fallback"}</strong>
+                  <span>
+                    {process.env.ENABLE_AI === "true"
+                      ? "Server-side model calls use the current Supabase state and fall back safely during outages."
+                      : "The tested local answer engine remains available without model access."}
+                  </span>
                 </div>
               </div>
             </div>
@@ -99,11 +103,11 @@ export default async function AskAiPage() {
             </div>
             <div className="qualityIssue info">
               <strong>Website context</strong>
-              <span>Temporary attendee answers include public Summit and Inspiring Children Foundation context.</span>
+              <span>Attendee answers include published Summit and Inspiring Children Foundation context.</span>
             </div>
             <div className="qualityIssue warning">
-              <strong>Production boundary</strong>
-              <span>Real model calls must run server-side, never from mobile or browser bundles.</span>
+              <strong>Server-side boundary</strong>
+              <span>Model credentials and calls remain on the deployed API, never in mobile or browser bundles.</span>
             </div>
           </div>
         </section>

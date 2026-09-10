@@ -1,7 +1,8 @@
 import { Link } from "expo-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { publicAppConfig } from "@not-alone/config";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
 import { getNowAndUpcoming, toEventTimeRange } from "@not-alone/domain";
 import type { EventSnapshot, ScheduleItem } from "@not-alone/validation";
@@ -104,16 +105,34 @@ const featuredPeople = [
   }
 ];
 
+type ConciergeAnswer = {
+  title: string;
+  body: string;
+  items: ScheduleItem[];
+};
+
+type AttendeeAiResponse = {
+  ok?: boolean;
+  engine?: "openai" | "deterministic-fallback";
+  answer?: {
+    title?: string;
+    body?: string;
+    items?: Array<{ id?: string }>;
+  };
+};
+
 export default function HelpScreen() {
   const [selectedPrompt, setSelectedPrompt] = useState<string>(promptChips[0] ?? "What is happening now?");
   const [customQuestion, setCustomQuestion] = useState("");
+  const [remoteAnswer, setRemoteAnswer] = useState<ConciergeAnswer | null>(null);
+  const [answerStatus, setAnswerStatus] = useState<"loading" | "live" | "fallback" | "offline">("loading");
   const { demoEnabled, snapshot, nowUtc } = useSummitDemo();
   const { current, upcoming } = getNowAndUpcoming({
     audienceGroups: ["public"],
     nowUtc,
     snapshot
   });
-  const answer = useMemo(
+  const localAnswer = useMemo(
     () =>
       getLocalConciergeAnswer({
         prompt: selectedPrompt,
@@ -125,6 +144,53 @@ export default function HelpScreen() {
       }),
     [selectedPrompt, snapshot, nowUtc, current, upcoming, demoEnabled]
   );
+  const answer = remoteAnswer ?? localAnswer;
+
+  useEffect(() => {
+    if (demoEnabled) {
+      setRemoteAnswer(null);
+      setAnswerStatus("fallback");
+      return;
+    }
+
+    const controller = new AbortController();
+    setAnswerStatus("loading");
+    fetch(`${publicAppConfig.apiBaseUrl}/api/ai/attendee`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question: selectedPrompt }),
+      signal: controller.signal
+    })
+      .then(async (response) => {
+        const result = (await response.json()) as AttendeeAiResponse;
+        if (!response.ok || !result.ok || !result.answer?.title || !result.answer.body) {
+          throw new Error("Concierge response unavailable.");
+        }
+        const itemById = new Map(snapshot.scheduleItems.map((item) => [item.id, item]));
+        const items = (result.answer.items ?? [])
+          .map((item) => item.id ? itemById.get(item.id) : undefined)
+          .filter((item): item is ScheduleItem => Boolean(item));
+        setRemoteAnswer({ title: result.answer.title, body: result.answer.body, items });
+        setAnswerStatus(result.engine === "openai" ? "live" : "fallback");
+      })
+      .catch((error: unknown) => {
+        if (error instanceof Error && error.name === "AbortError") return;
+        setRemoteAnswer(null);
+        setAnswerStatus("offline");
+      });
+
+    return () => controller.abort();
+  }, [demoEnabled, selectedPrompt, snapshot]);
+
+  const answerKicker = demoEnabled
+    ? "Demo answer"
+    : answerStatus === "loading"
+      ? "Checking live concierge"
+      : answerStatus === "live"
+        ? "Live AI answer"
+        : answerStatus === "offline"
+          ? "Offline schedule answer"
+          : "Schedule-grounded answer";
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
@@ -138,7 +204,7 @@ export default function HelpScreen() {
             <Text style={styles.kicker}>Ask AI</Text>
             <Text style={styles.title}>Your summit concierge.</Text>
             <Text style={styles.copy}>
-              Local prototype answers for the schedule, venue, speakers, and summit context.
+              Personal guidance grounded in the latest published schedule and summit information.
             </Text>
           </View>
         </ImageBackground>
@@ -167,7 +233,7 @@ export default function HelpScreen() {
           </View>
           <View style={styles.inputShell}>
             <TextInput
-              accessibilityLabel="Ask the local schedule concierge"
+              accessibilityLabel="Ask the summit concierge"
               onChangeText={setCustomQuestion}
               onSubmitEditing={() => {
                 const question = customQuestion.trim();
@@ -197,7 +263,7 @@ export default function HelpScreen() {
         </View>
 
         <View style={styles.answerPanel}>
-          <Text style={styles.answerKicker}>{demoEnabled ? "Demo answer" : "Prototype answer"}</Text>
+          <Text accessibilityLiveRegion="polite" style={styles.answerKicker}>{answerKicker}</Text>
           <Text style={styles.answerTitle}>{answer.title}</Text>
           <Text style={styles.answerBody}>{answer.body}</Text>
           {answer.items.length > 0 ? (
@@ -217,7 +283,7 @@ export default function HelpScreen() {
 
         <View style={styles.panel}>
           <CapabilityRow title="Schedule answers" body="Grounded in the same published agenda used by Home and Schedule." />
-          <CapabilityRow title="Summit knowledge" body="Preloaded with approved public website context until the real AI service is connected." />
+          <CapabilityRow title="Summit knowledge" body="Answers use published event context and clearly identify anything that is not yet confirmed." />
           <CapabilityRow title="Human escalation" body="Sensitive or unresolved requests should route to a trained event team member." />
         </View>
 

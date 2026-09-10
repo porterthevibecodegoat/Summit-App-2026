@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getReadOnlyLiveOpsState } from "../../../../lib/live-ops-repository";
 import { createAttendeeConciergeAnswer } from "../../../../lib/attendee-ai";
 import { checkRateLimit } from "../../../../lib/rate-limit";
+import { createOpenAiAttendeeAnswer } from "../../../../lib/openai-event-ai";
+import { isOpenAiEnabled } from "../../../../lib/openai-server";
 
 export async function POST(request: NextRequest) {
   const rateLimit = checkRateLimit(request, "attendee-ai", { limit: 30, windowMs: 60_000 });
@@ -16,21 +18,38 @@ export async function POST(request: NextRequest) {
     ? body.question.trim().slice(0, 500)
     : "What is happening now?";
   const state = await getReadOnlyLiveOpsState();
-  const answer = createAttendeeConciergeAnswer({
+  const fallbackAnswer = createAttendeeConciergeAnswer({
     question,
     snapshot: state.publishedSnapshot,
     nowUtc: new Date().toISOString()
   });
+  const aiEnabled = isOpenAiEnabled();
+  let answer = fallbackAnswer;
+  let engine: "openai" | "deterministic-fallback" = "deterministic-fallback";
+
+  if (aiEnabled) {
+    try {
+      answer = await createOpenAiAttendeeAnswer({
+        question,
+        snapshot: state.publishedSnapshot,
+        nowUtc: new Date().toISOString()
+      });
+      engine = "openai";
+    } catch {
+      answer = {
+        ...fallbackAnswer,
+        warnings: ["Live concierge is temporarily unavailable. This answer uses the latest published schedule."]
+      };
+    }
+  }
 
   return NextResponse.json(
     {
       ok: true,
-      aiEnabled: process.env.ENABLE_AI === "true",
+      aiEnabled,
+      engine,
       answer,
-      note:
-        process.env.ENABLE_AI === "true"
-          ? "OpenAI credentials are present, but this route still uses the deterministic temporary answer engine until structured model calls and evals are enabled."
-          : "Temporary no-key attendee concierge response."
+      note: engine === "openai" ? "Live grounded concierge response." : "Schedule-grounded fallback response."
     },
     {
       headers: {
