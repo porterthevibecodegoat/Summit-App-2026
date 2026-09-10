@@ -8,15 +8,15 @@ Status reflects evidence available on 2026-09-09. Re-run the commands for every 
 | Admin production compilation | Next.js production build passed | Passed |
 | Dependency advisory scan | `pnpm audit --prod --audit-level high` found no known vulnerabilities | Passed |
 | Public staging API | Health, snapshot revision 3, and protected readiness behavior verified | Passed |
-| Release configuration and assets | `pnpm release:preflight` passed 25/25 checks | Passed |
+| Release configuration and assets | `pnpm release:preflight` passed 27/27 checks | Passed |
 | Supabase role/RLS boundaries | `pnpm security:rls` passed 17/17 checks; disposable records cleaned up | Passed |
 | Portal publish to native cache | Revision 3 and all 34 sessions matched with `pnpm mobile:sync-verify` | Passed on Simulator |
 | Native Release compilation | Xcode Release/Simulator build and Apple bundle validation passed | Passed |
 | Compiled iOS bundle | `pnpm mobile:release-verify` passed 16/16 identity, privacy, permission, HTTPS, and secret-boundary checks | Passed |
 | Opening-screen visual fit | Release build inspected on iPhone 17e, iPhone 17 Pro, and iPhone 17 Pro Max with no clipping or overlap | Passed on Simulator |
-| Push registration and receipts | Requires EAS project, APNs credentials, and physical devices | Blocked by credentials |
+| Push registration and receipts | EAS project is linked; APNs credentials and physical devices remain | Blocked by Apple credentials |
 | External-model AI | Requires server key and production eval run | Blocked by credentials |
-| TestFlight install/upgrade | Requires Apple/EAS account | Blocked by credentials |
+| TestFlight install/upgrade | EAS account is linked; Apple Developer/App Store Connect access remains | Blocked by Apple credentials |
 | Final content and media | Requires approved 2026 source of truth and rights | Owner input |
 | Privacy and support legal approval | Public pages are live; approval remains | Owner input |
 

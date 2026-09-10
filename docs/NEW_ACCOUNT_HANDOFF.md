@@ -78,6 +78,6 @@ pnpm ios
 ## Current Limits
 
 - Real app-wide updates require a deployed Supabase backend.
-- Real push notifications require EAS project ID, Apple push credentials, attendee device registration, and a server dispatch worker.
+- Real push notifications have an EAS project ID but still require Apple push credentials, attendee device registration on physical phones, and an enabled server dispatch worker.
 - Real staff AI requires server-side OpenAI credentials and review/approval workflow.
-- App Store/TestFlight requires Apple Developer account setup and production EAS profiles.
+- App Store/TestFlight requires Apple Developer account setup; production EAS profiles already exist.

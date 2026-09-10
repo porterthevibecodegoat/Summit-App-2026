@@ -44,7 +44,7 @@ Completed:
 
 Remaining:
 
-1. Create the EAS project, add Apple push credentials, enable push flags, and validate delivery and receipts on physical devices.
+1. Add Apple push credentials, enable push flags, and validate delivery and receipts on physical devices.
 2. Add the OpenAI key server-side, enable AI flags, and run structured-output evals before allowing staff use.
 3. Load approved content and run accessibility, recovery, and physical-device testing; repeat the completed RLS matrix before release.
 4. Ship an internal TestFlight build, resolve findings, then submit for App Review.

@@ -16,8 +16,8 @@ Rollback: disable the deployment or restore the previous host release. Published
 
 ## 2. Activate Push Separately
 
-- Create/confirm the EAS project and Apple push credential ownership.
-- Add the EAS project ID to client-safe build configuration; add Expo/Apple credentials and `CRON_SECRET` only to server/provider stores.
+- EAS project creation and organization ownership are complete; confirm Apple push credential ownership.
+- The public EAS project ID is in client-safe build configuration; add Expo/Apple credentials and `CRON_SECRET` only to server/provider stores.
 - Keep `ENABLE_NOTIFICATION_DISPATCH=false` while validating device registration.
 - Enable delivery in staging, send only to approved physical test devices, reconcile receipts, and validate retries/cancellation.
 - Enable dispatch for event audiences only after sign-off.
@@ -43,7 +43,7 @@ Rollback: set `ENABLE_AI=false`. Deterministic attendee/staff fallbacks remain a
 
 - Supabase server URL and service-role key.
 - Supabase publishable key and public URL.
-- EAS project ID and Expo access token.
+- Expo access token for automated EAS operations; the public EAS project ID is already configured.
 - Apple Developer/App Store Connect signing and push credentials.
 - Cron/scheduler secret.
 - OpenAI API key and approved model.

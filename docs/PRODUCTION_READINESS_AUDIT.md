@@ -36,10 +36,11 @@ The authenticated staff API exposes the same report at `GET /api/production/read
 - Public HTTPS staff portal and API deployment.
 - Supabase client/server environment, Auth redirects, staff sessions, publish RPC, audit trail, and public snapshot reads.
 - Mobile preview/production API configuration targeting the deployed HTTPS service.
+- Organization-owned EAS project and Expo Updates identity for runtime version `1.0.0`.
 
 ## Intentionally Inactive Until Credentials
 
-- EAS project, Apple/APNs credentials, push feature flags, and physical-device delivery.
+- Apple/APNs credentials, push feature flags, and physical-device delivery.
 - OpenAI server key, model configuration, AI feature flag, and production eval sign-off.
 - App Store Connect/TestFlight submission credentials and release actions.
 

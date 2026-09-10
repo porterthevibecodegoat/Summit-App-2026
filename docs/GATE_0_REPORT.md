@@ -62,10 +62,10 @@ Evidence:
 
 - `expo-dev-client` is installed and configured for development builds.
 - `app.config.ts` defines app name, slug, scheme, portrait orientation, iOS bundle identifier, Expo Updates config, runtime version, and iOS notification usage text.
-- `eas.json` contains development, preview, and production profiles.
+- `apps/mobile/eas.json` contains development, preview, and production profiles in the Expo app root.
 - `runtimeVersion` is pinned to `0.1.0`, which is compatible with the generated native/bare workflow.
 - Native dependencies passed Expo SDK alignment check using Expo's local dependency map.
-- `updates.url` and `extra.eas.projectId` are placeholders and must be replaced before real EAS builds.
+- `updates.url` and `extra.eas.projectId` now target the organization-owned Not Alone Summit EAS project.
 
 ## Shared Demo Data
 
@@ -95,7 +95,7 @@ Evidence:
 - Codex's sandbox cannot reliably talk to CoreSimulatorService, so native `simctl` commands must be run from the user's normal Terminal when direct simulator control is needed.
 - Expo logged a non-blocking UIKit focus warning from `RCTScrollViewComponentView`.
 - Expo Dev Launcher reported an ambiguous build-script dependency warning; the build still succeeded.
-- Production EAS project ID, App Store credentials, final content, and delivery credentials are not configured yet.
+- Production EAS project identity is configured. App Store credentials, final content, and delivery credentials remain pending.
 
 ## Files Changed During Gate 0 / Early Phase 1
 

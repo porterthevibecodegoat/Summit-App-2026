@@ -50,10 +50,10 @@ APP_STORE_PRIVACY_URL=https://summit-app-2026-admin.vercel.app/privacy
 APP_SUPPORT_URL=https://summit-app-2026-admin.vercel.app/support
 ```
 
-Add the EAS project ID later when it is ready:
+The public EAS project identity is configured:
 
 ```sh
-EXPO_PUBLIC_EAS_PROJECT_ID=<real-eas-project-id>
+EXPO_PUBLIC_EAS_PROJECT_ID=5a79b65b-7080-4c27-84e1-8eb5e9d119fd
 ```
 
 ## Supabase Auth Redirect URLs
@@ -85,7 +85,7 @@ Expected staging result:
 - published revision is at least `2`
 - published schedule contains prototype sessions
 
-Production readiness remains blocked until OpenAI and EAS credentials are supplied. Legal approval, approved content, physical-device push testing, accessibility review, and TestFlight evidence remain release gates.
+Production readiness remains blocked until the OpenAI key is supplied. Apple/APNs credentials, legal approval, approved content, physical-device push testing, accessibility review, and TestFlight evidence remain release gates.
 
 ## What This Unlocks
 

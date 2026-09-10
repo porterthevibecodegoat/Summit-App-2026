@@ -1,7 +1,7 @@
 import type { ExpoConfig } from "expo/config";
 import { publicAppConfig } from "@not-alone/config";
 
-const easProjectId = process.env.EXPO_PUBLIC_EAS_PROJECT_ID;
+const easProjectId = process.env.EXPO_PUBLIC_EAS_PROJECT_ID ?? "5a79b65b-7080-4c27-84e1-8eb5e9d119fd";
 const hasEasProject = Boolean(
   easProjectId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(easProjectId)
 );
@@ -10,6 +10,7 @@ const appVersion = "1.0.0";
 
 const config: ExpoConfig = {
   name: publicAppConfig.appName,
+  owner: "inspiring-children-foundation",
   slug: publicAppConfig.appSlug,
   scheme: "notalone",
   version: appVersion,

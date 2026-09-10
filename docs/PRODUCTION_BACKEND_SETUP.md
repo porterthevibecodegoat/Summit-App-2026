@@ -64,4 +64,4 @@ Never print server keys. Verify key shape, table access, function privileges, RL
 
 ## Current Activation
 
-The HTTPS staging portal, Supabase Auth redirects, invite-only administrator activation, atomic publication, public snapshot API, and Simulator sync are active. Remaining activation is limited to EAS/Apple physical-device delivery, external-model AI credentials/evals, final approved content, and App Store release ownership.
+The HTTPS staging portal, Supabase Auth redirects, invite-only administrator activation, atomic publication, public snapshot API, Simulator sync, and organization-owned EAS project are active. Remaining activation is limited to Apple physical-device delivery, external-model AI credentials/evals, final approved content, and App Store release ownership.

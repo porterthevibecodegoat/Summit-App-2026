@@ -29,6 +29,10 @@ check(
   "Compiled mobile API uses deployed HTTPS",
   expoConfig.extra?.apiBaseUrl === "https://summit-app-2026-admin.vercel.app"
 );
+check(
+  "Compiled app contains the linked EAS project identity",
+  expoConfig.extra?.eas?.projectId === "5a79b65b-7080-4c27-84e1-8eb5e9d119fd"
+);
 
 const forbidden = [
   ["Supabase service credential", /sb_secret_[A-Za-z0-9_-]{8,}/],

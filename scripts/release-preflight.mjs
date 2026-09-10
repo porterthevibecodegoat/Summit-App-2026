@@ -7,10 +7,11 @@ const envPath = resolve(rootDir, ".env");
 if (existsSync(envPath) && typeof process.loadEnvFile === "function") process.loadEnvFile(envPath);
 
 const { default: appConfig } = await import("../apps/mobile/app.config.ts");
-const eas = JSON.parse(readFileSync(resolve(rootDir, "eas.json"), "utf8"));
+const eas = JSON.parse(readFileSync(resolve(rootDir, "apps/mobile/eas.json"), "utf8"));
 const nativeInfo = readFileSync(resolve(rootDir, "apps/mobile/ios/NotAloneSummit/Info.plist"), "utf8");
 const privacyManifest = readFileSync(resolve(rootDir, "apps/mobile/ios/NotAloneSummit/PrivacyInfo.xcprivacy"), "utf8");
 const checks = [];
+const expectedEasProjectId = "5a79b65b-7080-4c27-84e1-8eb5e9d119fd";
 
 check("App Store version is 1.0.0", appConfig.version === "1.0.0");
 check("iOS build number is initialized", appConfig.ios?.buildNumber === "1");
@@ -21,6 +22,8 @@ check("Unused Face ID permission is absent", !nativeInfo.includes("NSFaceIDUsage
 check("Notification purpose text is present", typeof appConfig.ios?.infoPlist?.NSUserNotificationsUsageDescription === "string");
 check("Privacy manifest declares no tracking", privacyManifest.includes("NSPrivacyTracking") && privacyManifest.includes("<false/>"));
 check("Privacy manifest declares required-reason APIs", privacyManifest.includes("NSPrivacyAccessedAPITypes"));
+check("EAS project identity is linked", appConfig.owner === "inspiring-children-foundation" && appConfig.extra?.eas?.projectId === expectedEasProjectId);
+check("Expo Updates targets the linked project", appConfig.updates?.enabled === true && appConfig.updates?.url === `https://u.expo.dev/${expectedEasProjectId}`);
 
 const apiBaseUrl = String(appConfig.extra?.apiBaseUrl ?? "");
 check("Mobile API uses public HTTPS", isPublicHttpsUrl(apiBaseUrl));
