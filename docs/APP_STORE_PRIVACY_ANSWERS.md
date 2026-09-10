@@ -25,7 +25,7 @@ Proposed retention: disable invalid registrations immediately and delete remaini
 
 Questions are sent to the Not Alone Summit server when server AI is enabled. The app instructs attendees not to submit sensitive information. Questions are not intentionally linked to an attendee identity and are not stored by the application by default.
 
-Before enabling external-model AI, confirm provider retention settings, `store: false`, regional/data-processing terms, and production log redaction.
+Before approving external-model AI for production event use, confirm provider retention settings, `store: false`, regional/data-processing terms, and production log redaction. The staging server integration is active with deterministic fallback while provider credits are unavailable.
 
 ## Diagnostics And Security
 

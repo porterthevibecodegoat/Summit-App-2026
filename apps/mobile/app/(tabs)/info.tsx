@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     borderRadius: 8
   },
   heroScrim: {
-    backgroundColor: "rgba(13, 19, 31, 0.24)",
+    backgroundColor: "rgba(5, 10, 30, 0.68)",
     flex: 1,
     justifyContent: "space-between",
     padding: spacing.lg
@@ -197,13 +197,13 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm
   },
   dateText: {
-    color: colors.surface,
+    color: colors.ink,
     fontSize: 13,
     fontWeight: "800",
     textAlign: "right"
   },
   heroTitle: {
-    color: colors.surface,
+    color: colors.ink,
     fontFamily: typography.display,
     fontSize: 34,
     fontWeight: "700",

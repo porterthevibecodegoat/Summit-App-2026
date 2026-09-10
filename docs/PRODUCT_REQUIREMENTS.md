@@ -10,4 +10,4 @@ Current implementation status:
 - Staff portal is a separate Next.js app.
 - The HTTPS staging portal, Supabase publishing path, public snapshot API, offline native cache, day-separated schedule, session details, map, information, deterministic concierge, and staff operating workflows are implemented.
 - Credential-independent release preflight, live RLS verification, policy pages, App Store metadata drafts, and incident/rollback procedures are implemented.
-- Apple physical-device delivery through the linked EAS project, external-model AI, approved 2026 content, TestFlight, and App Review remain release gates.
+- Apple physical-device delivery through the linked EAS project, live-model AI evaluation after provider credits are available, approved 2026 content, TestFlight, and App Review remain release gates.

@@ -2,7 +2,7 @@
 
 Current status: **LIVE STAGING BACKEND, NOT RELEASE-READY**
 
-The staff portal/API is deployed over HTTPS and connected to Supabase. Staff authentication, atomic publishing, the public snapshot API, and native mobile refresh are active. Push and external-model AI remain safely disabled until their separate credentials and validation gates are complete.
+The staff portal/API is deployed over HTTPS and connected to Supabase. Staff authentication, atomic publishing, the public snapshot API, native mobile refresh, and server-side OpenAI routes are active. OpenAI failures degrade to deterministic schedule-grounded answers; live model responses currently await provider account credits. Push remains safely disabled until Apple credentials and physical-device validation are complete.
 
 ```sh
 pnpm production:readiness
@@ -17,7 +17,7 @@ The authenticated staff API exposes the same report at `GET /api/production/read
 - Supabase schema, RLS, staff roles, staging seed, atomic publish/rollback functions, revisions, audit records, import records, attendee devices, notification jobs, and delivery attempts.
 - HttpOnly staff sessions, server route guards, bearer-token compatibility for native/server clients, rate limits, and redacted public health responses.
 - Schedule editing, quality gates, drag/drop and accessible reordering, safe review/publish, revision history, and rollback.
-- Deterministic State AI, attendee concierge, and Official Change AI fallback behavior without external model calls.
+- Server-side OpenAI Responses API integration for State AI, attendee concierge, and Official Change AI, with strict structured outputs and deterministic fallback behavior.
 - Strict target matching for Official Change AI; ambiguous or missing sessions produce no mutation proposal.
 - PDF/TXT/CSV extraction and staged import review with file-size/type safeguards and no automatic publishing.
 - Header-aware CSV ingestion with quoted-field support, deterministic duplicate handling, schema validation, and a downloadable staff template.
@@ -33,6 +33,8 @@ The authenticated staff API exposes the same report at `GET /api/production/read
 - Production dependency advisory scan reports no known vulnerabilities.
 - Staff portal desktop and narrow layouts have no document overflow; mobile staff status remains in page flow instead of obstructing controls.
 - Opening-screen fixed-format controls pass Accessibility Large and Increase Contrast inspection without clipped labels.
+- Attendee map markers use a numbered venue index instead of overlapping absolute-position labels, and the Info hero maintains readable foreground contrast.
+- Legacy `notalone://today` and `notalone://ask-ai` links redirect to their current attendee destinations.
 
 ## Active Staging Services
 
@@ -44,8 +46,11 @@ The authenticated staff API exposes the same report at `GET /api/production/read
 ## Intentionally Inactive Until Credentials
 
 - Apple/APNs credentials, push feature flags, and physical-device delivery.
-- OpenAI server key, model configuration, AI feature flag, and production eval sign-off.
 - App Store Connect/TestFlight submission credentials and release actions.
+
+## Active With A Remaining External Gate
+
+- OpenAI server key, model configuration, and AI feature flag are active in the Vercel server environment. The API currently returns the tested deterministic fallback because the provider account reports exhausted credits; live-model evaluation resumes automatically after credits are available.
 
 ## Pending Non-Secret Inputs
 

@@ -29,7 +29,7 @@ pnpm production:readiness
 
 The staging backend and staff portal are live over HTTPS. Supabase Auth, invited-staff administrator activation, atomic schedule publishing, the public snapshot API, and native mobile refresh are connected. A controlled production-path verification published revision 3 and the running iOS app adopted the same 34-session revision without reinstalling.
 
-Push delivery and external-model AI remain intentionally disabled until EAS/Apple credentials, physical-device validation, and an OpenAI server key are supplied. Final 2026 content, legal URLs, accessibility/device review, TestFlight, and App Store submission also remain release gates.
+Push delivery remains intentionally disabled until Apple credentials and physical-device validation are complete. Server-side OpenAI integration is deployed with deterministic fallback; live model responses remain blocked only by provider account credits and final evaluation sign-off. Final 2026 content, legal approval, accessibility/device review, TestFlight, and App Store submission also remain release gates.
 
 See `docs/PRODUCTION_READINESS_AUDIT.md` for the current verification record and release gates.
 

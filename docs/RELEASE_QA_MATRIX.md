@@ -4,7 +4,7 @@ Status reflects evidence available on 2026-09-10. Re-run the commands for every 
 
 | Area | Current Evidence | Status |
 | --- | --- | --- |
-| Type safety and unit behavior | Lint, typecheck, and all 53 tests passed | Passed |
+| Type safety and unit behavior | Lint, typecheck, and all 55 tests passed | Passed |
 | Admin production compilation | Next.js production build passed | Passed |
 | Dependency advisory scan | `pnpm audit --prod --audit-level moderate` found no known vulnerabilities | Passed |
 | Public staging API | Health, snapshot revision 3, and protected readiness behavior verified | Passed |
@@ -18,7 +18,7 @@ Status reflects evidence available on 2026-09-10. Re-run the commands for every 
 | Structured schedule import | Multipart CSV template upload parsed quoted fields and staged 2/2 rows with zero unmatched rows; PDF/TXT parser regression tests remain green | Passed locally |
 | Staff responsive layout | Schedule Editor and Schedule Import inspected at 1440x900 and 390x844 with no document overflow or obstructed controls | Passed locally |
 | Push registration and receipts | EAS project is linked; APNs credentials and physical devices remain | Blocked by Apple credentials |
-| External-model AI | Requires server key and production eval run | Blocked by credentials |
+| External-model AI | Server key, model, feature flag, structured outputs, rate limits, and deterministic fallback are deployed; live endpoint correctly falls back while provider credits are exhausted | Blocked by provider billing and final live-model eval |
 | TestFlight install/upgrade | EAS account is linked; Apple Developer/App Store Connect access remains | Blocked by Apple credentials |
 | Final content and media | Requires approved 2026 source of truth and rights | Owner input |
 | Privacy and support legal approval | Public pages are live; approval remains | Owner input |
@@ -31,6 +31,8 @@ The opening screen has been inspected on the available compact, Pro, and Pro Max
 - Standard iPhone: opening screen passed at standard and Accessibility Large text; full-screen walkthrough remains to be signed off
 - Pro iPhone: iPhone 17 Pro opening screen passed
 - Pro Max iPhone: iPhone 17 Pro Max opening screen passed
+
+Compact 390x844 browser inspection also passed Home, Schedule, Ask AI, Map, and Info after the latest map-label and hero-contrast repairs. Tuesday tab selection was verified to remove Monday content rather than concatenate days.
 
 For each size, test standard text and at least one larger Dynamic Type setting. The app is portrait-only and iPad support is intentionally disabled.
 

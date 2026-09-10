@@ -85,7 +85,7 @@ Expected staging result:
 - published revision is at least `2`
 - published schedule contains prototype sessions
 
-Production readiness remains blocked until the OpenAI key is supplied. Apple/APNs credentials, legal approval, approved content, physical-device push testing, accessibility review, and TestFlight evidence remain release gates.
+The OpenAI key, model, and staging feature flag are configured server-side. Live-model responses remain blocked by provider account credits, while deterministic fallbacks stay operational. Apple/APNs credentials, legal approval, approved content, physical-device push testing, accessibility review, AI evaluation, and TestFlight evidence remain release gates.
 
 ## What This Unlocks
 

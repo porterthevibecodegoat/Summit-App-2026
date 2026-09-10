@@ -41,6 +41,8 @@ export default function MapScreen() {
               <View style={styles.mapGridLineB} />
               {snapshot.locations.map((location, index) => (
                 <View
+                  accessibilityLabel={`${index + 1}. ${location.name}`}
+                  accessible
                   key={location.id}
                   style={[
                     styles.mapMarker,
@@ -50,20 +52,21 @@ export default function MapScreen() {
                     }
                   ]}
                 >
-                  <View style={[styles.markerDot, index === 0 && styles.markerDotPrimary]} />
-                  <Text style={styles.mapRoomText} numberOfLines={2}>{location.name}</Text>
+                  <Text style={[styles.markerNumber, index === 0 && styles.markerNumberPrimary]}>{index + 1}</Text>
                 </View>
               ))}
-              <View style={styles.youAreHere}>
-                <View style={styles.youDot} />
-                <Text style={styles.youText}>You are here</Text>
+              <View style={styles.mapLegend}>
+                <View style={styles.legendDot} />
+                <Text style={styles.legendText}>Room index</Text>
               </View>
             </View>
 
             <View style={styles.locationList}>
-              {snapshot.locations.map((location) => (
+              {snapshot.locations.map((location, index) => (
                 <View key={location.id} style={styles.locationRow}>
-                  <View style={styles.locationIndex} />
+                  <View style={styles.locationIndex}>
+                    <Text style={styles.locationIndexText}>{index + 1}</Text>
+                  </View>
                   <View style={styles.locationBody}>
                     <Text style={styles.locationName}>{location.name}</Text>
                     <Text style={styles.locationDescription}>{location.description}</Text>
@@ -194,34 +197,26 @@ const styles = StyleSheet.create({
   },
   mapMarker: {
     alignItems: "center",
-    backgroundColor: "rgba(18, 29, 68, 0.9)",
-    borderColor: colors.border,
-    borderRadius: 8,
+    backgroundColor: "rgba(18, 29, 68, 0.96)",
+    borderColor: "rgba(230, 192, 111, 0.52)",
+    borderRadius: 15,
     borderWidth: 1,
-    flexDirection: "row",
-    gap: spacing.sm,
-    maxWidth: 132,
-    padding: spacing.md,
+    height: 30,
+    justifyContent: "center",
     position: "absolute",
-    transform: [{ translateX: -28 }, { translateY: -18 }]
+    transform: [{ translateX: -15 }, { translateY: -15 }],
+    width: 30
   },
-  markerDot: {
-    backgroundColor: colors.plum,
-    borderRadius: 8,
-    height: 8,
-    width: 8
-  },
-  markerDotPrimary: {
-    backgroundColor: colors.gold
-  },
-  mapRoomText: {
+  markerNumber: {
     color: colors.surfaceMuted,
-    fontFamily: typography.semibold,
-    fontSize: 12,
-    fontWeight: "700",
-    lineHeight: 16
+    fontFamily: typography.bold,
+    fontSize: 11,
+    fontWeight: "800"
   },
-  youAreHere: {
+  markerNumberPrimary: {
+    color: colors.gold
+  },
+  mapLegend: {
     alignItems: "center",
     bottom: spacing.lg,
     flexDirection: "row",
@@ -229,13 +224,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: spacing.lg
   },
-  youDot: {
+  legendDot: {
     backgroundColor: colors.gold,
     borderRadius: 8,
     height: 12,
     width: 12
   },
-  youText: {
+  legendText: {
     color: colors.gold,
     fontFamily: typography.bold,
     fontSize: 12,
@@ -257,11 +252,20 @@ const styles = StyleSheet.create({
     padding: spacing.lg
   },
   locationIndex: {
-    backgroundColor: colors.gold,
-    borderRadius: 8,
-    height: 10,
-    marginTop: 5,
-    width: 10
+    alignItems: "center",
+    backgroundColor: "rgba(230, 192, 111, 0.14)",
+    borderColor: "rgba(230, 192, 111, 0.42)",
+    borderRadius: 14,
+    borderWidth: 1,
+    height: 28,
+    justifyContent: "center",
+    width: 28
+  },
+  locationIndexText: {
+    color: colors.gold,
+    fontFamily: typography.bold,
+    fontSize: 11,
+    fontWeight: "800"
   },
   locationBody: {
     flex: 1

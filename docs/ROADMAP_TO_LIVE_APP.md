@@ -1,6 +1,6 @@
 # Roadmap To Live App
 
-The Not Alone Summit product now has a **live HTTPS staging backend**. Supabase, staff authentication, atomic publishing, the public snapshot API, and native iOS snapshot refresh are connected. Push credentials, external-model AI, approved 2026 content, and release validation remain deliberately last.
+The Not Alone Summit product now has a **live HTTPS staging backend**. Supabase, staff authentication, atomic publishing, the public snapshot API, native iOS snapshot refresh, and server-side OpenAI routes are connected. The AI routes retain deterministic fallback while provider credits are unavailable. Push credentials, live-model evaluation, approved 2026 content, and release validation remain deliberately last.
 
 Run the machine-readable audit with:
 

@@ -26,16 +26,18 @@ Rollback: set both push flags false. Existing schedule sync continues without no
 
 ## 3. Activate OpenAI Separately
 
-- Add `OPENAI_API_KEY` and approved model only to the server environment.
-- Keep `ENABLE_AI=false` while running attendee, State AI, and Official Change AI evals.
-- Verify grounding, schema validation, ambiguous-command refusal, prompt-injection resistance, rate limits, data retention, and provider-failure fallback.
-- Enable staging AI only after eval approval.
+- Status: server-only `OPENAI_API_KEY`, model configuration, and `ENABLE_AI=true` are deployed in Vercel; no key is present in the repository, browser bundle, or mobile bundle.
+- Structured-output validation, strict proposal matching, ambiguous-command refusal, rate limits, and provider-failure fallback are implemented and covered by automated tests.
+- Add provider account credits, then run the attendee, State AI, and Official Change AI live-model evaluation set before production sign-off.
+- Review provider retention settings and approve production data-handling policy before event use.
 
 Rollback: set `ENABLE_AI=false`. Deterministic attendee/staff fallbacks remain available.
 
 ## 4. Release Credentials
 
-- Configure App Store Connect/EAS access under the organization-owned Apple team.
+- Sign in to the organization-owned Apple Developer team and confirm active Apple Developer Program membership.
+- Register or confirm the App ID `org.inspiringchildren.notalonesummit`, with Push Notifications enabled.
+- Connect EAS project `5a79b65b-7080-4c27-84e1-8eb5e9d119fd` to the same Apple team and let EAS manage the distribution certificate, provisioning profile, and APNs key unless the organization has an established credential-management policy.
 - Build an internal TestFlight release, inspect the signed bundle/environment, and complete physical-device and accessibility testing.
 - Submit only after final policy URLs, content rights, privacy answers, reviewer notes, and stakeholder sign-off are complete.
 
