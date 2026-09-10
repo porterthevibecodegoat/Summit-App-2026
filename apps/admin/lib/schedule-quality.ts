@@ -127,7 +127,7 @@ export function createScheduleQualityReport(sessions: StaffDraftSession[]): Sche
     if (!parsed.dayKey) {
       issues.push({
         id: `${session.id}-unclear-day`,
-        severity: "warning",
+        severity: "blocking",
         title: "Unclear day",
         message: `${rowLabel} has an unclear day label. Use Monday Nov 2, Tuesday Nov 3, or Wednesday Nov 4.`,
         sessionIds: [session.id]

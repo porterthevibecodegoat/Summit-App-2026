@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { operatorAiCreateProposal } from "@not-alone/domain";
 import { getLiveOpsState, getStaffContext, StaffAuthError } from "../../../../../lib/live-ops-repository";
 import { createScheduleProposal } from "../../../../../lib/staff-ai";
+import { staffDraftSessionsSchema } from "../../../../../lib/live-ops-store";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,7 +10,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json().catch(() => ({}));
     const commandText = typeof body.commandText === "string" ? body.commandText : "";
     const state = await getLiveOpsState();
-    const sessions = Array.isArray(body.sessions) ? body.sessions : state.draftSessions;
+    const parsedSessions = body.sessions === undefined
+      ? { success: true as const, data: state.draftSessions }
+      : staffDraftSessionsSchema.safeParse(body.sessions);
+    if (!parsedSessions.success) {
+      return NextResponse.json({ ok: false, error: "Invalid draft sessions supplied to Operator AI." }, { status: 422 });
+    }
+    const sessions = parsedSessions.data;
     const proposal = createScheduleProposal(commandText || "No command supplied.", sessions);
 
     const structuredProposal = operatorAiCreateProposal({

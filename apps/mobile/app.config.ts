@@ -23,6 +23,7 @@ const config: ExpoConfig = {
     buildNumber: "1",
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
+      UIBackgroundModes: ["fetch", "remote-notification"],
       NSUserNotificationsUsageDescription:
         "Notifications provide schedule reminders and urgent event changes for Not Alone Summit."
     }

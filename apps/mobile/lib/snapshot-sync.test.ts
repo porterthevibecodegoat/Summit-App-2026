@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { demoSnapshot } from "@not-alone/test-fixtures";
-import { selectPublishedSnapshot } from "./snapshot-sync";
+import { selectCachedSnapshot, selectPublishedSnapshot } from "./snapshot-sync";
 
 describe("mobile published snapshot selection", () => {
   it("accepts the first cloud snapshot", () => {
@@ -25,5 +25,15 @@ describe("mobile published snapshot selection", () => {
 
     expect(result.snapshot.revision).toBe(4);
     expect(result.rejectedStaleRevision).toBe(3);
+  });
+
+  it("does not let late cache hydration overwrite an active cloud snapshot", () => {
+    const cloud = { ...demoSnapshot, revision: 5, serverTimeUtc: "2026-09-10T17:00:00.000Z" };
+    const cached = { ...demoSnapshot, revision: 5, serverTimeUtc: "2026-09-09T17:00:00.000Z" };
+
+    const result = selectCachedSnapshot(cloud, cached);
+
+    expect(result.snapshot).toBe(cloud);
+    expect(result.snapshot.serverTimeUtc).toBe("2026-09-10T17:00:00.000Z");
   });
 });

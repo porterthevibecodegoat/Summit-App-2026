@@ -13,7 +13,7 @@ import {
 } from "@not-alone/validation";
 import {
   buildPublishedSnapshotFromDraftSessions,
-  createNotificationJobs,
+  createNotificationJobsForPublish,
   DraftPublishError,
   publishDraftSessions,
   readLiveOpsStore,
@@ -22,6 +22,7 @@ import {
   rollbackLastPublishedSnapshot,
   saveDraftSessions,
   type LiveOpsStore,
+  staffDraftSessionsSchema,
   type StaffDraftSession
 } from "./live-ops-store";
 import { createPublishPreview } from "./publish-diff";
@@ -481,7 +482,7 @@ async function publishSupabaseDraft(
   const nowUtc = new Date().toISOString();
   const nextRevision = state.publishedSnapshot.revision + 1;
   const snapshot = buildPublishedSnapshotFromDraftSessions(sessions, nextRevision, nowUtc);
-  const notificationJobs = createNotificationJobs(snapshot);
+  const notificationJobs = createNotificationJobsForPublish(snapshot, options.notifyAttendees);
   const preview = createPublishPreview(state.publishedSnapshot, sessions, nowUtc);
   const changesCount = preview.counts.added + preview.counts.changed + preview.counts.removed;
 
@@ -535,7 +536,7 @@ async function rollbackSupabaseRevision(options: { notifyAttendees: boolean; sta
       publishedAt: nowUtc
     }))
   });
-  const notificationJobs = createNotificationJobs(rollbackSnapshot);
+  const notificationJobs = createNotificationJobsForPublish(rollbackSnapshot, options.notifyAttendees);
   const revision = await publishAtomicSupabaseRevision({
     expectedPreviousRevision: currentState.publishedSnapshot.revision,
     snapshot: rollbackSnapshot,
@@ -628,9 +629,10 @@ async function registerSupabaseDevice(registration: AttendeeDeviceRegistration) 
 }
 
 function parseDraftSessions(value: unknown, snapshot: EventSnapshot): StaffDraftSession[] {
-  const candidate = value as { draftSessions?: StaffDraftSession[] } | undefined;
-  if (Array.isArray(candidate?.draftSessions)) {
-    return candidate.draftSessions;
+  const candidate = value as { draftSessions?: unknown } | undefined;
+  const parsed = staffDraftSessionsSchema.safeParse(candidate?.draftSessions);
+  if (parsed.success) {
+    return parsed.data;
   }
 
   return snapshot.scheduleItems.map((item) => ({

@@ -1,17 +1,7 @@
 import { createScheduleQualityReport } from "./schedule-quality";
+import type { StaffDraftSession as DraftSession } from "./live-ops-store";
 
-export type DraftSession = {
-  id: string;
-  day: string;
-  start: string;
-  end: string;
-  title: string;
-  speaker: string;
-  location: string;
-  audience: string;
-  status: "Draft" | "Ready" | "Needs review";
-  reminders: string;
-};
+export type { StaffDraftSession as DraftSession } from "./live-ops-store";
 
 export type ProposalChange = {
   id: string;

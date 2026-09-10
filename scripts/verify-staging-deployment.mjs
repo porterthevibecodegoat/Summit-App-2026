@@ -1,4 +1,5 @@
-const baseUrl = normalizeBaseUrl(process.env.STAGING_ADMIN_URL ?? process.argv[2] ?? "");
+const positionalBaseUrl = process.argv.slice(2).find((argument) => argument !== "--") ?? "";
+const baseUrl = normalizeBaseUrl(process.env.STAGING_ADMIN_URL ?? positionalBaseUrl);
 
 if (!baseUrl) {
   console.error("Set STAGING_ADMIN_URL or pass the staging admin URL as the first argument.");

@@ -20,6 +20,13 @@ check("App is iPhone-only and portrait-oriented", appConfig.ios?.supportsTablet 
 check("Export-compliance declaration is present", appConfig.ios?.infoPlist?.ITSAppUsesNonExemptEncryption === false && nativeInfo.includes("ITSAppUsesNonExemptEncryption"));
 check("Unused Face ID permission is absent", !nativeInfo.includes("NSFaceIDUsageDescription"));
 check("Notification purpose text is present", typeof appConfig.ios?.infoPlist?.NSUserNotificationsUsageDescription === "string");
+check(
+  "Notification background modes are declared",
+  appConfig.ios?.infoPlist?.UIBackgroundModes?.includes("fetch") === true &&
+    appConfig.ios?.infoPlist?.UIBackgroundModes?.includes("remote-notification") === true &&
+    nativeInfo.includes("<string>fetch</string>") &&
+    nativeInfo.includes("<string>remote-notification</string>")
+);
 check("Privacy manifest declares no tracking", privacyManifest.includes("NSPrivacyTracking") && privacyManifest.includes("<false/>"));
 check("Privacy manifest declares required-reason APIs", privacyManifest.includes("NSPrivacyAccessedAPITypes"));
 check("EAS project identity is linked", appConfig.owner === "inspiring-children-foundation" && appConfig.extra?.eas?.projectId === expectedEasProjectId);

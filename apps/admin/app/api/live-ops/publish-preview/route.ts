@@ -1,18 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStaffContext, previewPublish, StaffAuthError } from "../../../../lib/live-ops-repository";
-import type { StaffDraftSession } from "../../../../lib/live-ops-store";
+import { staffDraftSessionsSchema } from "../../../../lib/live-ops-store";
 
 export async function POST(request: NextRequest) {
   try {
     const staff = await getStaffContext(request, ["VIEWER", "EDITOR", "PUBLISHER", "ADMIN"]);
     const body = await request.json().catch(() => ({}));
-    const sessions = Array.isArray(body.sessions) ? (body.sessions as StaffDraftSession[]) : [];
+    const parsed = staffDraftSessionsSchema.safeParse(body.sessions);
 
-    if (sessions.length === 0) {
-      return NextResponse.json({ ok: false, error: "At least one draft session is required to preview publication." }, { status: 422 });
+    if (!parsed.success || parsed.data.length === 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "At least one valid draft session is required to preview publication.",
+          issues: parsed.success ? [] : parsed.error.issues.map((issue) => issue.message)
+        },
+        { status: 422 }
+      );
     }
 
-    const preview = await previewPublish(sessions, staff);
+    const preview = await previewPublish(parsed.data, staff);
 
     return NextResponse.json(
       {

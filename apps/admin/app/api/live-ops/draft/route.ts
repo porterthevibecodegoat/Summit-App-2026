@@ -1,18 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStaffContext, saveDraft, StaffAuthError } from "../../../../lib/live-ops-repository";
-import type { StaffDraftSession } from "../../../../lib/live-ops-store";
+import { staffDraftSessionsSchema } from "../../../../lib/live-ops-store";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}));
-  const sessions = Array.isArray(body.sessions) ? (body.sessions as StaffDraftSession[]) : [];
+  const parsed = staffDraftSessionsSchema.safeParse(body.sessions);
 
-  if (sessions.length === 0) {
-    return NextResponse.json({ ok: false, error: "At least one draft session is required." }, { status: 422 });
+  if (!parsed.success || parsed.data.length === 0) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "A valid draft with at least one session is required.",
+        issues: parsed.success ? [] : parsed.error.issues.map((issue) => issue.message)
+      },
+      { status: 422 }
+    );
   }
 
   try {
     const staff = await getStaffContext(request, ["EDITOR", "PUBLISHER", "ADMIN"]);
-    const result = await saveDraft(sessions, staff);
+    const result = await saveDraft(parsed.data, staff);
 
     return NextResponse.json(
       {

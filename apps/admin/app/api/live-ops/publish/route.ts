@@ -1,19 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { changeSourceSchema } from "@not-alone/validation";
 import { getStaffContext, publishDraft, StaffAuthError } from "../../../../lib/live-ops-repository";
-import { DraftPublishError, type StaffDraftSession } from "../../../../lib/live-ops-store";
+import { DraftPublishError, staffDraftSessionsSchema } from "../../../../lib/live-ops-store";
 
 export async function POST(request: NextRequest) {
   try {
     const staff = await getStaffContext(request, ["PUBLISHER", "ADMIN"]);
     const body = await request.json().catch(() => ({}));
-    const sessions = Array.isArray(body.sessions) ? (body.sessions as StaffDraftSession[]) : [];
+    const parsed = staffDraftSessionsSchema.safeParse(body.sessions);
     const source = changeSourceSchema.catch("MANUAL_EDITOR").parse(body.source);
     const notifyAttendees = body.notifyAttendees === true;
     const confirmPublish = body.confirmPublish === true;
 
-    if (sessions.length === 0) {
-      return NextResponse.json({ ok: false, error: "At least one ready session is required before publishing." }, { status: 422 });
+    if (!parsed.success || parsed.data.length === 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "At least one valid ready session is required before publishing.",
+          issues: parsed.success ? [] : parsed.error.issues.map((issue) => issue.message)
+        },
+        { status: 422 }
+      );
     }
 
     if (!confirmPublish) {
@@ -26,7 +33,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await publishDraft(sessions, { source, notifyAttendees, staff });
+    const result = await publishDraft(parsed.data, { source, notifyAttendees, staff });
 
     return NextResponse.json(
       {

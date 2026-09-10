@@ -38,7 +38,7 @@ describe("schedule quality report", () => {
     expect(messages.join(" ")).toContain("overlaps");
   });
 
-  it("warns on unclear day labels and missing reminder offsets", () => {
+  it("blocks unclear day labels and warns on missing reminder offsets", () => {
     const report = createScheduleQualityReport([
       {
         ...readySession,
@@ -48,7 +48,8 @@ describe("schedule quality report", () => {
       }
     ]);
 
-    expect(report.publishable).toBe(true);
-    expect(report.issueCounts.warning).toBe(2);
+    expect(report.publishable).toBe(false);
+    expect(report.issueCounts.blocking).toBe(1);
+    expect(report.issueCounts.warning).toBe(1);
   });
 });

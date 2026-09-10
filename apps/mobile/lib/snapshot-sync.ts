@@ -23,3 +23,17 @@ export function selectPublishedSnapshot(
     advanced: Boolean(current && incoming.revision > current.revision)
   };
 }
+
+export function selectCachedSnapshot(
+  current: EventSnapshot | null,
+  cached: EventSnapshot
+): SnapshotSelection {
+  if (current) {
+    return {
+      snapshot: current,
+      advanced: false
+    };
+  }
+
+  return selectPublishedSnapshot(null, cached);
+}

@@ -60,6 +60,18 @@ describe("fetchPublishedSnapshot", () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
+  it("normalizes a trailing slash in the configured API URL", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => snapshot });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await fetchPublishedSnapshot("https://staff.example.com///");
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://staff.example.com/api/snapshot",
+      expect.any(Object)
+    );
+  });
+
   it("throws on non-ok responses", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 503 }));
 

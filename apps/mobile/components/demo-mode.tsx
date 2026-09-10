@@ -8,7 +8,7 @@ import { publicAppConfig } from "@not-alone/config";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
 import { demoSnapshot as canonicalSnapshot } from "@not-alone/test-fixtures";
 import { eventSnapshotSchema, type EventSnapshot, type ScheduleItem } from "@not-alone/validation";
-import { selectPublishedSnapshot } from "../lib/snapshot-sync";
+import { selectCachedSnapshot, selectPublishedSnapshot } from "../lib/snapshot-sync";
 
 const LOCATION_IDS = {
   theater: "827d53e5-a0c6-4fdd-9dd7-bf72f04e8651",
@@ -144,8 +144,12 @@ export function SummitDemoProvider({ children }: PropsWithChildren) {
 
         const cachedValue = JSON.parse(cached) as { snapshot?: unknown; syncedAt?: unknown };
         const parsed = eventSnapshotSchema.parse(cachedValue.snapshot ?? cachedValue);
-        setPublishedSnapshot(parsed);
-        publishedSnapshotRef.current = parsed;
+        const selection = selectCachedSnapshot(publishedSnapshotRef.current, parsed);
+        if (selection.snapshot !== parsed) {
+          return;
+        }
+        setPublishedSnapshot(selection.snapshot);
+        publishedSnapshotRef.current = selection.snapshot;
         setLastSuccessfulSyncAt(typeof cachedValue.syncedAt === "string" ? cachedValue.syncedAt : undefined);
         setServerClockOffsetMs(0);
       } catch {
@@ -259,7 +263,7 @@ export function SummitDemoProvider({ children }: PropsWithChildren) {
           return;
         }
 
-        await fetch(`${mobileApiBaseUrl}/api/devices/register`, {
+        const response = await fetch(`${mobileApiBaseUrl}/api/devices/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -272,6 +276,9 @@ export function SummitDemoProvider({ children }: PropsWithChildren) {
             lastSeenAt: new Date().toISOString()
           })
         });
+        if (!response.ok) {
+          throw new Error(`Device registration failed with status ${response.status}.`);
+        }
       } catch (error) {
         if (active) {
           setSyncError(error instanceof Error ? error.message : "Unable to register this device for push delivery.");

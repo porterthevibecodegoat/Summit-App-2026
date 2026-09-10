@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getNowAndUpcoming } from "@not-alone/domain";
 import { getReadOnlyLiveOpsState, getStaffContext, StaffAuthError } from "../../../../lib/live-ops-repository";
+import { staffDraftSessionsSchema } from "../../../../lib/live-ops-store";
 import { createStateAnswer } from "../../../../lib/staff-ai";
 
 export async function POST(request: NextRequest) {
@@ -10,7 +11,13 @@ export async function POST(request: NextRequest) {
     const question = typeof body.question === "string" ? body.question : "What is the current event state?";
     const state = await getReadOnlyLiveOpsState();
     const snapshot = state.publishedSnapshot;
-    const sessions = Array.isArray(body.sessions) ? body.sessions : state.draftSessions;
+    const parsedSessions = body.sessions === undefined
+      ? { success: true as const, data: state.draftSessions }
+      : staffDraftSessionsSchema.safeParse(body.sessions);
+    if (!parsedSessions.success) {
+      return NextResponse.json({ ok: false, error: "Invalid draft sessions supplied to State AI." }, { status: 422 });
+    }
+    const sessions = parsedSessions.data;
     const publishState = body.publishState && typeof body.publishState === "object" ? body.publishState : null;
     const timeline = getNowAndUpcoming({
       snapshot,

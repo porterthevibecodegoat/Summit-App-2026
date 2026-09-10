@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { createHash } from "node:crypto";
+import { z } from "zod";
 import { demoSnapshot } from "@not-alone/test-fixtures";
 import {
   eventSnapshotSchema,
@@ -12,18 +13,22 @@ import {
 } from "@not-alone/validation";
 import { getBlockingPublishMessages } from "./schedule-quality";
 
-export type StaffDraftSession = {
-  id: string;
-  day: string;
-  start: string;
-  end: string;
-  title: string;
-  speaker: string;
-  location: string;
-  audience: string;
-  status: "Draft" | "Ready" | "Needs review";
-  reminders: string;
-};
+export const staffDraftSessionSchema = z.object({
+  id: z.string().trim().min(1).max(200),
+  day: z.string().trim().max(100),
+  start: z.string().trim().max(40),
+  end: z.string().trim().max(40),
+  title: z.string().trim().max(300),
+  speaker: z.string().trim().max(300),
+  location: z.string().trim().max(300),
+  audience: z.string().trim().max(100),
+  status: z.enum(["Draft", "Ready", "Needs review"]),
+  reminders: z.string().trim().max(200)
+}).strict();
+
+export const staffDraftSessionsSchema = z.array(staffDraftSessionSchema).max(1000);
+
+export type StaffDraftSession = z.infer<typeof staffDraftSessionSchema>;
 
 export type LiveOpsStore = {
   eventId: string;
@@ -128,7 +133,7 @@ export async function publishDraftSessions(
   const nowUtc = new Date().toISOString();
   const nextRevision = store.revision + 1;
   const publishedSnapshot = buildPublishedSnapshotFromDraftSessions(normalizedSessions, nextRevision, nowUtc);
-  const notificationJobs = createNotificationJobs(publishedSnapshot);
+  const notificationJobs = createNotificationJobsForPublish(publishedSnapshot, options.notifyAttendees);
   const nextStore: LiveOpsStore = {
     ...store,
     draftSessions: normalizedSessions,
@@ -172,7 +177,7 @@ export async function rollbackLastPublishedSnapshot(options: { notifyAttendees: 
       publishedAt: nowUtc
     }))
   });
-  const notificationJobs = createNotificationJobs(publishedSnapshot);
+  const notificationJobs = createNotificationJobsForPublish(publishedSnapshot, options.notifyAttendees);
   const nextStore: LiveOpsStore = {
     ...store,
     draftSessions: publishedSnapshot.scheduleItems.map((item) => ({
@@ -227,6 +232,10 @@ export function buildPublishedSnapshotFromDraftSessions(
     scheduleItems: normalizedSessions.map((session, index) => createScheduleItem(session, index, revision, nowUtc)),
     locations: createLocations(normalizedSessions)
   });
+}
+
+export function createNotificationJobsForPublish(snapshot: EventSnapshot, notifyAttendees: boolean) {
+  return notifyAttendees ? createNotificationJobs(snapshot) : [];
 }
 
 export async function registerAttendeeDevice(registration: AttendeeDeviceRegistration) {
