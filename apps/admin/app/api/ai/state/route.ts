@@ -60,7 +60,8 @@ export async function POST(request: NextRequest) {
       try {
         answer = await createOpenAiStateAnswer({ question, facts: structuredFacts, sessions });
         engine = "openai";
-      } catch {
+      } catch (error) {
+        console.error("State OpenAI call failed:", error instanceof Error ? error.message : "Unknown provider error.");
         // The read-only deterministic engine remains available during model outages.
       }
     }

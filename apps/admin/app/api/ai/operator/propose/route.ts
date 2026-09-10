@@ -26,7 +26,8 @@ export async function POST(request: NextRequest) {
       try {
         proposal = await createOpenAiScheduleProposal(commandText, sessions);
         engine = "openai";
-      } catch {
+      } catch (error) {
+        console.error("Operator OpenAI call failed:", error instanceof Error ? error.message : "Unknown provider error.");
         // Keep the reviewed deterministic proposal path available during model outages.
       }
     }

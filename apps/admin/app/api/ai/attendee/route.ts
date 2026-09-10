@@ -35,7 +35,8 @@ export async function POST(request: NextRequest) {
         nowUtc: new Date().toISOString()
       });
       engine = "openai";
-    } catch {
+    } catch (error) {
+      console.error("Attendee OpenAI call failed:", error instanceof Error ? error.message : "Unknown provider error.");
       answer = {
         ...fallbackAnswer,
         warnings: ["Live concierge is temporarily unavailable. This answer uses the latest published schedule."]

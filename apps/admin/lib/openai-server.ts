@@ -58,7 +58,12 @@ export async function createStructuredOpenAiResponse<T>({
   });
 
   if (!response.ok) {
-    throw new Error(`OpenAI request failed with status ${response.status}.`);
+    const errorPayload = await response.json().catch(() => null) as {
+      error?: { code?: string; message?: string };
+    } | null;
+    const code = errorPayload?.error?.code ? ` (${errorPayload.error.code})` : "";
+    const message = errorPayload?.error?.message?.slice(0, 300) ?? "No provider detail returned.";
+    throw new Error(`OpenAI request failed with status ${response.status}${code}: ${message}`);
   }
 
   const payload = (await response.json()) as OpenAiResponse;
