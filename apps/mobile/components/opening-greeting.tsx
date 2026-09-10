@@ -382,7 +382,15 @@ export function OpeningGreeting() {
                 start={{ x: 0, y: 0.5 }}
                 style={styles.yearCapsule}
               >
-                <Text style={styles.yearText}>2026</Text>
+                <Text
+                  adjustsFontSizeToFit
+                  maxFontSizeMultiplier={1.2}
+                  minimumFontScale={0.8}
+                  numberOfLines={1}
+                  style={styles.yearText}
+                >
+                  2026
+                </Text>
               </LinearGradient>
             </Animated.View>
 
@@ -406,7 +414,15 @@ export function OpeningGreeting() {
                 onPress={handleEnter}
                 style={({ pressed }) => [styles.enterButton, pressed && styles.enterPressed]}
               >
-                <Text style={styles.enterText}>ENTER</Text>
+                <Text
+                  adjustsFontSizeToFit
+                  maxFontSizeMultiplier={1.2}
+                  minimumFontScale={0.8}
+                  numberOfLines={1}
+                  style={styles.enterText}
+                >
+                  ENTER
+                </Text>
               </Pressable>
             </Animated.View>
           </SafeAreaView>

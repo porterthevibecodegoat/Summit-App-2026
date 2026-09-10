@@ -20,6 +20,7 @@ The authenticated staff API exposes the same report at `GET /api/production/read
 - Deterministic State AI, attendee concierge, and Official Change AI fallback behavior without external model calls.
 - Strict target matching for Official Change AI; ambiguous or missing sessions produce no mutation proposal.
 - PDF/TXT/CSV extraction and staged import review with file-size/type safeguards and no automatic publishing.
+- Header-aware CSV ingestion with quoted-field support, deterministic duplicate handling, schema validation, and a downloadable staff template.
 - Mobile SQLite cache, resilient synchronization, event-clock correction, refresh triggers, stale data rejection, and local My Schedule persistence.
 - Durable push dispatcher and receipt reconciliation code with database claims, retries, attempt audit, and invalid-token handling.
 - Premium app icon/launch art, public privacy/support drafts, and initial reviewer documentation.
@@ -30,6 +31,8 @@ The authenticated staff API exposes the same report at `GET /api/production/read
 - Release preflight passes configuration, asset, policy URL, live API, and secret-boundary checks.
 - Credential-free native Release compilation and Apple bundle validation pass; compiled-bundle verification is repeatable with `pnpm mobile:release-verify`.
 - Production dependency advisory scan reports no known vulnerabilities.
+- Staff portal desktop and narrow layouts have no document overflow; mobile staff status remains in page flow instead of obstructing controls.
+- Opening-screen fixed-format controls pass Accessibility Large and Increase Contrast inspection without clipped labels.
 
 ## Active Staging Services
 

@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { PDFParse } from "pdf-parse";
+import { parse as parseCsv } from "csv-parse/sync";
 import type { DocumentImportJob } from "@not-alone/validation";
 import type { StaffDraftSession } from "./live-ops-store";
 
@@ -49,7 +50,18 @@ export async function extractScheduleDocument(input: {
   };
 }
 
-export function parseScheduleDocument(text: string): ScheduleParseResult {
+export function parseScheduleDocument(
+  text: string,
+  fileType: DocumentImportJob["fileType"] = "TXT"
+): ScheduleParseResult {
+  if (fileType === "CSV") {
+    return parseCsvScheduleDocument(text);
+  }
+
+  return parseLineScheduleDocument(text);
+}
+
+function parseLineScheduleDocument(text: string): ScheduleParseResult {
   const sessions: StaffDraftSession[] = [];
   let currentDay = "Monday Nov 2";
   let skippedOperationalRows = 0;
@@ -99,6 +111,83 @@ export function parseScheduleDocument(text: string): ScheduleParseResult {
 
 export function parseScheduleText(text: string): StaffDraftSession[] {
   return parseScheduleDocument(text).sessions;
+}
+
+function parseCsvScheduleDocument(text: string): ScheduleParseResult {
+  const records = parseCsv(text, {
+    bom: true,
+    columns: (headers: string[]) => headers.map(normalizeCsvHeader),
+    relax_column_count: true,
+    skip_empty_lines: true,
+    skip_records_with_empty_values: false,
+    trim: true
+  }) as Array<Record<string, string>>;
+
+  if (records.length === 0) {
+    return { sessions: [], skippedOperationalRows: 0, unmatchedTimedRows: 0 };
+  }
+
+  const headers = new Set(Object.keys(records[0] ?? {}));
+  const titleHeader = findHeader(headers, ["title", "session", "session_title", "event", "activity", "program"]);
+  const startHeader = findHeader(headers, ["start", "start_time", "time", "begins"]);
+  if (!titleHeader || !startHeader) {
+    throw new Error(
+      "CSV files need a title/session column and a start/start time column. Optional columns include day, end, speaker, location, audience, and reminders."
+    );
+  }
+
+  const dayHeader = findHeader(headers, ["day", "date", "event_day"]);
+  const endHeader = findHeader(headers, ["end", "end_time", "ends"]);
+  const speakerHeader = findHeader(headers, ["speaker", "presenter", "host", "talent"]);
+  const locationHeader = findHeader(headers, ["location", "room", "venue", "stage"]);
+  const audienceHeader = findHeader(headers, ["audience", "group", "visibility"]);
+  const remindersHeader = findHeader(headers, ["reminders", "reminder", "notification", "notification_offsets"]);
+  const occurrences = new Map<string, number>();
+  const sessions: StaffDraftSession[] = [];
+  let skippedOperationalRows = 0;
+  let unmatchedTimedRows = 0;
+
+  records.forEach((record) => {
+    const title = cleanTitle(record[titleHeader] ?? "");
+    const rawStart = record[startHeader] ?? "";
+    const start = normalizeTime(rawStart);
+    if (!title || !isRecognizedTime(start)) {
+      if (title || rawStart) unmatchedTimedRows += 1;
+      return;
+    }
+
+    if (isClearlyOperational(title)) {
+      skippedOperationalRows += 1;
+      return;
+    }
+
+    const explicitDay = dayHeader ? inferDayLabel(record[dayHeader] ?? "") : null;
+    const day = explicitDay ?? cleanCsvValue(dayHeader ? record[dayHeader] : "") ?? "Needs day";
+    const rawEnd = endHeader ? record[endHeader] ?? "" : "";
+    const end = rawEnd && isRecognizedTime(normalizeTime(rawEnd)) ? normalizeTime(rawEnd) : addMinutes(start, 45);
+    const location = cleanCsvValue(locationHeader ? record[locationHeader] : "") ?? inferLocation(title) ?? "Needs location";
+    const speaker = cleanCsvValue(speakerHeader ? record[speakerHeader] : "") ?? inferSpeaker(title);
+    const audience = cleanCsvValue(audienceHeader ? record[audienceHeader] : "") ?? inferAudience(title);
+    const reminders = cleanCsvValue(remindersHeader ? record[remindersHeader] : "") ?? "10m";
+    const fingerprint = `${day}:${start}:${end}:${title}`;
+    const occurrence = (occurrences.get(fingerprint) ?? 0) + 1;
+    occurrences.set(fingerprint, occurrence);
+
+    sessions.push({
+      id: stableImportId(`${fingerprint}:${occurrence}`),
+      day,
+      start,
+      end,
+      title,
+      speaker,
+      location,
+      audience,
+      status: "Needs review",
+      reminders
+    });
+  });
+
+  return { sessions, skippedOperationalRows, unmatchedTimedRows };
 }
 
 export function detectFileType(fileName: string, mimeType = ""): DocumentImportJob["fileType"] {
@@ -167,7 +256,11 @@ function inferSpeaker(title: string) {
   if (relationship) return relationship;
 
   const performance = title.match(/^(.+?)\s+(?:Performance|Keynote|Conversation|Talk)\b/i)?.[1]?.trim();
-  return performance || "Unassigned";
+  if (performance && !/^(?:a|an|the|opening|closing|welcome|featured|keynote|community|panel)$/i.test(performance)) {
+    return performance;
+  }
+
+  return "Unassigned";
 }
 
 function inferAudience(title: string) {
@@ -183,6 +276,23 @@ function normalizeTime(value: string) {
   const match = value.trim().match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)$/i);
   if (!match?.[1] || !match[3]) return value.trim();
   return `${Number(match[1])}:${match[2] ?? "00"} ${match[3].toUpperCase()}`;
+}
+
+function isRecognizedTime(value: string) {
+  return /^\d{1,2}:\d{2}\s*(?:AM|PM)$/i.test(value);
+}
+
+function normalizeCsvHeader(value: string) {
+  return value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+}
+
+function findHeader(headers: Set<string>, candidates: string[]) {
+  return candidates.find((candidate) => headers.has(candidate));
+}
+
+function cleanCsvValue(value: string | undefined) {
+  const cleaned = value?.replace(/\s+/g, " ").trim();
+  return cleaned || null;
 }
 
 function addMinutes(value: string, minutesToAdd: number) {

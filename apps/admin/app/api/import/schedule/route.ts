@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStaffContext, recordScheduleImport, StaffAuthError } from "../../../../lib/live-ops-repository";
+import { staffDraftSessionsSchema } from "../../../../lib/live-ops-store";
 import { detectFileType, extractScheduleDocument, parseScheduleDocument } from "../../../../lib/schedule-import";
 
 export const runtime = "nodejs";
@@ -38,8 +39,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: "No readable schedule text was found in this file." }, { status: 422 });
     }
 
-    const parseResult = parseScheduleDocument(text);
-    const sessions = parseResult.sessions;
+    const parseResult = parseScheduleDocument(text, fileType);
+    const sessions = staffDraftSessionsSchema.parse(parseResult.sessions);
     const importJob = await recordScheduleImport(
       {
         id: crypto.randomUUID(),

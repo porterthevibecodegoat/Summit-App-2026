@@ -131,9 +131,12 @@ export function ImportCenter({
             <h2>{busy ? "Reading schedule" : "Drop an updated schedule"}</h2>
             <p>PDF, TXT, or CSV, up to 15 MB</p>
           </div>
-          <button className="ghostButton" disabled={busy} onClick={() => inputRef.current?.click()} type="button">
-            Choose File
-          </button>
+          <div className="importActions">
+            <a className="ghostButton" download href="/schedule-import-template.csv">Download CSV Template</a>
+            <button className="ghostButton" disabled={busy} onClick={() => inputRef.current?.click()} type="button">
+              Choose File
+            </button>
+          </div>
           <input
             accept=".pdf,.txt,.csv,application/pdf,text/plain,text/csv"
             className="visuallyHidden"

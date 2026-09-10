@@ -1105,6 +1105,19 @@ textarea {
   margin-top: 4px;
 }
 
+.importActions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.importActions a {
+  align-items: center;
+  display: inline-flex;
+}
+
 .importGlyph {
   align-items: center;
   background: var(--navy);
@@ -1395,9 +1408,13 @@ textarea {
   }
 
   .staffAuthBridge {
-    bottom: 12px;
+    border-radius: 6px;
+    bottom: auto;
+    box-shadow: none;
     flex-wrap: wrap;
     left: 12px;
+    margin: 10px 12px 0;
+    position: static;
     right: 12px;
   }
 
@@ -1466,6 +1483,10 @@ textarea {
   .importDropZone {
     grid-template-columns: 1fr;
     padding: 22px;
+  }
+
+  .importActions {
+    justify-content: flex-start;
   }
 
   .publicPageShell {

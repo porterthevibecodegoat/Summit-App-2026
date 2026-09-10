@@ -44,6 +44,9 @@ importers:
       '@not-alone/validation':
         specifier: workspace:*
         version: link:../../packages/validation
+      csv-parse:
+        specifier: 7.0.2
+        version: 7.0.2
       next:
         specifier: 16.3.3
         version: 16.3.3(@babel/core@7.29.7(supports-color@8.1.1))(@types/node@26.4.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -2134,6 +2137,9 @@ packages:
 
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+
+  csv-parse@7.0.2:
+    resolution: {integrity: sha512-uKZghv9UmPkMVLYy//KZ9HFAIJsl7wkhoEdIL0+rhuSY9pZQlhaeGEDPIe+/w7eh81MOql8Q/9+inAGWG6ZHYA==}
 
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -5826,6 +5832,8 @@ snapshots:
       hyphenate-style-name: 1.1.0
 
   csstype@3.2.3: {}
+
+  csv-parse@7.0.2: {}
 
   debug@2.6.9(supports-color@8.1.1):
     dependencies:

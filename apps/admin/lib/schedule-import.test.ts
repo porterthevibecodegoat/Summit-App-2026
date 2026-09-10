@@ -65,4 +65,52 @@ describe("schedule import parser", () => {
     });
     expect(extracted).toEqual({ fileType: "TXT", text: "Monday Nov 2\n9 AM Session" });
   });
+
+  it("parses structured CSV rows with common headers and quoted values", () => {
+    const csv = [
+      "Date,Start Time,End Time,Session,Presenter,Room,Audience,Reminders",
+      'Tuesday November 3,1 PM,2:15 PM,"Connection, Community & Purpose",Mike Tyson,Encore Theater,All attendees,"30m, 10m"',
+      "Tuesday November 3,3 PM,,Closing Conversation,,Main Stage,,"
+    ].join("\n");
+
+    const result = parseScheduleDocument(csv, "CSV");
+
+    expect(result.sessions).toHaveLength(2);
+    expect(result.sessions[0]).toMatchObject({
+      day: "Tuesday Nov 3",
+      start: "1:00 PM",
+      end: "2:15 PM",
+      title: "Connection, Community & Purpose",
+      speaker: "Mike Tyson",
+      location: "Encore Theater",
+      reminders: "30m, 10m"
+    });
+    expect(result.sessions[1]).toMatchObject({
+      start: "3:00 PM",
+      end: "3:45 PM",
+      speaker: "Unassigned",
+      audience: "All attendees"
+    });
+  });
+
+  it("counts malformed CSV rows and keeps duplicate ids unique and stable", () => {
+    const csv = [
+      "day,start,title,location",
+      "Monday Nov 2,9 AM,Opening,Main Stage",
+      "Monday Nov 2,9 AM,Opening,Main Stage",
+      "Monday Nov 2,not-a-time,Broken row,Main Stage"
+    ].join("\n");
+
+    const first = parseScheduleDocument(csv, "CSV");
+    const second = parseScheduleDocument(csv, "CSV");
+
+    expect(first.sessions).toHaveLength(2);
+    expect(new Set(first.sessions.map((session) => session.id)).size).toBe(2);
+    expect(first.sessions.map((session) => session.id)).toEqual(second.sessions.map((session) => session.id));
+    expect(first.unmatchedTimedRows).toBe(1);
+  });
+
+  it("rejects CSV files without recognizable schedule columns", () => {
+    expect(() => parseScheduleDocument("foo,bar\none,two", "CSV")).toThrow(/title\/session column/);
+  });
 });
