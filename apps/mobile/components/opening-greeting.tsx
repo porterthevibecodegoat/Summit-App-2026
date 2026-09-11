@@ -6,6 +6,7 @@ import {
   Easing,
   ImageBackground,
   Modal,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -105,7 +106,7 @@ export function OpeningGreeting() {
         duration: 1250,
         easing: Easing.bezier(0.2, 0.8, 0.18, 1),
         toValue: 1,
-        useNativeDriver: true
+        useNativeDriver: Platform.OS !== "web"
       }),
       Animated.sequence([
         Animated.delay(620),
@@ -113,7 +114,7 @@ export function OpeningGreeting() {
           duration: 880,
           easing: Easing.bezier(0.18, 0.82, 0.22, 1),
           toValue: 1,
-          useNativeDriver: true
+          useNativeDriver: Platform.OS !== "web"
         })
       ]),
       Animated.sequence([
@@ -122,7 +123,7 @@ export function OpeningGreeting() {
           duration: 520,
           easing: Easing.out(Easing.cubic),
           toValue: 1,
-          useNativeDriver: true
+          useNativeDriver: Platform.OS !== "web"
         })
       ])
     ]);
@@ -132,13 +133,13 @@ export function OpeningGreeting() {
           duration: 2100,
           easing: Easing.inOut(Easing.sin),
           toValue: 1,
-          useNativeDriver: true
+          useNativeDriver: Platform.OS !== "web"
         }),
         Animated.timing(ambient, {
           duration: 2100,
           easing: Easing.inOut(Easing.sin),
           toValue: 0,
-          useNativeDriver: true
+          useNativeDriver: Platform.OS !== "web"
         })
       ])
     );
@@ -148,13 +149,13 @@ export function OpeningGreeting() {
           duration: 1300,
           easing: Easing.out(Easing.quad),
           toValue: 1,
-          useNativeDriver: true
+          useNativeDriver: Platform.OS !== "web"
         }),
         Animated.delay(1300),
         Animated.timing(halo, {
           duration: 0,
           toValue: 0,
-          useNativeDriver: true
+          useNativeDriver: Platform.OS !== "web"
         })
       ])
     );
@@ -165,12 +166,12 @@ export function OpeningGreeting() {
           duration: 1550,
           easing: Easing.inOut(Easing.cubic),
           toValue: 1,
-          useNativeDriver: true
+          useNativeDriver: Platform.OS !== "web"
         }),
         Animated.timing(sweep, {
           duration: 0,
           toValue: 0,
-          useNativeDriver: true
+          useNativeDriver: Platform.OS !== "web"
         }),
         Animated.delay(2750)
       ])
@@ -183,12 +184,12 @@ export function OpeningGreeting() {
             duration: 9800,
             easing: Easing.linear,
             toValue: 1,
-            useNativeDriver: true
+            useNativeDriver: Platform.OS !== "web"
           }),
           Animated.timing(progress, {
             duration: 0,
             toValue: 0,
-            useNativeDriver: true
+            useNativeDriver: Platform.OS !== "web"
           })
         ])
       )
@@ -225,7 +226,7 @@ export function OpeningGreeting() {
       duration: 360,
       easing: Easing.inOut(Easing.cubic),
       toValue: 0,
-      useNativeDriver: true
+      useNativeDriver: Platform.OS !== "web"
     }).start(({ finished }) => {
       if (finished) {
         setVisible(false);
@@ -270,9 +271,9 @@ export function OpeningGreeting() {
         <ImageBackground source={launchArt} resizeMode="cover" style={styles.artwork}>
           <View style={styles.deepScrim} />
           <Animated.View
-            pointerEvents="none"
             style={[
               styles.ambientGlow,
+              { pointerEvents: "none" },
               {
                 opacity: ambient.interpolate({ inputRange: [0, 1], outputRange: [0.22, 0.48] }),
                 transform: [
@@ -283,9 +284,9 @@ export function OpeningGreeting() {
           />
 
           <Animated.View
-            pointerEvents="none"
             style={[
               styles.sweep,
+              { pointerEvents: "none" },
               {
                 opacity: sweep.interpolate({
                   inputRange: [0, 0.12, 0.5, 0.88, 1],
@@ -307,7 +308,7 @@ export function OpeningGreeting() {
             />
           </Animated.View>
 
-          <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+          <View style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}>
             <Animated.View
               style={[
                 styles.halo,
@@ -456,9 +457,10 @@ const styles = StyleSheet.create({
     borderRadius: 190,
     height: 380,
     position: "absolute",
-    shadowColor: "#78AFFF",
-    shadowOpacity: 0.7,
-    shadowRadius: 54,
+    ...Platform.select({
+      web: { boxShadow: "0 0 54px rgba(120, 175, 255, 0.7)" },
+      default: { shadowColor: "#78AFFF", shadowOpacity: 0.7, shadowRadius: 54 }
+    }),
     top: "23%",
     width: 380
   },
@@ -475,9 +477,10 @@ const styles = StyleSheet.create({
     borderRadius: 138,
     height: 276,
     position: "absolute",
-    shadowColor: "#F4CA71",
-    shadowOpacity: 0.75,
-    shadowRadius: 36,
+    ...Platform.select({
+      web: { boxShadow: "0 0 36px rgba(244, 202, 113, 0.75)" },
+      default: { shadowColor: "#F4CA71", shadowOpacity: 0.75, shadowRadius: 36 }
+    }),
     top: "26%",
     width: 276
   },
@@ -501,9 +504,10 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     height: 4,
     position: "absolute",
-    shadowColor: "#F2C15C",
-    shadowOpacity: 1,
-    shadowRadius: 5,
+    ...Platform.select({
+      web: { boxShadow: "0 0 5px #F2C15C" },
+      default: { shadowColor: "#F2C15C", shadowOpacity: 1, shadowRadius: 5 }
+    }),
     width: 4
   },
   safeArea: {
@@ -539,9 +543,10 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: "center",
     marginTop: 18,
-    shadowColor: "#E6C06F",
-    shadowOpacity: 0.4,
-    shadowRadius: 20,
+    ...Platform.select({
+      web: { boxShadow: "0 0 20px rgba(230, 192, 111, 0.4)" },
+      default: { shadowColor: "#E6C06F", shadowOpacity: 0.4, shadowRadius: 20 }
+    }),
     width: 128
   },
   yearText: {
@@ -569,10 +574,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 46,
     justifyContent: "center",
-    shadowColor: "#E6C06F",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.2,
-    shadowRadius: 18
+    ...Platform.select({
+      web: { boxShadow: "0 10px 18px rgba(230, 192, 111, 0.2)" },
+      default: {
+        shadowColor: "#E6C06F",
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.2,
+        shadowRadius: 18
+      }
+    })
   },
   enterPressed: {
     backgroundColor: "rgba(21, 37, 76, 0.92)",

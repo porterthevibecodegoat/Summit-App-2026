@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { useState } from "react";
-import { Image, ImageBackground, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, ImageBackground, Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
 import { getNowAndUpcoming, toEventTimeRange } from "@not-alone/domain";
@@ -357,10 +357,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 124,
     overflow: "hidden",
-    shadowColor: colors.gold,
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.18,
-    shadowRadius: 24,
+    ...Platform.select({
+      web: { boxShadow: "0 12px 24px rgba(230, 192, 111, 0.18)" },
+      default: {
+        shadowColor: colors.gold,
+        shadowOffset: { width: 0, height: 12 },
+        shadowOpacity: 0.18,
+        shadowRadius: 24
+      }
+    }),
     width: 96
   },
   portrait: {

@@ -1,7 +1,6 @@
 import { createContext, type PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AppState, Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import Constants from "expo-constants";
-import * as Notifications from "expo-notifications";
 import Storage from "expo-sqlite/kv-store";
 import { fetchPublishedSnapshot } from "@not-alone/api-client";
 import { publicAppConfig } from "@not-alone/config";
@@ -182,10 +181,24 @@ export function SummitDemoProvider({ children }: PropsWithChildren) {
   }, []);
 
   useEffect(() => {
-    const subscription = Notifications.addNotificationResponseReceivedListener(() => {
-      void syncPublishedSnapshot();
+    if (Platform.OS === "web") {
+      return;
+    }
+
+    let active = true;
+    let removeListener: (() => void) | undefined;
+    void import("expo-notifications").then((Notifications) => {
+      if (!active) return;
+      const subscription = Notifications.addNotificationResponseReceivedListener(() => {
+        void syncPublishedSnapshot();
+      });
+      removeListener = () => subscription.remove();
     });
-    return () => subscription.remove();
+
+    return () => {
+      active = false;
+      removeListener?.();
+    };
   }, [syncPublishedSnapshot]);
 
   useEffect(() => {
@@ -244,6 +257,7 @@ export function SummitDemoProvider({ children }: PropsWithChildren) {
 
     async function registerForPushDelivery() {
       try {
+        const Notifications = await import("expo-notifications");
         const existingPermissions = await Notifications.getPermissionsAsync();
         const finalPermissions =
           existingPermissions.status === "granted" ? existingPermissions : await Notifications.requestPermissionsAsync();
@@ -631,10 +645,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 16 },
-    shadowOpacity: 0.28,
-    shadowRadius: 24,
+    ...Platform.select({
+      web: { boxShadow: "0 16px 24px rgba(0, 0, 0, 0.28)" },
+      default: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 16 },
+        shadowOpacity: 0.28,
+        shadowRadius: 24
+      }
+    }),
     width: 172
   },
   dockGradient: {

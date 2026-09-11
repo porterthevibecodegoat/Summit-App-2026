@@ -45,6 +45,16 @@ export function createAttendeeConciergeAnswer({
     audienceGroups: ["all_attendees", "founders", "public"]
   });
   const personMatch = findPersonScheduleMatch(normalized, allItems);
+  const dayMatch = findDayScheduleMatch(normalized, allItems, snapshot.event.timeZone);
+  const locationMatch = findLocationMatch(normalized, snapshot);
+
+  if (matchesAny(normalized, ["emergency", "crisis", "suicide", "self harm", "self-harm", "unsafe"])) {
+    return createAnswer({
+      title: "Immediate human support",
+      body: `${publicSummitKnowledge.emergency} If you are in immediate danger in the United States, call emergency services or call/text 988 for crisis support.`,
+      items: []
+    });
+  }
 
   if (matchesAny(normalized, ["inspiring children", "foundation", "icf", "nonprofit"])) {
     return createAnswer({
@@ -62,6 +72,18 @@ export function createAttendeeConciergeAnswer({
           ? `${personMatch.name} appears in the loaded schedule below.`
           : `${personMatch.name} is listed in public summit materials, but the current app schedule does not include a specific published appearance time yet.`,
       items: personMatch.items.slice(0, 4),
+      snapshot
+    });
+  }
+
+  if (dayMatch) {
+    return createAnswer({
+      title: `${dayMatch.label} schedule`,
+      body:
+        dayMatch.items.length > 0
+          ? `${dayMatch.items.length} published session${dayMatch.items.length === 1 ? " is" : "s are"} loaded for ${dayMatch.label.toLowerCase()}.`
+          : `No published sessions are loaded for ${dayMatch.label.toLowerCase()} yet.`,
+      items: dayMatch.items.slice(0, 8),
       snapshot
     });
   }
@@ -111,6 +133,15 @@ export function createAttendeeConciergeAnswer({
     });
   }
 
+  if (locationMatch) {
+    return createAnswer({
+      title: locationMatch.location.name,
+      body: locationMatch.guidance,
+      items: locationMatch.items.slice(0, 4),
+      snapshot
+    });
+  }
+
   if (matchesAny(normalized, ["next", "where", "go", "room", "location"])) {
     const nextItem = timeline.upcoming[0];
     return createAnswer({
@@ -120,14 +151,6 @@ export function createAttendeeConciergeAnswer({
         : "No upcoming published session is available in the current snapshot.",
       items: timeline.upcoming.slice(0, 3),
       snapshot
-    });
-  }
-
-  if (matchesAny(normalized, ["emergency", "crisis", "suicide", "self harm", "self-harm", "unsafe"])) {
-    return createAnswer({
-      title: "Immediate human support",
-      body: `${publicSummitKnowledge.emergency} If you are in immediate danger in the United States, call emergency services or call/text 988 for crisis support.`,
-      items: []
     });
   }
 
@@ -149,6 +172,64 @@ export function createAttendeeConciergeAnswer({
     items: timeline.upcoming.slice(0, 4),
     snapshot
   });
+}
+
+function findDayScheduleMatch(prompt: string, items: ScheduleItem[], timeZone: string) {
+  const day = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].find((value) =>
+    prompt.includes(value)
+  );
+  if (!day) return null;
+
+  const period = ["morning", "afternoon", "evening"].find((value) => prompt.includes(value));
+  const matches = items.filter((item) => {
+    const date = new Date(item.startUtc);
+    const weekday = new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone }).format(date).toLowerCase();
+    if (weekday !== day) return false;
+
+    if (!period) return true;
+    const hourPart = new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      hourCycle: "h23",
+      timeZone
+    }).formatToParts(date).find((part) => part.type === "hour")?.value;
+    const hour = Number(hourPart);
+    if (!Number.isFinite(hour)) return true;
+    if (period === "morning") return hour < 12;
+    if (period === "afternoon") return hour >= 12 && hour < 17;
+    return hour >= 17;
+  });
+
+  const periodLabel = period ? ` ${period}` : "";
+  return { label: `${day[0]?.toUpperCase()}${day.slice(1)}${periodLabel}`, items: matches };
+}
+
+function findLocationMatch(prompt: string, snapshot: EventSnapshot) {
+  if (!matchesAny(prompt, ["where", "room", "location", "stage", "find", "navigate", "directions"])) return null;
+
+  const searchablePrompt = prompt.replace(/[^a-z0-9]+/g, " ");
+  const venueGuidePages = snapshot.contentPages
+    .filter((page) => page.slug.includes("venue") || page.slug.includes("room") || page.title.toLowerCase().includes("venue"))
+    .map((page) => page.body);
+  const venueGuide = venueGuidePages.join(" ").toLowerCase();
+  const location = snapshot.locations.find((candidate) => {
+    const name = candidate.name.toLowerCase();
+    const significantNameParts = name.split(/[^a-z0-9]+/).filter((part) => part.length >= 4);
+    const directMatch = significantNameParts.some((part) => searchablePrompt.includes(part));
+    const mainStageMatch = prompt.includes("main stage") && significantNameParts.some((part) => venueGuide.includes(`${part} is the wisdom forum main stage`));
+    return directMatch || mainStageMatch;
+  });
+  if (!location) return null;
+
+  const locationTerms = location.name.toLowerCase().split(/[^a-z0-9]+/).filter((part) => part.length >= 4);
+  const guidance = venueGuidePages
+    .flatMap((body) => body.split(/(?<=[.!?])\s+/))
+    .find((sentence) => locationTerms.some((part) => sentence.toLowerCase().includes(part)));
+
+  return {
+    location,
+    guidance: guidance ?? location.description,
+    items: snapshot.scheduleItems.filter((item) => item.locationId === location.id)
+  };
 }
 
 function createAnswer({

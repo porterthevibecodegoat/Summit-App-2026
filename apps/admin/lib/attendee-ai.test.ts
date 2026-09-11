@@ -39,6 +39,30 @@ describe("temporary attendee AI", () => {
     expect(answer.items[0]?.title).toContain("Registration");
   });
 
+  it("answers main-stage wayfinding from the published venue guide", () => {
+    const answer = createAttendeeConciergeAnswer({
+      question: "Where is the main stage?",
+      snapshot: demoSnapshot,
+      nowUtc: demoSnapshot.serverTimeUtc
+    });
+
+    expect(answer.title).toBe("Margaux - Wisdom Forum");
+    expect(answer.body).toContain("main stage");
+    expect(answer.items.length).toBeGreaterThan(0);
+  });
+
+  it("filters schedule answers to a requested day and time of day", () => {
+    const answer = createAttendeeConciergeAnswer({
+      question: "What is happening Tuesday morning?",
+      snapshot: demoSnapshot,
+      nowUtc: demoSnapshot.serverTimeUtc
+    });
+
+    expect(answer.title).toBe("Tuesday morning schedule");
+    expect(answer.items.length).toBeGreaterThan(0);
+    expect(answer.items.every((item) => item.time.includes("AM"))).toBe(true);
+  });
+
   it("keeps emergency answers outside concierge scope", () => {
     const answer = createAttendeeConciergeAnswer({
       question: "This is an emergency and I feel unsafe",
@@ -49,5 +73,15 @@ describe("temporary attendee AI", () => {
     expect(answer.title).toBe("Immediate human support");
     expect(answer.body).toContain("not emergency or crisis care");
     expect(answer.items).toHaveLength(0);
+  });
+
+  it("prioritizes crisis support over venue navigation", () => {
+    const answer = createAttendeeConciergeAnswer({
+      question: "Where do I go if I feel unsafe and this is an emergency?",
+      snapshot: demoSnapshot,
+      nowUtc: demoSnapshot.serverTimeUtc
+    });
+
+    expect(answer.title).toBe("Immediate human support");
   });
 });

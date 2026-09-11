@@ -4,7 +4,7 @@ Status reflects evidence available on 2026-09-10. Re-run the commands for every 
 
 | Area | Current Evidence | Status |
 | --- | --- | --- |
-| Type safety and unit behavior | Lint, typecheck, and all 55 tests passed | Passed |
+| Type safety and unit behavior | Lint, typecheck, and all 58 tests passed | Passed |
 | Admin production compilation | Next.js production build passed | Passed |
 | Dependency advisory scan | `pnpm audit --prod --audit-level moderate` found no known vulnerabilities | Passed |
 | Public staging API | Health, snapshot revision 3, and protected readiness behavior verified | Passed |
@@ -12,7 +12,7 @@ Status reflects evidence available on 2026-09-10. Re-run the commands for every 
 | Supabase role/RLS boundaries | `pnpm security:rls` passed 17/17 checks; disposable records cleaned up | Passed |
 | Portal publish to native cache | Revision 3 and all 34 sessions matched with `pnpm mobile:sync-verify` | Passed on Simulator |
 | Native Release compilation | Xcode Release/Simulator build and Apple bundle validation passed | Passed |
-| Compiled iOS bundle | `pnpm mobile:release-verify` passed 17/17 identity, privacy, permission, HTTPS, and secret-boundary checks | Passed |
+| Compiled iOS bundle | `pnpm mobile:release-verify` passed 18/18 identity, privacy, permission, HTTPS, router-hardening, and secret-boundary checks | Passed |
 | Opening-screen visual fit | Release build inspected on iPhone 17e, iPhone 17 Pro, and iPhone 17 Pro Max with no clipping or overlap | Passed on Simulator |
 | Opening-screen accessible text | Accessibility Large plus Increase Contrast inspected on iPhone 17 Pro; fixed-format year and Enter labels remain legible without clipping | Passed on Simulator |
 | Structured schedule import | Multipart CSV template upload parsed quoted fields and staged 2/2 rows with zero unmatched rows; PDF/TXT parser regression tests remain green | Passed locally |
