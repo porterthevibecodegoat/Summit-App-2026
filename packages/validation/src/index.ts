@@ -13,6 +13,53 @@ export const featuredPersonSchema = z.object({
   group: z.string().min(1)
 });
 
+export const speakerSchema = z.object({
+  id: z.string().uuid(),
+  eventId: z.string().min(1),
+  name: z.string().min(1),
+  role: z.string().min(1),
+  bio: z.string(),
+  headshotUrl: z.string().url().nullable(),
+  published: z.boolean()
+});
+
+export const faqSchema = z.object({
+  id: z.string().uuid(),
+  question: z.string().min(1),
+  answer: z.string().min(1),
+  category: z.string().min(1),
+  published: z.boolean()
+});
+
+export const sponsorSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(1),
+  tier: z.string().min(1),
+  websiteUrl: z.string().url().nullable(),
+  logoUrl: z.string().url().nullable(),
+  published: z.boolean()
+});
+
+export const mediaItemSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string().min(1),
+  type: z.enum(["image", "video", "link"]),
+  url: z.string().url(),
+  altText: z.string(),
+  published: z.boolean()
+});
+
+export const eventNoticeSchema = z.object({
+  id: z.string().uuid(),
+  eventId: z.string().min(1),
+  title: z.string().min(1),
+  body: z.string().min(1),
+  severity: z.enum(["info", "change", "urgent"]),
+  startsAtUtc: z.string().datetime(),
+  endsAtUtc: z.string().datetime().nullable(),
+  published: z.boolean()
+});
+
 export const scheduleItemSchema = z.object({
   id: z.string().uuid(),
   eventId: z.string().min(1),
@@ -58,6 +105,11 @@ export const eventSnapshotSchema = z.object({
   revision: z.number().int().positive(),
   serverTimeUtc: z.string().datetime(),
   scheduleItems: z.array(scheduleItemSchema),
+  speakers: z.array(speakerSchema).default([]),
+  faqs: z.array(faqSchema).default([]),
+  sponsors: z.array(sponsorSchema).default([]),
+  media: z.array(mediaItemSchema).default([]),
+  notices: z.array(eventNoticeSchema).default([]),
   locations: z.array(
     z.object({
       id: z.string().uuid(),
@@ -234,6 +286,11 @@ export const attendeeSyncStateSchema = z.object({
 export type ScheduleItem = z.infer<typeof scheduleItemSchema>;
 export type FeaturedPerson = z.infer<typeof featuredPersonSchema>;
 export type EventSnapshot = z.infer<typeof eventSnapshotSchema>;
+export type Speaker = z.infer<typeof speakerSchema>;
+export type Faq = z.infer<typeof faqSchema>;
+export type Sponsor = z.infer<typeof sponsorSchema>;
+export type MediaItem = z.infer<typeof mediaItemSchema>;
+export type EventNotice = z.infer<typeof eventNoticeSchema>;
 export type StaffRole = z.infer<typeof staffRoleSchema>;
 export type StaffPermission = z.infer<typeof staffPermissionSchema>;
 export type AiSystem = z.infer<typeof aiSystemSchema>;

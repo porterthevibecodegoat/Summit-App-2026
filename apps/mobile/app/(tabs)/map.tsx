@@ -1,42 +1,41 @@
 import { Image, ImageBackground, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
-import { useSummitDemo } from "../../components/demo-mode";
+import { useSummit } from "../../components/summit-context";
+import { useResponsiveLayout } from "../../components/responsive-layout";
 
 const wynnLogo = require("../../assets/wynn-logo.webp");
 const summitArt = require("../../assets/summit-art-v2.png");
 
 export default function MapScreen() {
-  const { demoEnabled, snapshot } = useSummitDemo();
+  const { snapshot } = useSummit();
+  const layout = useResponsiveLayout();
+  const mapHeight = Math.min(Math.max((Math.min(layout.width, 840) - layout.gutter * 2) * 0.78, 280), 420);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <ScrollView
         style={styles.screen}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={layout.contentStyle}
         contentInsetAdjustmentBehavior="automatic"
       >
-        <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.introImage} style={styles.intro}>
-          <View style={styles.introScrim}>
+        <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.introImage} style={[styles.intro, layout.marginStyle]}>
+          <View style={[styles.introScrim, layout.cardPaddingStyle]}>
             <Text style={styles.kicker}>Venue Map</Text>
             <Text style={styles.title}>{snapshot.event.venueName}</Text>
             <Text style={styles.introBody}>{snapshot.event.city}</Text>
           </View>
         </ImageBackground>
 
-        <View style={styles.venueCard}>
+        <View style={[styles.venueCard, layout.marginStyle, layout.cardPaddingStyle]}>
           <Image source={wynnLogo} resizeMode="contain" style={styles.venueLogo} />
-          <Text style={styles.venueTitle}>{demoEnabled ? "Demo wayfinding preview" : "Room-level map coming soon"}</Text>
-          <Text style={styles.venueBody}>
-            {demoEnabled
-              ? "Sample rooms show how attendees will move between main-stage programming, quiet spaces, lounges, and hosted experiences."
-              : "Approved rooms, entrances, and wayfinding details will appear here when the event layout is ready."}
-          </Text>
+          <Text style={styles.venueTitle}>Room-level map coming soon</Text>
+          <Text style={styles.venueBody}>Approved rooms, entrances, and wayfinding details will appear here when the event layout is ready.</Text>
         </View>
 
         {snapshot.locations.length > 0 ? (
           <>
-            <View style={styles.mapPanel}>
+            <View style={[styles.mapPanel, layout.marginStyle, { height: mapHeight }]}>
               <View style={styles.mapGridLineA} />
               <View style={styles.mapGridLineB} />
               {snapshot.locations.map((location, index) => (
@@ -61,9 +60,9 @@ export default function MapScreen() {
               </View>
             </View>
 
-            <View style={styles.locationList}>
+            <View style={[styles.locationList, layout.marginStyle]}>
               {snapshot.locations.map((location, index) => (
-                <View key={location.id} style={styles.locationRow}>
+                  <View key={location.id} style={[styles.locationRow, layout.cardPaddingStyle]}>
                   <View style={styles.locationIndex}>
                     <Text style={styles.locationIndexText}>{index + 1}</Text>
                   </View>
@@ -76,11 +75,10 @@ export default function MapScreen() {
             </View>
           </>
         ) : (
-          <View style={styles.emptyPanel}>
+          <View style={[styles.emptyPanel, layout.marginStyle, layout.cardPaddingStyle]}>
             <Text style={styles.emptyTitle}>No rooms published yet</Text>
             <Text style={styles.emptyBody}>
-              The attendee map will stay clear until real venue details are approved. Demo Mode previews the intended
-              interaction without making final venue claims.
+              The attendee map will stay clear until room locations and wayfinding details are approved.
             </Text>
           </View>
         )}
@@ -96,9 +94,6 @@ const styles = StyleSheet.create({
   },
   screen: {
     backgroundColor: colors.canvas
-  },
-  content: {
-    paddingBottom: 116
   },
   intro: {
     backgroundColor: colors.midnight,
@@ -174,7 +169,6 @@ const styles = StyleSheet.create({
     borderColor: "rgba(230, 192, 111, 0.18)",
     borderRadius: 8,
     borderWidth: 1,
-    height: 318,
     marginHorizontal: spacing.lg,
     marginTop: spacing.lg,
     overflow: "hidden"

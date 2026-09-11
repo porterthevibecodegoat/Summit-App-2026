@@ -4,13 +4,27 @@ import { createAttendeeConciergeAnswer } from "../../../../lib/attendee-ai";
 import { checkRateLimit } from "../../../../lib/rate-limit";
 import { createOpenAiAttendeeAnswer } from "../../../../lib/openai-event-ai";
 import { isOpenAiEnabled } from "../../../../lib/openai-server";
+import { publicApiCorsHeaders, publicApiOptions } from "../../../../lib/public-api-cors";
+
+const allowedMethods = ["POST"] as const;
+
+export function OPTIONS() {
+  return publicApiOptions(allowedMethods);
+}
 
 export async function POST(request: NextRequest) {
   const rateLimit = checkRateLimit(request, "attendee-ai", { limit: 30, windowMs: 60_000 });
   if (!rateLimit.allowed) {
     return NextResponse.json(
       { ok: false, error: "Too many concierge requests. Please wait a moment and try again." },
-      { status: 429, headers: { ...rateLimit.headers, "Retry-After": String(rateLimit.retryAfterSeconds) } }
+      {
+        status: 429,
+        headers: {
+          ...publicApiCorsHeaders(allowedMethods),
+          ...rateLimit.headers,
+          "Retry-After": String(rateLimit.retryAfterSeconds)
+        }
+      }
     );
   }
   const body = await request.json().catch(() => ({}));
@@ -55,6 +69,7 @@ export async function POST(request: NextRequest) {
     {
       headers: {
         "Cache-Control": "no-store",
+        ...publicApiCorsHeaders(allowedMethods),
         ...rateLimit.headers
       }
     }

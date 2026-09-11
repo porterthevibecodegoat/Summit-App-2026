@@ -1,31 +1,31 @@
 import { Link } from "expo-router";
 import { useState } from "react";
-import { Image, ImageBackground, Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, ImageBackground, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View, type ImageSourcePropType, type StyleProp, type ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
-import { getNowAndUpcoming, toEventTimeRange } from "@not-alone/domain";
-import type { ScheduleItem } from "@not-alone/validation";
-import { DemoModeControl, demoSpeaker, useSummitDemo } from "../../components/demo-mode";
+import { getActiveOperationalNotices, getCountdownLabel, getEventPhase, getNowAndUpcoming, toEventTimeRange, type OperationalNotice } from "@not-alone/domain";
+import type { ScheduleItem, Speaker } from "@not-alone/validation";
+import { useSummit } from "../../components/summit-context";
 import { OpeningGreeting } from "../../components/opening-greeting";
+import { useResponsiveLayout } from "../../components/responsive-layout";
 
 const summitArt = require("../../assets/summit-art-v2.png");
+const steveWozniakHeadshot = require("../../assets/steve-wozniak-headshot.jpg");
 
 const homePrompts = ["What should I do now?", "Where is the next session?"];
 
 export default function TodayScreen() {
   const [refreshing, setRefreshing] = useState(false);
+  const layout = useResponsiveLayout();
   const {
-    demoAvailable,
-    demoEnabled,
     snapshot,
     nowUtc,
-    setDemoEnabled,
     lastSuccessfulSyncAt,
     lastRevisionUpdateAt,
     syncing,
     syncError,
     refreshPublishedSnapshot
-  } = useSummitDemo();
+  } = useSummit();
   const { current, upcoming } = getNowAndUpcoming({
     audienceGroups: ["public"],
     nowUtc,
@@ -33,6 +33,11 @@ export default function TodayScreen() {
   });
   const currentItem = current[0];
   const nextItem = upcoming[0];
+  const eventPhase = getEventPhase(snapshot, nowUtc);
+  const currentSpeaker = currentItem
+    ? snapshot.speakers.find((speaker) => speaker.published && currentItem.speakerIds.includes(speaker.id))
+    : undefined;
+  const operationalNotices = getActiveOperationalNotices(snapshot, nowUtc);
 
   async function handleRefresh() {
     setRefreshing(true);
@@ -48,7 +53,7 @@ export default function TodayScreen() {
       <OpeningGreeting />
       <ScrollView
         style={styles.screen}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={layout.contentStyle}
         contentInsetAdjustmentBehavior="automatic"
         refreshControl={
           <RefreshControl
@@ -58,18 +63,16 @@ export default function TodayScreen() {
           />
         }
       >
-        <View style={styles.header}>
+        <View style={[styles.header, layout.paddingStyle]}>
           <Text style={styles.eyebrow}>{snapshot.event.organizationName}</Text>
           <Text style={styles.headerTitle}>Home</Text>
           <Text style={styles.headerMeta}>{snapshot.event.dateLabel} · {snapshot.event.venueName}</Text>
         </View>
 
-        <View style={styles.syncStrip}>
+        <View style={[styles.syncStrip, layout.marginStyle]}>
           <View style={[styles.syncDot, syncError ? styles.syncDotWarn : styles.syncDotReady]} />
           <Text style={styles.syncText}>
-            {demoEnabled
-              ? "Previewing an event-day timeline."
-              : syncing
+            {syncing
                 ? "Checking for the latest schedule."
               : syncError
                 ? "Using saved schedule while reconnecting."
@@ -81,10 +84,27 @@ export default function TodayScreen() {
           </Text>
         </View>
 
+        {operationalNotices.length > 0 ? <NoticeStack insetStyle={layout.marginStyle} notices={operationalNotices} /> : null}
+
         {currentItem ? (
-          <LiveSessionCard demoEnabled={demoEnabled} item={currentItem} />
+          <LiveSessionCard insetStyle={layout.marginStyle} item={currentItem} nowUtc={nowUtc} speaker={currentSpeaker} />
+        ) : eventPhase === "after" ? (
+          <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.liveImage} style={[styles.liveShell, layout.marginStyle]}>
+            <View style={styles.liveScrim}>
+              <Text style={styles.liveKicker}>Summit complete</Text>
+              <Text style={styles.waitingTitle}>Thank you for being here.</Text>
+              <Text style={styles.waitingBody}>
+                The conversations, connections, and resources from the summit remain with you. The full agenda is still available for reference.
+              </Text>
+              <Link href="/schedule" asChild>
+                <Pressable accessibilityRole="button" style={({ pressed }) => [styles.completionButton, pressed && styles.pressed]}>
+                  <Text style={styles.completionButtonText}>View event schedule</Text>
+                </Pressable>
+              </Link>
+            </View>
+          </ImageBackground>
         ) : (
-          <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.liveImage} style={styles.liveShell}>
+          <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.liveImage} style={[styles.liveShell, layout.marginStyle]}>
             <View style={styles.liveScrim}>
               <Text style={styles.liveKicker}>Welcome to the summit</Text>
               <Text style={styles.waitingTitle}>You are not alone.</Text>
@@ -93,22 +113,19 @@ export default function TodayScreen() {
                   ? "Your schedule, venue guide, and event information are together in one place."
                   : "Programming will appear here as soon as the event team publishes it."}
               </Text>
-              {demoAvailable ? (
-                <Pressable accessibilityRole="button" onPress={() => setDemoEnabled(true)} style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}>
-                  <Text style={styles.primaryButtonText}>Preview Live Demo</Text>
-                </Pressable>
-              ) : null}
             </View>
           </ImageBackground>
         )}
 
-        <View style={styles.quickPanel}>
+        <View style={[styles.quickPanel, layout.marginStyle, layout.cardPaddingStyle]}>
           <Text style={styles.panelLabel}>Your summit day</Text>
           <MiniStatus
-            title="Up next"
-            value={nextItem ? nextItem.title : demoEnabled ? "No additional demo session queued" : "Schedule coming soon"}
-            meta={nextItem ? toEventTimeRange(nextItem, snapshot.event.timeZone) : "Temporary details pending"}
+            title={eventPhase === "after" ? "Event status" : "Up next"}
+            value={eventPhase === "after" ? "The summit has concluded" : nextItem ? nextItem.title : "Schedule coming soon"}
+            meta={eventPhase === "after" ? "View the completed agenda" : nextItem ? `${toEventTimeRange(nextItem, snapshot.event.timeZone)} · Starts in ${getCountdownLabel(nextItem.startUtc, nowUtc)}` : "Check back for event updates"}
+            detail={nextItem ? `${nextItem.locationName} · ${nextItem.visibilityScope.label}` : undefined}
             href={nextItem ? { pathname: "/session/[id]", params: { id: nextItem.id } } : "/schedule"}
+            railLabel={eventPhase === "after" ? "Done" : "Next"}
           />
           <View style={styles.divider} />
           <View style={styles.aiBlock}>
@@ -135,25 +152,25 @@ export default function TodayScreen() {
           </View>
         </View>
 
-        <View style={styles.toolsPanel}>
+        <View style={[styles.toolsPanel, layout.marginStyle]}>
           <ToolPill href="/schedule" label="Schedule" value={`${snapshot.scheduleItems.length} sessions`} />
           <ToolPill href="/map" label="Map" value={snapshot.event.venueName} />
           <ToolPill href="/help" label="Help" value="Concierge" />
         </View>
 
-        <DemoModeControl />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-function LiveSessionCard({ demoEnabled, item }: { demoEnabled: boolean; item: ScheduleItem }) {
+function LiveSessionCard({ insetStyle, item, nowUtc, speaker }: { insetStyle: StyleProp<ViewStyle>; item: ScheduleItem; nowUtc: string; speaker: Speaker | undefined }) {
+  const speakerImage = getSpeakerImage(speaker);
   return (
     <Link href={{ pathname: "/session/[id]", params: { id: item.id } }} asChild>
       <Pressable
         accessibilityLabel={`Live now. ${item.title}. ${item.locationName}`}
         accessibilityRole="button"
-        style={({ pressed }) => [styles.liveShell, pressed && styles.pressed]}
+        style={({ pressed }) => [styles.liveShell, insetStyle, pressed && styles.pressed]}
       >
         <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.liveImage} style={styles.liveBackground}>
           <View style={styles.liveScrim}>
@@ -161,15 +178,12 @@ function LiveSessionCard({ demoEnabled, item }: { demoEnabled: boolean; item: Sc
               <View style={styles.liveTopText}>
                 <Text style={styles.liveKicker}>Live now</Text>
                 <Text style={styles.liveTime}>{toEventTimeRange(item, item.eventTimeZone)}</Text>
+                <Text style={styles.countdownText}>Ends in {getCountdownLabel(item.endUtc, nowUtc)}</Text>
               </View>
-              {demoEnabled ? (
-                <View style={styles.portraitFrame}>
-                  <Image source={demoSpeaker.image} resizeMode="cover" style={styles.portrait} />
-                </View>
-              ) : null}
+              {speakerImage ? <Image accessibilityLabel={speaker ? `Headshot of ${speaker.name}` : "Live session speaker"} resizeMode="cover" source={speakerImage} style={styles.speakerPortrait} /> : null}
             </View>
             <Text style={styles.sessionTitle}>{item.title}</Text>
-            {demoEnabled ? <Text style={styles.speakerLine}>With {demoSpeaker.name} · {demoSpeaker.role}</Text> : null}
+            {speaker ? <Text style={styles.speakerName}>{speaker.name} · {speaker.role}</Text> : null}
             <Text style={styles.sessionSummary} numberOfLines={2}>{item.summary}</Text>
             <View style={styles.liveFooter}>
               <Text style={styles.locationText}>{item.locationName}</Text>
@@ -182,27 +196,47 @@ function LiveSessionCard({ demoEnabled, item }: { demoEnabled: boolean; item: Sc
   );
 }
 
+function NoticeStack({ insetStyle, notices }: { insetStyle: StyleProp<ViewStyle>; notices: OperationalNotice[] }) {
+  return (
+    <View accessibilityLabel="Important event updates" style={[styles.noticeStack, insetStyle]}>
+      {notices.map((notice) => {
+        const body = <View style={[styles.notice, notice.severity === "urgent" && styles.noticeUrgent]}>
+          <Text style={[styles.noticeLabel, notice.severity === "urgent" && styles.noticeLabelUrgent]}>{notice.severity === "urgent" ? "Urgent notice" : notice.severity === "change" ? "Schedule update" : "Event notice"}</Text>
+          <Text style={styles.noticeTitle}>{notice.title}</Text>
+          <Text style={styles.noticeBody}>{notice.body}</Text>
+        </View>;
+        return notice.scheduleItemId ? <Link href={{ pathname: "/session/[id]", params: { id: notice.scheduleItemId } }} asChild key={notice.id}><Pressable accessibilityRole="button">{body}</Pressable></Link> : <View key={notice.id}>{body}</View>;
+      })}
+    </View>
+  );
+}
+
 function MiniStatus({
   title,
   value,
   meta,
-  href
+  detail,
+  href,
+  railLabel = "Next"
 }: {
   title: string;
   value: string;
   meta: string;
+  detail?: string | undefined;
   href: "/schedule" | { pathname: "/session/[id]"; params: { id: string } };
+  railLabel?: string | undefined;
 }) {
   return (
     <Link href={href} asChild>
       <Pressable accessibilityLabel={`${title}. ${value}. ${meta}`} accessibilityRole="button" style={({ pressed }) => [styles.miniStatus, pressed && styles.pressed]}>
         <View style={styles.statusRail}>
-          <Text style={styles.statusRailText}>Next</Text>
+          <Text style={styles.statusRailText}>{railLabel}</Text>
         </View>
         <View style={styles.statusText}>
           <Text style={styles.panelLabel}>{title}</Text>
           <Text style={styles.statusTitle} numberOfLines={2}>{value}</Text>
           <Text style={styles.statusMeta}>{meta}</Text>
+          {detail ? <Text numberOfLines={2} style={styles.statusDetail}>{detail}</Text> : null}
         </View>
       </Pressable>
     </Link>
@@ -227,6 +261,12 @@ function formatSyncTime(value: string) {
   }).format(new Date(value));
 }
 
+function getSpeakerImage(speaker: Speaker | undefined): ImageSourcePropType | undefined {
+  if (!speaker) return undefined;
+  if (speaker.headshotUrl) return { uri: speaker.headshotUrl };
+  return /steve wozniak/i.test(speaker.name) ? steveWozniakHeadshot : undefined;
+}
+
 const styles = StyleSheet.create({
   safeArea: {
     backgroundColor: colors.canvas,
@@ -234,9 +274,6 @@ const styles = StyleSheet.create({
   },
   screen: {
     backgroundColor: colors.canvas
-  },
-  content: {
-    paddingBottom: 112
   },
   header: {
     paddingHorizontal: spacing.lg,
@@ -298,6 +335,40 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "500"
   },
+  noticeStack: {
+    gap: spacing.sm,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.md
+  },
+  notice: {
+    backgroundColor: "rgba(230, 192, 111, 0.1)",
+    borderColor: "rgba(230, 192, 111, 0.42)",
+    borderLeftWidth: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: spacing.md
+  },
+  noticeUrgent: {
+    backgroundColor: "rgba(154, 44, 44, 0.18)",
+    borderColor: "rgba(240, 111, 111, 0.65)"
+  },
+  noticeLabel: {
+    color: colors.gold,
+    fontFamily: typography.bold,
+    fontSize: 10,
+    fontWeight: "800",
+    textTransform: "uppercase"
+  },
+  noticeLabelUrgent: { color: "#FF9B9B" },
+  noticeTitle: {
+    color: colors.ink,
+    fontFamily: typography.bold,
+    fontSize: 16,
+    fontWeight: "800",
+    lineHeight: 21,
+    marginTop: 3
+  },
+  noticeBody: { color: colors.body, fontFamily: typography.body, fontSize: 12, lineHeight: 18, marginTop: spacing.xs },
   revisionText: {
     color: colors.muted,
     fontFamily: typography.bold,
@@ -327,8 +398,7 @@ const styles = StyleSheet.create({
   liveTop: {
     alignItems: "flex-start",
     flexDirection: "row",
-    justifyContent: "space-between",
-    minHeight: 124
+    justifyContent: "space-between"
   },
   liveTopText: {
     flex: 1,
@@ -350,36 +420,28 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     marginTop: spacing.sm
   },
-  portraitFrame: {
-    backgroundColor: "#080E25",
-    borderColor: "rgba(230, 192, 111, 0.34)",
-    borderRadius: 8,
-    borderWidth: 1,
-    height: 124,
-    overflow: "hidden",
-    ...Platform.select({
-      web: { boxShadow: "0 12px 24px rgba(230, 192, 111, 0.18)" },
-      default: {
-        shadowColor: colors.gold,
-        shadowOffset: { width: 0, height: 12 },
-        shadowOpacity: 0.18,
-        shadowRadius: 24
-      }
-    }),
-    width: 96
-  },
-  portrait: {
-    height: "100%",
-    width: "100%"
-  },
-  speakerLine: {
+  countdownText: {
     color: colors.gold,
     fontFamily: typography.semibold,
-    fontSize: 13,
-    fontWeight: "700",
-    letterSpacing: 0,
-    marginTop: spacing.xs,
-    lineHeight: 19
+    fontSize: 12,
+    fontWeight: "600",
+    marginTop: spacing.xs
+  },
+  speakerPortrait: {
+    backgroundColor: colors.surface,
+    borderColor: "rgba(230, 192, 111, 0.5)",
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 120,
+    width: 92
+  },
+  speakerName: {
+    color: colors.gold,
+    fontFamily: typography.semibold,
+    fontSize: 12,
+    fontWeight: "600",
+    lineHeight: 18,
+    marginTop: spacing.xs
   },
   sessionTitle: {
     color: colors.ink,
@@ -437,20 +499,21 @@ const styles = StyleSheet.create({
     lineHeight: 23,
     marginTop: spacing.md
   },
-  primaryButton: {
+  completionButton: {
+    alignItems: "center",
     alignSelf: "flex-start",
     backgroundColor: colors.gold,
     borderRadius: 8,
+    justifyContent: "center",
     marginTop: spacing.lg,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md
+    minHeight: 42,
+    paddingHorizontal: spacing.lg
   },
-  primaryButtonText: {
+  completionButtonText: {
     color: colors.midnight,
     fontFamily: typography.bold,
-    fontSize: 13,
-    fontWeight: "800",
-    textTransform: "uppercase"
+    fontSize: 12,
+    fontWeight: "800"
   },
   quickPanel: {
     backgroundColor: "rgba(13, 21, 48, 0.9)",
@@ -507,6 +570,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginTop: spacing.xs
   },
+  statusDetail: { color: colors.surfaceMuted, fontFamily: typography.medium, fontSize: 11, lineHeight: 16, marginTop: 3 },
   divider: {
     backgroundColor: colors.border,
     height: 1,

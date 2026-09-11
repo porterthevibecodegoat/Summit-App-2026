@@ -14,12 +14,12 @@ export default function PrivacyPage() {
 
         <p>
           The Not Alone Summit app is an event guide provided by Inspiring Children Foundation. This policy explains
-          the limited information used to provide schedules, saved sessions, event updates, and attendee support.
+          the limited information used to provide schedules, event updates, and attendee support.
         </p>
 
         <h2>Information the app uses</h2>
         <p>
-          The app stores your saved sessions and the latest event guide on your device. If notifications are enabled,
+          The app stores the latest event guide on your device. If notifications are enabled,
           it may register an app-specific push token, app version, device platform, and event access group so the
           correct operational updates can be delivered. The app does not request contacts, photos, camera, microphone,
           or precise location access.
@@ -34,16 +34,16 @@ export default function PrivacyPage() {
 
         <h2>How information is used</h2>
         <p>
-          Information is used only to operate the event experience, synchronize published event details, preserve your
-          selected sessions, deliver requested notifications, maintain service security, and diagnose reliability issues.
+          Information is used only to operate the event experience, synchronize published event details, deliver event
+          notifications, maintain service security, and diagnose reliability issues.
           We do not sell personal information or use app activity for third-party behavioral advertising.
         </p>
 
         <h2>Retention and choices</h2>
         <p>
-          Saved sessions can be removed in the app. Notifications can be disabled in iOS Settings. Operational records
-          are retained only as long as reasonably needed for event delivery, security, and legal obligations. You may
-          request assistance through the support page below.
+          Notifications can be disabled in iOS Settings. Operational records are retained only as long as reasonably
+          needed for event delivery, security, and legal obligations. You may request assistance through the support
+          page below.
         </p>
 
         <h2>Children and safety</h2>

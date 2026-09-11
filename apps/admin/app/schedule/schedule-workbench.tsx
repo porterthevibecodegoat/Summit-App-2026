@@ -103,7 +103,7 @@ export function ScheduleWorkbench({
           timeZone: snapshot.event.timeZone
         }).format(new Date(item.endUtc)),
         title: item.title,
-        speaker: item.speakerIds.length > 0 ? `${item.speakerIds.length} linked speaker(s)` : "Unassigned",
+        speaker: item.speakerIds.map((id) => snapshot.speakers.find((speaker) => speaker.id === id)?.name).filter(Boolean).join(", ") || "Unassigned",
         location: item.locationName,
         audience: item.visibilityScope.label,
         status: item.published ? "Ready" : "Draft",
@@ -603,7 +603,13 @@ export function ScheduleWorkbench({
                       <option>Staff only</option>
                       <option>VIP</option>
                     </select>
-                    <input value={session.reminders} onChange={(event) => updateSession(session.id, "reminders", event.target.value)} aria-label="Reminder offsets" />
+                    <input
+                      aria-label="Broadcast times before session"
+                      onChange={(event) => updateSession(session.id, "reminders", event.target.value)}
+                      placeholder="Broadcasts before start, e.g. 30m, 10m"
+                      title="Schedule public attendee broadcasts this many minutes before the session"
+                      value={session.reminders}
+                    />
                   </div>
                 </div>
                 <div className="sessionActions">

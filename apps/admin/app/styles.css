@@ -243,6 +243,166 @@ p {
   overflow-wrap: anywhere;
 }
 
+.contentStudio {
+  max-width: 1320px;
+}
+
+.contentStatus {
+  background: #edf8f5;
+  border: 1px solid #b7dfd7;
+  border-radius: 6px;
+  color: var(--accent-strong);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+}
+
+.contentStatusDirty {
+  background: #fff8e8;
+  border-color: #ead399;
+  color: #7a5410;
+}
+
+.contentTabs {
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+}
+
+.contentTabs button {
+  background: transparent;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  padding: 13px 16px 11px;
+  white-space: nowrap;
+}
+
+.contentTabs button.active {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+}
+
+.contentEditor {
+  padding: 24px 0 80px;
+}
+
+.editorHeading,
+.recordHeader,
+.recordActions {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.contentFormGrid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 18px;
+}
+
+.contentField {
+  display: grid;
+  gap: 7px;
+}
+
+.contentField.wide {
+  grid-column: 1 / -1;
+}
+
+.contentField span {
+  color: var(--body);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.contentField input,
+.contentField textarea,
+.contentField select {
+  background: #fff;
+  border: 1px solid #cbd6e2;
+  border-radius: 6px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  min-height: 42px;
+  padding: 10px 11px;
+  resize: vertical;
+  width: 100%;
+}
+
+.recordList {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.recordEditor {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.recordHeader {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+.publishToggle {
+  align-items: center;
+  color: var(--body);
+  display: flex;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 6px;
+}
+
+.primaryButton,
+.secondaryButton,
+.dangerTextButton {
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  min-height: 38px;
+  padding: 8px 14px;
+}
+
+.primaryButton {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: #fff;
+}
+
+.primaryButton:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.secondaryButton {
+  background: #fff;
+  border: 1px solid var(--border);
+  color: var(--accent);
+}
+
+.dangerTextButton {
+  background: transparent;
+  border: 0;
+  color: var(--danger);
+  min-height: 30px;
+  padding: 4px 6px;
+}
+
 .timeline {
   display: grid;
   gap: 0;
@@ -1450,6 +1610,7 @@ textarea {
     .assistantGrid,
     .commandGrid,
     .quickActionGrid,
+  .contentFormGrid,
   .sessionTopline,
   .sessionMetaGrid {
     grid-template-columns: 1fr;
@@ -1462,6 +1623,16 @@ textarea {
   .pageHeader,
   .panelHeader {
     display: block;
+  }
+
+  .editorHeading,
+  .recordHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .recordActions {
+    justify-content: flex-start;
   }
 
   .sessionCard {

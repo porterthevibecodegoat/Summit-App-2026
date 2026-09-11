@@ -28,7 +28,72 @@ export const staffDraftSessionSchema = z.object({
 
 export const staffDraftSessionsSchema = z.array(staffDraftSessionSchema).max(1000);
 
+export const staffContentSchema = z.object({
+  event: z.object({
+    name: z.string().trim().min(1).max(120),
+    organizationName: z.string().trim().min(1).max(160),
+    dateLabel: z.string().trim().min(1).max(120),
+    venueName: z.string().trim().min(1).max(160),
+    city: z.string().trim().min(1).max(160),
+    positioning: z.string().trim().min(1).max(600),
+    presentedBy: z.string().trim().min(1).max(160),
+    poweredBy: z.string().trim().min(1).max(160),
+    tracks: z.array(z.string().trim().min(1).max(80)).max(30)
+  }),
+  speakers: z.array(z.object({
+    id: z.string().uuid(),
+    eventId: z.string().min(1),
+    name: z.string().trim().min(1).max(160),
+    role: z.string().trim().min(1).max(200),
+    bio: z.string().trim().max(2000),
+    headshotUrl: z.string().url().nullable(),
+    published: z.boolean()
+  })).max(250),
+  faqs: z.array(z.object({
+    id: z.string().uuid(),
+    question: z.string().trim().min(1).max(300),
+    answer: z.string().trim().min(1).max(3000),
+    category: z.string().trim().min(1).max(100),
+    published: z.boolean()
+  })).max(250),
+  sponsors: z.array(z.object({
+    id: z.string().uuid(),
+    name: z.string().trim().min(1).max(200),
+    tier: z.string().trim().min(1).max(100),
+    websiteUrl: z.string().url().nullable(),
+    logoUrl: z.string().url().nullable(),
+    published: z.boolean()
+  })).max(250),
+  media: z.array(z.object({
+    id: z.string().uuid(),
+    title: z.string().trim().min(1).max(200),
+    type: z.enum(["image", "video", "link"]),
+    url: z.string().url(),
+    altText: z.string().trim().max(500),
+    published: z.boolean()
+  })).max(500),
+  notices: z.array(z.object({
+    id: z.string().uuid(),
+    eventId: z.string().min(1),
+    title: z.string().trim().min(1).max(200),
+    body: z.string().trim().min(1).max(1200),
+    severity: z.enum(["info", "change", "urgent"]),
+    startsAtUtc: z.string().datetime(),
+    endsAtUtc: z.string().datetime().nullable(),
+    published: z.boolean()
+  })).max(100),
+  contentPages: z.array(z.object({
+    id: z.string().uuid(),
+    slug: z.string().trim().min(1).max(120),
+    title: z.string().trim().min(1).max(200),
+    body: z.string().trim().min(1).max(10000),
+    published: z.boolean(),
+    revision: z.number().int().positive()
+  })).max(250)
+}).strict();
+
 export type StaffDraftSession = z.infer<typeof staffDraftSessionSchema>;
+export type StaffContent = z.infer<typeof staffContentSchema>;
 
 export type LiveOpsStore = {
   eventId: string;
@@ -72,8 +137,8 @@ export async function readLiveOpsStore(): Promise<LiveOpsStore> {
     const parsed = JSON.parse(raw) as LiveOpsStore;
     return {
       ...parsed,
-      publishedSnapshot: eventSnapshotSchema.parse(parsed.publishedSnapshot),
-      revisionHistory: (parsed.revisionHistory ?? []).map((snapshot) => eventSnapshotSchema.parse(snapshot)),
+      publishedSnapshot: hydrateSnapshotContent(parsed.publishedSnapshot),
+      revisionHistory: (parsed.revisionHistory ?? []).map((snapshot) => hydrateSnapshotContent(snapshot)),
       attendeeDevices: parsed.attendeeDevices ?? [],
       notificationJobs: parsed.notificationJobs ?? [],
       activityLog: parsed.activityLog ?? [],
@@ -97,6 +162,27 @@ export async function readLiveOpsStore(): Promise<LiveOpsStore> {
     await writeLiveOpsStore(initialStore);
     return initialStore;
   }
+}
+
+export function hydrateSnapshotContent(value: unknown): EventSnapshot {
+  const source = value as Partial<EventSnapshot> | undefined;
+  const parsed = eventSnapshotSchema.parse(value);
+  const positioning = /prototype attendee agenda/i.test(parsed.event.positioning)
+    ? demoSnapshot.event.positioning
+    : parsed.event.positioning;
+
+  return eventSnapshotSchema.parse({
+    ...parsed,
+    event: { ...parsed.event, positioning },
+    speakers: Array.isArray(source?.speakers) ? parsed.speakers : demoSnapshot.speakers,
+    faqs: Array.isArray(source?.faqs) ? parsed.faqs : demoSnapshot.faqs,
+    sponsors: Array.isArray(source?.sponsors) ? parsed.sponsors : demoSnapshot.sponsors,
+    media: Array.isArray(source?.media) ? parsed.media : demoSnapshot.media,
+    notices: Array.isArray(source?.notices) ? parsed.notices : demoSnapshot.notices,
+    contentPages: parsed.contentPages.map((page) =>
+      page.slug === "prototype-schedule-note" ? { ...page, slug: "schedule-note" } : page
+    )
+  });
 }
 
 export async function writeLiveOpsStore(store: LiveOpsStore) {
@@ -132,7 +218,7 @@ export async function publishDraftSessions(
   const store = await readLiveOpsStore();
   const nowUtc = new Date().toISOString();
   const nextRevision = store.revision + 1;
-  const publishedSnapshot = buildPublishedSnapshotFromDraftSessions(normalizedSessions, nextRevision, nowUtc);
+  const publishedSnapshot = buildPublishedSnapshotFromDraftSessions(normalizedSessions, nextRevision, nowUtc, store.publishedSnapshot);
   const notificationJobs = createNotificationJobsForPublish(publishedSnapshot, options.notifyAttendees);
   const nextStore: LiveOpsStore = {
     ...store,
@@ -194,7 +280,7 @@ export async function rollbackLastPublishedSnapshot(options: { notifyAttendees: 
         timeZone: publishedSnapshot.event.timeZone
       }).format(new Date(item.endUtc)),
       title: item.title,
-      speaker: item.speakerIds.length > 0 ? `${item.speakerIds.length} linked speaker(s)` : "Unassigned",
+      speaker: item.speakerIds.map((id) => publishedSnapshot.speakers.find((speaker) => speaker.id === id)?.name).filter(Boolean).join(", ") || "Unassigned",
       location: item.locationName,
       audience: item.visibilityScope.label,
       status: "Ready",
@@ -222,16 +308,51 @@ export async function rollbackLastPublishedSnapshot(options: { notifyAttendees: 
 export function buildPublishedSnapshotFromDraftSessions(
   sessions: StaffDraftSession[],
   revision: number,
-  nowUtc = new Date().toISOString()
+  nowUtc = new Date().toISOString(),
+  baseSnapshot: EventSnapshot = demoSnapshot
 ) {
   const normalizedSessions = normalizeDraftSessions(sessions);
   return eventSnapshotSchema.parse({
-    ...demoSnapshot,
+    ...baseSnapshot,
     revision,
     serverTimeUtc: nowUtc,
-    scheduleItems: normalizedSessions.map((session, index) => createScheduleItem(session, index, revision, nowUtc)),
-    locations: createLocations(normalizedSessions)
+    scheduleItems: normalizedSessions.map((session, index) => createScheduleItem(session, index, revision, nowUtc, baseSnapshot)),
+    locations: createLocations(normalizedSessions, baseSnapshot.event.id)
   });
+}
+
+export async function publishContent(content: StaffContent) {
+  const parsed = staffContentSchema.parse(content);
+  const store = await readLiveOpsStore();
+  const nowUtc = new Date().toISOString();
+  const nextRevision = store.revision + 1;
+  const publishedSnapshot = eventSnapshotSchema.parse({
+    ...store.publishedSnapshot,
+    event: { ...store.publishedSnapshot.event, ...parsed.event },
+    speakers: parsed.speakers,
+    faqs: parsed.faqs,
+    sponsors: parsed.sponsors,
+    media: parsed.media,
+    notices: parsed.notices,
+    contentPages: parsed.contentPages.map((page) => ({ ...page, revision: nextRevision })),
+    revision: nextRevision,
+    serverTimeUtc: nowUtc
+  });
+  const nextStore: LiveOpsStore = {
+    ...store,
+    publishedSnapshot,
+    revisionHistory: [store.publishedSnapshot, ...store.revisionHistory].slice(0, 10),
+    revision: nextRevision,
+    lastPublishedAt: nowUtc,
+    lastPublishedMessage: "Published attendee content. Schedule and notification jobs were preserved.",
+    activityLog: addActivity(store.activityLog, {
+      action: "PUBLISH_CONTENT",
+      actorRole: "ADMIN",
+      detail: `Revision ${nextRevision} published event information, ${parsed.speakers.length} speaker(s), ${parsed.faqs.length} FAQ(s), ${parsed.sponsors.length} sponsor(s), ${parsed.media.length} media item(s), and ${parsed.notices.length} live notice(s).`
+    })
+  };
+  await writeLiveOpsStore(nextStore);
+  return nextStore;
 }
 
 export function createNotificationJobsForPublish(snapshot: EventSnapshot, notifyAttendees: boolean) {
@@ -313,7 +434,7 @@ function createInitialDraftSessions(): StaffDraftSession[] {
   ];
 }
 
-function createScheduleItem(session: StaffDraftSession, index: number, revision: number, nowUtc: string): ScheduleItem {
+function createScheduleItem(session: StaffDraftSession, index: number, revision: number, nowUtc: string, baseSnapshot: EventSnapshot): ScheduleItem {
   const startUtc = localEventTimeToUtc(session.day, session.start);
   const endUtc = localEventTimeToUtc(session.day, session.end);
   const visibility = audienceToScope(session.audience);
@@ -323,18 +444,22 @@ function createScheduleItem(session: StaffDraftSession, index: number, revision:
 
   return {
     id: stableUuid(session.id),
-    eventId: demoSnapshot.event.id,
+    eventId: baseSnapshot.event.id,
     title,
     shortTitle: title.slice(0, 36),
     summary: `${speaker} at ${location}.`,
     description: "Published from the staff live-ops control room. Replace this with approved production copy.",
     startUtc,
     endUtc,
-    eventTimeZone: demoSnapshot.event.timeZone,
+    eventTimeZone: baseSnapshot.event.timeZone,
     dayOrder: index,
     locationId: stableUuid(`location:${location}`),
     locationName: location,
-    speakerIds: [stableUuid(`speaker:${speaker}`)],
+    speakerIds: speaker === "Unassigned"
+      ? []
+      : speaker.split(",").map((name) => name.trim()).filter(Boolean).map((name) =>
+          baseSnapshot.speakers.find((candidate) => candidate.name.toLowerCase() === name.toLowerCase())?.id ?? stableUuid(`speaker:${name}`)
+        ),
     status: "scheduled",
     visibilityScope: visibility,
     eligibilityScope: visibility,
@@ -348,10 +473,10 @@ function createScheduleItem(session: StaffDraftSession, index: number, revision:
   };
 }
 
-function createLocations(sessions: StaffDraftSession[]) {
+function createLocations(sessions: StaffDraftSession[], eventId: string) {
   return [...new Set(sessions.map((session) => session.location.trim()).filter(Boolean))].map((locationName, index, locations) => ({
     id: stableUuid(`location:${locationName}`),
-    eventId: demoSnapshot.event.id,
+    eventId,
     name: locationName,
     description: "Published staff-controlled event location.",
     mapX: locations.length <= 1 ? 0.5 : 0.18 + (index / Math.max(locations.length - 1, 1)) * 0.64,

@@ -5,7 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 import { colors, typography } from "@not-alone/design-tokens";
-import { SummitDemoProvider } from "../components/demo-mode";
+import { SummitProvider } from "../components/summit-context";
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -41,7 +41,7 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SummitDemoProvider>
+      <SummitProvider>
         <StatusBar style="light" />
         <Stack
           screenOptions={{
@@ -57,7 +57,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="session/[id]" options={{ title: "Session" }} />
         </Stack>
-      </SummitDemoProvider>
+      </SummitProvider>
     </QueryClientProvider>
   );
 }

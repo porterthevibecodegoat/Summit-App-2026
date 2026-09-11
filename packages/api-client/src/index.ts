@@ -8,7 +8,6 @@ export async function fetchPublishedSnapshot(apiBaseUrl: string, options: { time
   try {
     const response = await fetch(`${normalizedBaseUrl}/api/snapshot`, {
       cache: "no-store",
-      headers: { "Cache-Control": "no-cache" },
       signal: controller.signal
     });
 

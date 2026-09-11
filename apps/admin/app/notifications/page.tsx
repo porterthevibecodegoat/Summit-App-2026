@@ -31,10 +31,10 @@ export default async function NotificationsPage() {
         <div className="pageHeader">
           <div>
             <div className="kicker">Notification Operations · {backendLabel}</div>
-            <h1>Reminder queue</h1>
+            <h1>Attendee broadcasts</h1>
             <p className="headerCopy">
-              Publishing a schedule revision recalculates reminder jobs here. Delivery stays disabled until Expo/APNs
-              credentials are authorized. The worker and delivery audit remain safely disabled until then.
+              Publishing a schedule revision schedules its public reminders for every registered attendee device.
+              Delivery stays disabled until Expo/APNs credentials are authorized and tested.
             </p>
           </div>
           <div className="badgeGroup">
@@ -65,7 +65,7 @@ export default async function NotificationsPage() {
         <div className="systemNotice">
           {state.adapterWarning ? `${state.adapterWarning} ` : ""}
           Current backend mode: {state.mode}. The audited dispatch worker is built, but nothing is sent while delivery
-          flags remain off. {state.attendeeDevices} device(s) are registered in this environment.
+          flags remain off. {state.attendeeDevices} attendee device(s) are registered in this environment.
         </div>
 
         <NotificationControl enabled={pushEnabled} />
@@ -73,8 +73,8 @@ export default async function NotificationsPage() {
         <section className="panel">
           <div className="panelHeader">
             <div>
-              <div className="label">Queued reminder metadata</div>
-              <h2>Jobs created from the published schedule</h2>
+              <div className="label">Scheduled attendee broadcasts</div>
+              <h2>Jobs created from the published event schedule</h2>
             </div>
             <Link className="textButton" href="/schedule">Manage schedule</Link>
           </div>
@@ -83,8 +83,8 @@ export default async function NotificationsPage() {
               <div className="row">
                 <div className="time">No jobs</div>
                 <div>
-                  <div className="title">No reminders are queued yet.</div>
-                  <div className="summary">Publish a ready schedule revision to generate reminder jobs.</div>
+                  <div className="title">No broadcasts are scheduled yet.</div>
+                  <div className="summary">Add broadcast timing to a session, then publish the schedule.</div>
                 </div>
                 <div className="badge">Waiting</div>
               </div>

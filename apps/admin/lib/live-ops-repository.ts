@@ -13,9 +13,12 @@ import {
 } from "@not-alone/validation";
 import {
   buildPublishedSnapshotFromDraftSessions,
+  createNotificationJobs,
   createNotificationJobsForPublish,
   DraftPublishError,
+  hydrateSnapshotContent,
   publishDraftSessions,
+  publishContent as publishLocalContent,
   readLiveOpsStore,
   recordDocumentImport,
   registerAttendeeDevice,
@@ -23,6 +26,8 @@ import {
   saveDraftSessions,
   type LiveOpsStore,
   staffDraftSessionsSchema,
+  staffContentSchema,
+  type StaffContent,
   type StaffDraftSession
 } from "./live-ops-store";
 import { createPublishPreview } from "./publish-diff";
@@ -149,6 +154,59 @@ export async function publishDraft(
     lastPublishedAt: store.lastPublishedAt,
     message: store.lastPublishedMessage,
     notificationJobsCount: store.notificationJobs.length,
+    snapshotUrl: "/api/snapshot"
+  };
+}
+
+export async function publishEventContent(content: StaffContent, staff: StaffContext) {
+  requireRole(staff, ["PUBLISHER", "ADMIN"]);
+  const parsed = staffContentSchema.parse(content);
+
+  if (!hasSupabaseServerConfig()) {
+    const store = await publishLocalContent(parsed);
+    return {
+      mode: "local-adapter" as const,
+      publishedRevision: store.revision,
+      lastPublishedAt: store.lastPublishedAt,
+      message: store.lastPublishedMessage,
+      snapshotUrl: "/api/snapshot"
+    };
+  }
+
+  const state = await readSupabaseState();
+  const nowUtc = new Date().toISOString();
+  const nextRevision = state.publishedSnapshot.revision + 1;
+  const snapshot = eventSnapshotSchema.parse({
+    ...state.publishedSnapshot,
+    event: { ...state.publishedSnapshot.event, ...parsed.event },
+    speakers: parsed.speakers,
+    faqs: parsed.faqs,
+    sponsors: parsed.sponsors,
+    media: parsed.media,
+    notices: parsed.notices,
+    contentPages: parsed.contentPages.map((page) => ({ ...page, revision: nextRevision })),
+    revision: nextRevision,
+    serverTimeUtc: nowUtc
+  });
+  const notificationJobs = createNotificationJobs(snapshot);
+  const changesCount = parsed.speakers.length + parsed.faqs.length + parsed.sponsors.length + parsed.media.length + parsed.notices.length + parsed.contentPages.length + 1;
+  const revision = await publishAtomicSupabaseRevision({
+    expectedPreviousRevision: state.publishedSnapshot.revision,
+    snapshot,
+    source: "MANUAL_EDITOR",
+    changesCount,
+    notificationJobs,
+    notifyAttendees: false,
+    staff,
+    rollbackOfRevision: null,
+    extraJobPayload: { contentOnlyRevision: true }
+  });
+
+  return {
+    mode: "supabase" as const,
+    publishedRevision: revision.revision,
+    lastPublishedAt: revision.published_at,
+    message: "Published attendee content to Supabase. Schedule and reminder timing were preserved.",
     snapshotUrl: "/api/snapshot"
   };
 }
@@ -381,7 +439,7 @@ async function readSupabaseState(): Promise<LiveOpsState> {
   ]);
 
   const revisionRow = revisionRows[0];
-  const snapshot = revisionRow ? eventSnapshotSchema.parse(revisionRow.snapshot) : eventSnapshotSchema.parse({ ...demoFallback(), serverTimeUtc: new Date().toISOString() });
+  const snapshot = revisionRow ? hydrateSnapshotContent(revisionRow.snapshot) : hydrateSnapshotContent({ ...demoFallback(), serverTimeUtc: new Date().toISOString() });
   const draftSessions = parseDraftSessions(draftRows[0]?.working_snapshot, snapshot);
   const notificationJobs = notificationRows.map((job) => ({
     id: job.id,
@@ -481,7 +539,7 @@ async function publishSupabaseDraft(
   const state = await readSupabaseState();
   const nowUtc = new Date().toISOString();
   const nextRevision = state.publishedSnapshot.revision + 1;
-  const snapshot = buildPublishedSnapshotFromDraftSessions(sessions, nextRevision, nowUtc);
+  const snapshot = buildPublishedSnapshotFromDraftSessions(sessions, nextRevision, nowUtc, state.publishedSnapshot);
   const notificationJobs = createNotificationJobsForPublish(snapshot, options.notifyAttendees);
   const preview = createPublishPreview(state.publishedSnapshot, sessions, nowUtc);
   const changesCount = preview.counts.added + preview.counts.changed + preview.counts.removed;
@@ -649,7 +707,7 @@ function parseDraftSessions(value: unknown, snapshot: EventSnapshot): StaffDraft
       timeZone: snapshot.event.timeZone
     }).format(new Date(item.endUtc)),
     title: item.title,
-    speaker: item.speakerIds.length > 0 ? `${item.speakerIds.length} linked speaker(s)` : "Unassigned",
+    speaker: item.speakerIds.map((id) => snapshot.speakers.find((speaker) => speaker.id === id)?.name).filter(Boolean).join(", ") || "Unassigned",
     location: item.locationName,
     audience: item.visibilityScope.label,
     status: item.published ? "Ready" : "Draft",

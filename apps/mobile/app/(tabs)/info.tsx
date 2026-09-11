@@ -1,29 +1,37 @@
-import { ImageBackground, Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, ImageBackground, Linking, Pressable, ScrollView, StyleSheet, Text, View, type StyleProp, type ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { publicAppConfig } from "@not-alone/config";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
-import { useSummitDemo } from "../../components/demo-mode";
+import { useSummit } from "../../components/summit-context";
+import { useResponsiveLayout } from "../../components/responsive-layout";
+import { mobileApiBaseUrl } from "../../lib/mobile-api";
 
 const summitArt = require("../../assets/summit-art-v2.png");
 
 export default function InfoScreen() {
-  const { demoEnabled, snapshot } = useSummitDemo();
+  const { snapshot } = useSummit();
+  const layout = useResponsiveLayout();
+  const tileStyle = layout.compact ? styles.gridItemFull : layout.wide ? styles.gridItemQuarter : styles.gridItemHalf;
+  const mediaItemStyle = layout.compact ? styles.gridItemFull : layout.regular ? styles.gridItemThird : styles.gridItemHalf;
   const officialContent = snapshot.contentPages.find((page) => page.slug === "inspiring-children-foundation");
+  const speakers = snapshot.speakers.filter((speaker) => speaker.published);
+  const faqs = snapshot.faqs.filter((faq) => faq.published);
+  const sponsors = snapshot.sponsors.filter((sponsor) => sponsor.published);
+  const media = snapshot.media.filter((item) => item.published);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <ScrollView
         style={styles.screen}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={layout.contentStyle}
         contentInsetAdjustmentBehavior="automatic"
       >
-        <View style={styles.header}>
+        <View style={[styles.header, layout.paddingStyle]}>
           <Text style={styles.eyebrow}>{snapshot.event.organizationName}</Text>
           <Text style={styles.headerTitle}>Summit Info</Text>
         </View>
 
-        <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.heroImage} style={styles.heroCard}>
-          <View style={styles.heroScrim}>
+        <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.heroImage} style={[styles.heroCard, layout.marginStyle]}>
+          <View style={[styles.heroScrim, layout.cardPaddingStyle]}>
             <View style={styles.heroTop}>
               <View style={styles.artMark} />
               <View style={styles.dateBadge}>
@@ -37,24 +45,15 @@ export default function InfoScreen() {
           </View>
         </ImageBackground>
 
-        <View style={styles.detailGrid}>
-          <InfoTile label="Venue" value={snapshot.event.venueName} tone="green" />
-          <InfoTile label="City" value={snapshot.event.city} tone="blue" />
-          <InfoTile label="Presented by" value={snapshot.event.presentedBy} tone="gold" />
-          <InfoTile label="Powered by" value={snapshot.event.poweredBy} tone="plum" />
+        <View style={[styles.detailGrid, layout.marginStyle]}>
+          <InfoTile itemStyle={tileStyle} label="Venue" value={snapshot.event.venueName} tone="green" />
+          <InfoTile itemStyle={tileStyle} label="City" value={snapshot.event.city} tone="blue" />
+          <InfoTile itemStyle={tileStyle} label="Presented by" value={snapshot.event.presentedBy} tone="gold" />
+          <InfoTile itemStyle={tileStyle} label="Powered by" value={snapshot.event.poweredBy} tone="plum" />
         </View>
 
-        {demoEnabled ? (
-          <View style={styles.demoNotice}>
-            <Text style={styles.demoNoticeLabel}>Temporary demo mode</Text>
-            <Text style={styles.demoNoticeBody}>
-              Sample sessions and wayfinding are active for preview only. Final agenda content remains controlled by
-              the shared published event data.
-            </Text>
-          </View>
-        ) : null}
 
-        <View style={styles.section}>
+        <View style={[styles.section, layout.paddingStyle]}>
           <Text style={styles.sectionTitle}>Experience</Text>
           <View style={styles.trackGrid}>
             {snapshot.event.tracks.map((track) => (
@@ -65,37 +64,60 @@ export default function InfoScreen() {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Featured Leadership</Text>
+        {speakers.length > 0 ? <View style={[styles.section, layout.paddingStyle]}>
+          <Text style={styles.sectionTitle}>Speakers & Guests</Text>
           <View style={styles.peoplePanel}>
-            {snapshot.event.featuredPeople.map((person) => (
-              <View key={`${person.group}-${person.name}`} style={styles.personRow}>
+            {speakers.map((person) => (
+              <View key={person.id} style={styles.personRow}>
+                {person.headshotUrl ? <Image accessibilityLabel={`${person.name} headshot`} source={{ uri: person.headshotUrl }} style={styles.personImage} /> : null}
                 <View style={styles.personText}>
                   <Text style={styles.personName}>{person.name}</Text>
                   <Text style={styles.personRole}>{person.role}</Text>
                 </View>
-                <View style={styles.personBadge}>
-                  <Text style={styles.personGroup}>{person.group}</Text>
-                </View>
               </View>
             ))}
           </View>
-        </View>
+        </View> : null}
 
-        <View style={styles.aboutPanel}>
+        {faqs.length > 0 ? <View style={[styles.section, layout.paddingStyle]}>
+          <Text style={styles.sectionTitle}>Frequently Asked Questions</Text>
+          <View style={styles.peoplePanel}>
+            {faqs.map((faq) => <View key={faq.id} style={styles.faqRow}><Text style={styles.faqCategory}>{faq.category}</Text><Text style={styles.personName}>{faq.question}</Text><Text style={styles.personRole}>{faq.answer}</Text></View>)}
+          </View>
+        </View> : null}
+
+        {sponsors.length > 0 ? <View style={[styles.section, layout.paddingStyle]}>
+          <Text style={styles.sectionTitle}>Sponsors & Partners</Text>
+          <View style={styles.peoplePanel}>
+            {sponsors.map((sponsor) => <Pressable disabled={!sponsor.websiteUrl} key={sponsor.id} onPress={() => sponsor.websiteUrl ? void Linking.openURL(sponsor.websiteUrl) : undefined} style={styles.sponsorRow}>
+              {sponsor.logoUrl ? <Image accessibilityLabel={`${sponsor.name} logo`} resizeMode="contain" source={{ uri: sponsor.logoUrl }} style={styles.sponsorLogo} /> : null}
+              <View style={styles.personText}><Text style={styles.faqCategory}>{sponsor.tier}</Text><Text style={styles.personName}>{sponsor.name}</Text></View>
+            </Pressable>)}
+          </View>
+        </View> : null}
+
+        {media.length > 0 ? <View style={[styles.section, layout.paddingStyle]}>
+          <Text style={styles.sectionTitle}>Media</Text>
+          <View style={styles.mediaGrid}>{media.map((item) => <Pressable accessibilityRole="link" key={item.id} onPress={() => void Linking.openURL(item.url)} style={[styles.mediaItem, mediaItemStyle]}>
+            {item.type === "image" ? <Image accessibilityLabel={item.altText || item.title} resizeMode="cover" source={{ uri: item.url }} style={styles.mediaImage} /> : null}
+            <Text style={styles.mediaTitle}>{item.title}</Text>
+          </Pressable>)}</View>
+        </View> : null}
+
+        <View style={[styles.aboutPanel, layout.marginStyle, layout.cardPaddingStyle]}>
           <Text style={styles.aboutKicker}>About</Text>
-          <Text style={styles.aboutTitle}>{officialContent?.title ?? publicAppConfig.organizationName}</Text>
+          <Text style={styles.aboutTitle}>{officialContent?.title ?? snapshot.event.organizationName}</Text>
           <Text style={styles.aboutCopy}>{officialContent?.body}</Text>
         </View>
 
-        <View style={styles.supportPanel}>
+        <View style={[styles.supportPanel, layout.marginStyle]}>
           <Pressable accessibilityRole="link" onPress={() => void Linking.openURL("https://www.inspiringchildren.org/summit")} style={styles.supportLink}>
             <Text style={styles.supportLinkText}>Official Summit Website</Text>
           </Pressable>
           <Pressable accessibilityRole="link" onPress={() => void Linking.openURL("https://www.inspiringchildren.org/contact")} style={styles.supportLink}>
             <Text style={styles.supportLinkText}>Contact Event Support</Text>
           </Pressable>
-          <Pressable accessibilityRole="link" onPress={() => void Linking.openURL(`${publicAppConfig.apiBaseUrl}/privacy`)} style={styles.supportLink}>
+          <Pressable accessibilityRole="link" onPress={() => void Linking.openURL(`${mobileApiBaseUrl}/privacy`)} style={styles.supportLink}>
             <Text style={styles.supportLinkText}>Privacy Policy</Text>
           </Pressable>
         </View>
@@ -105,10 +127,12 @@ export default function InfoScreen() {
 }
 
 function InfoTile({
+  itemStyle,
   label,
   value,
   tone
 }: {
+  itemStyle: StyleProp<ViewStyle>;
   label: string;
   value: string;
   tone: "gold" | "green" | "plum" | "blue";
@@ -121,7 +145,7 @@ function InfoTile({
   }[tone];
 
   return (
-    <View style={[styles.infoTile, toneStyle]}>
+    <View style={[styles.infoTile, toneStyle, itemStyle]}>
       <Text style={styles.infoLabel}>{label}</Text>
       <Text style={styles.infoValue}>{value}</Text>
     </View>
@@ -135,9 +159,6 @@ const styles = StyleSheet.create({
   },
   screen: {
     backgroundColor: colors.canvas
-  },
-  content: {
-    paddingBottom: 116
   },
   header: {
     paddingHorizontal: spacing.lg,
@@ -223,34 +244,15 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.lg,
     marginTop: spacing.lg
   },
-  demoNotice: {
-    backgroundColor: "rgba(230, 192, 111, 0.12)",
-    borderColor: "rgba(230, 192, 111, 0.24)",
-    borderRadius: 8,
-    borderWidth: 1,
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
-    padding: spacing.lg
-  },
-  demoNoticeLabel: {
-    color: colors.gold,
-    fontFamily: typography.bold,
-    fontSize: 11,
-    fontWeight: "800",
-    textTransform: "uppercase"
-  },
-  demoNoticeBody: {
-    color: colors.body,
-    fontSize: 14,
-    lineHeight: 21,
-    marginTop: spacing.xs
-  },
   infoTile: {
     borderRadius: 8,
     minHeight: 104,
-    padding: spacing.md,
-    width: "47.8%"
+    padding: spacing.md
   },
+  gridItemFull: { width: "100%" },
+  gridItemHalf: { width: "47.8%" },
+  gridItemThird: { width: "31.2%" },
+  gridItemQuarter: { width: "23.2%" },
   greenTile: {
     backgroundColor: colors.accentSoft
   },
@@ -326,6 +328,11 @@ const styles = StyleSheet.create({
   personText: {
     flex: 1
   },
+  personImage: {
+    borderRadius: 8,
+    height: 64,
+    width: 52
+  },
   personName: {
     color: colors.ink,
     fontFamily: typography.bold,
@@ -338,19 +345,53 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginTop: 2
   },
-  personBadge: {
-    backgroundColor: colors.accentSoft,
-    borderRadius: 8,
-    maxWidth: 102,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs
+  faqRow: {
+    borderTopColor: colors.border,
+    borderTopWidth: 1,
+    padding: spacing.md
   },
-  personGroup: {
-    color: colors.accent,
+  faqCategory: {
+    color: colors.gold,
     fontSize: 11,
     fontWeight: "800",
-    textAlign: "center",
+    marginBottom: spacing.xs,
     textTransform: "uppercase"
+  },
+  sponsorRow: {
+    alignItems: "center",
+    borderTopColor: colors.border,
+    borderTopWidth: 1,
+    flexDirection: "row",
+    gap: spacing.md,
+    padding: spacing.md
+  },
+  sponsorLogo: {
+    height: 50,
+    width: 72
+  },
+  mediaGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
+    marginTop: spacing.md
+  },
+  mediaItem: {
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
+    borderRadius: 8,
+    borderWidth: 1,
+    overflow: "hidden"
+  },
+  mediaImage: {
+    aspectRatio: 1.4,
+    width: "100%"
+  },
+  mediaTitle: {
+    color: colors.ink,
+    fontFamily: typography.semibold,
+    fontSize: 13,
+    fontWeight: "700",
+    padding: spacing.sm
   },
   aboutPanel: {
     backgroundColor: colors.surface,

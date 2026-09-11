@@ -2,12 +2,15 @@ import { Link, useLocalSearchParams } from "expo-router";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
 import { toEventTimeRange } from "@not-alone/domain";
-import { demoSpeaker, useSummitDemo } from "../../components/demo-mode";
+import { useSummit } from "../../components/summit-context";
+import { useResponsiveLayout } from "../../components/responsive-layout";
 
 export default function SessionDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { demoEnabled, snapshot, isSessionSaved, toggleSavedSession } = useSummitDemo();
+  const { snapshot } = useSummit();
+  const layout = useResponsiveLayout();
   const item = snapshot.scheduleItems.find((scheduleItem) => scheduleItem.id === id);
+  const speakers = snapshot.speakers.filter((speaker) => speaker.published && item?.speakerIds.includes(speaker.id));
 
   if (!item) {
     return (
@@ -21,46 +24,45 @@ export default function SessionDetailScreen() {
   return (
     <ScrollView
       style={styles.screen}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={layout.contentStyle}
       contentInsetAdjustmentBehavior="automatic"
     >
-      <View style={styles.hero}>
+      <View style={[styles.hero, layout.paddingStyle]}>
         <Text style={styles.time}>{toEventTimeRange(item, snapshot.event.timeZone)}</Text>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.summary}>{item.summary}</Text>
-        <Pressable
-          accessibilityLabel={isSessionSaved(item.id) ? "Remove from My Schedule" : "Save to My Schedule"}
-          accessibilityRole="button"
-          accessibilityState={{ selected: isSessionSaved(item.id) }}
-          onPress={() => toggleSavedSession(item.id)}
-          style={({ pressed }) => [styles.saveButton, isSessionSaved(item.id) && styles.saveButtonActive, pressed && styles.pressed]}
-        >
-          <Text style={[styles.saveButtonText, isSessionSaved(item.id) && styles.saveButtonTextActive]}>
-            {isSessionSaved(item.id) ? "Saved to My Schedule" : "Save to My Schedule"}
-          </Text>
-        </Pressable>
       </View>
 
-      {demoEnabled && item.featured ? (
-        <View style={styles.speakerPanel}>
-          <Image source={demoSpeaker.image} resizeMode="cover" style={styles.speakerImage} />
-          <View style={styles.speakerText}>
-            <Text style={styles.speakerKicker}>Featured speaker</Text>
-            <Text style={styles.speakerName}>{demoSpeaker.name}</Text>
-            <Text style={styles.speakerRole}>{demoSpeaker.role}</Text>
-          </View>
+      {speakers.length > 0 ? (
+        <View style={[styles.speakerSection, layout.marginStyle]}>
+          <Text style={styles.sectionLabel}>{speakers.length === 1 ? "Speaker" : "Speakers"}</Text>
+          {speakers.map((speaker) => (
+            <View key={speaker.id} style={[styles.speakerPanel, layout.cardPaddingStyle]}>
+              {speaker.headshotUrl ? (
+                <Image accessibilityLabel={`${speaker.name} headshot`} source={{ uri: speaker.headshotUrl }} style={styles.speakerImage} />
+              ) : (
+                <View accessibilityLabel={speaker.name} style={styles.speakerFallback}>
+                  <Text style={styles.speakerInitials}>{initials(speaker.name)}</Text>
+                </View>
+              )}
+              <View style={styles.speakerText}>
+                <Text style={styles.speakerName}>{speaker.name}</Text>
+                <Text style={styles.speakerRole}>{speaker.role}</Text>
+                {speaker.bio ? <Text style={styles.speakerBio}>{speaker.bio}</Text> : null}
+              </View>
+            </View>
+          ))}
         </View>
       ) : null}
 
-      <View style={styles.panel}>
+      <View style={[styles.panel, layout.marginStyle, layout.cardPaddingStyle]}>
         <DetailRow label="Location" value={item.locationName} />
         <DetailRow label="Access" value={item.eligibilityScope.label} />
         <DetailRow label="Visibility" value={item.visibilityScope.label} />
-        <DetailRow label="Reminder" value={`${item.notificationOffsetsMinutes.join(", ")} minutes before`} />
         <DetailRow label="Status" value={item.status} />
       </View>
 
-      <View style={styles.actionGrid}>
+      <View style={[styles.actionGrid, layout.marginStyle]}>
         <Link href="/map" asChild>
           <Pressable accessibilityLabel="Open map and find this room" accessibilityRole="button" style={({ pressed }) => [styles.actionButton, pressed && styles.pressed]}>
             <Text style={styles.actionLabel}>Map</Text>
@@ -75,12 +77,12 @@ export default function SessionDetailScreen() {
         </Link>
       </View>
 
-      <View style={styles.panel}>
+      <View style={[styles.panel, layout.marginStyle, layout.cardPaddingStyle]}>
         <Text style={styles.panelTitle}>About this session</Text>
         <Text style={styles.description}>{item.description}</Text>
       </View>
 
-      <View style={styles.panel}>
+      <View style={[styles.panel, layout.marginStyle, layout.cardPaddingStyle]}>
         <Text style={styles.panelTitle}>Event Context</Text>
         <Text style={styles.description}>
           {snapshot.event.name} brings together mental health advocates, artists, athletes, philanthropists,
@@ -100,12 +102,13 @@ function DetailRow({ label, value }: { label: string; value: string }) {
   );
 }
 
+function initials(name: string) {
+  return name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("");
+}
+
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: colors.canvas
-  },
-  content: {
-    paddingBottom: 116
   },
   hero: {
     padding: spacing.lg,
@@ -129,27 +132,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     lineHeight: 24,
     marginTop: spacing.md
-  },
-  saveButton: {
-    alignSelf: "flex-start",
-    borderColor: "rgba(230, 192, 111, 0.48)",
-    borderRadius: 8,
-    borderWidth: 1,
-    marginTop: spacing.lg,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md
-  },
-  saveButtonActive: {
-    backgroundColor: colors.gold
-  },
-  saveButtonText: {
-    color: colors.gold,
-    fontFamily: typography.bold,
-    fontSize: 13,
-    fontWeight: "800"
-  },
-  saveButtonTextActive: {
-    color: colors.midnight
   },
   panel: {
     backgroundColor: colors.surface,
@@ -190,46 +172,72 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     marginTop: spacing.sm
   },
+  speakerSection: {
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.lg
+  },
+  sectionLabel: {
+    color: colors.gold,
+    fontFamily: typography.bold,
+    fontSize: 11,
+    fontWeight: "800",
+    marginBottom: spacing.sm,
+    textTransform: "uppercase"
+  },
   speakerPanel: {
+    alignItems: "center",
     backgroundColor: colors.surface,
     borderColor: "rgba(230, 192, 111, 0.22)",
     borderRadius: 8,
     borderWidth: 1,
     flexDirection: "row",
     gap: spacing.md,
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
+    marginBottom: spacing.sm,
     overflow: "hidden",
     padding: spacing.md
   },
   speakerImage: {
     borderRadius: 8,
-    height: 112,
-    width: 92
+    height: 104,
+    width: 84
+  },
+  speakerFallback: {
+    alignItems: "center",
+    backgroundColor: colors.midnight,
+    borderColor: colors.gold,
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 104,
+    justifyContent: "center",
+    width: 84
+  },
+  speakerInitials: {
+    color: colors.gold,
+    fontFamily: typography.display,
+    fontSize: 28,
+    fontWeight: "700"
   },
   speakerText: {
-    flex: 1,
-    justifyContent: "center"
-  },
-  speakerKicker: {
-    color: colors.gold,
-    fontFamily: typography.bold,
-    fontSize: 11,
-    fontWeight: "800",
-    textTransform: "uppercase"
+    flex: 1
   },
   speakerName: {
     color: colors.ink,
     fontFamily: typography.display,
-    fontSize: 25,
+    fontSize: 23,
     fontWeight: "700",
-    lineHeight: 30,
-    marginTop: spacing.xs
+    lineHeight: 28
   },
   speakerRole: {
+    color: colors.gold,
+    fontFamily: typography.semibold,
+    fontSize: 12,
+    lineHeight: 18,
+    marginTop: 2
+  },
+  speakerBio: {
     color: colors.body,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 12,
+    lineHeight: 18,
     marginTop: spacing.xs
   },
   detailRow: {

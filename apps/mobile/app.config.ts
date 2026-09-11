@@ -14,11 +14,12 @@ const config: ExpoConfig = {
   slug: publicAppConfig.appSlug,
   scheme: "notalone",
   version: appVersion,
-  orientation: "portrait",
+  platforms: ["ios", "android", "web"],
+  orientation: "default",
   userInterfaceStyle: "automatic",
   icon: "./assets/icon-premium.png",
   ios: {
-    supportsTablet: false,
+    supportsTablet: true,
     bundleIdentifier: publicAppConfig.iosBundleIdentifier,
     buildNumber: "1",
     infoPlist: {
@@ -27,6 +28,18 @@ const config: ExpoConfig = {
       NSUserNotificationsUsageDescription:
         "Notifications provide schedule reminders and urgent event changes for Not Alone Summit."
     }
+  },
+  android: {
+    package: publicAppConfig.iosBundleIdentifier,
+    adaptiveIcon: {
+      foregroundImage: "./assets/icon-premium.png",
+      backgroundColor: "#06102B"
+    }
+  },
+  web: {
+    favicon: "./assets/icon-premium.png",
+    backgroundColor: "#06102B",
+    bundler: "metro"
   },
   updates: hasEasProject
     ? {
@@ -55,7 +68,6 @@ const config: ExpoConfig = {
         sitemap: false
       }
     ],
-    "expo-sqlite",
     "expo-notifications",
     "expo-updates",
     [

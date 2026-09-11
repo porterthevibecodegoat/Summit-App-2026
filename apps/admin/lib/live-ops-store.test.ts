@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   buildPublishedSnapshotFromDraftSessions,
   createNotificationJobsForPublish,
+  staffContentSchema,
   staffDraftSessionsSchema,
   type StaffDraftSession
 } from "./live-ops-store";
+import { demoSnapshot } from "@not-alone/test-fixtures";
 
 const session: StaffDraftSession = {
   id: "opening-session",
@@ -31,5 +33,42 @@ describe("live operations input safety", () => {
 
     expect(createNotificationJobsForPublish(snapshot, false)).toEqual([]);
     expect(createNotificationJobsForPublish(snapshot, true)).toHaveLength(2);
+  });
+
+  it("preserves published attendee content when schedule rows are republished", () => {
+    const snapshot = buildPublishedSnapshotFromDraftSessions(
+      [session],
+      4,
+      "2026-09-10T17:00:00.000Z",
+      demoSnapshot
+    );
+
+    expect(snapshot.speakers).toEqual(demoSnapshot.speakers);
+    expect(snapshot.faqs).toEqual(demoSnapshot.faqs);
+    expect(snapshot.sponsors).toEqual(demoSnapshot.sponsors);
+    expect(snapshot.notices).toEqual(demoSnapshot.notices);
+    expect(snapshot.contentPages).toEqual(demoSnapshot.contentPages);
+  });
+
+  it("validates timed notices before staff can publish them", () => {
+    const result = staffContentSchema.safeParse({
+      event: demoSnapshot.event,
+      speakers: demoSnapshot.speakers,
+      faqs: demoSnapshot.faqs,
+      sponsors: demoSnapshot.sponsors,
+      media: demoSnapshot.media,
+      notices: [{
+        id: "87000000-0000-4000-8000-000000000001",
+        eventId: demoSnapshot.event.id,
+        title: "Room update",
+        body: "The session is now in Margaux.",
+        severity: "change",
+        startsAtUtc: "not-a-date",
+        endsAtUtc: null,
+        published: true
+      }],
+      contentPages: demoSnapshot.contentPages
+    });
+    expect(result.success).toBe(false);
   });
 });

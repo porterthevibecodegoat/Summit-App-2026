@@ -2,11 +2,12 @@ import { Link } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { publicAppConfig } from "@not-alone/config";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
 import { getNowAndUpcoming, toEventTimeRange } from "@not-alone/domain";
 import type { EventSnapshot, ScheduleItem } from "@not-alone/validation";
-import { useSummitDemo } from "../../components/demo-mode";
+import { useSummit } from "../../components/summit-context";
+import { useResponsiveLayout } from "../../components/responsive-layout";
+import { mobileApiBaseUrl } from "../../lib/mobile-api";
 
 const summitArt = require("../../assets/summit-art-v2.png");
 
@@ -37,9 +38,9 @@ const summitKnowledge = {
   featured:
     "Public materials highlight experts, celebrities, athletes, business leaders, philanthropists, musicians, and Not Alone supporters. Featured names include Jewel, Steve Wozniak, Mike Tyson, Jada Pinkett Smith, Loni Love, Jason Kennedy, Rachel Platten, Darryl McDaniels, Harry Hudson, Kevin Hines, and others.",
   checkIn:
-    "For prototype purposes, check-in and registration appear in the loaded schedule. Final credential pickup, guest services, and room assignments should be verified by staff before launch.",
+    "Check-in and registration appear in the current schedule. Credential pickup, guest services, and room assignments will reflect the latest details published by the event team.",
   support:
-    "This prototype can give summit information and schedule guidance, but it is not emergency or crisis support."
+    "This concierge can provide summit information and schedule guidance, but it is not emergency or crisis support."
 };
 
 const featuredPeople = [
@@ -122,11 +123,12 @@ type AttendeeAiResponse = {
 };
 
 export default function HelpScreen() {
+  const layout = useResponsiveLayout();
   const [selectedPrompt, setSelectedPrompt] = useState<string>(promptChips[0] ?? "What is happening now?");
   const [customQuestion, setCustomQuestion] = useState("");
   const [remoteAnswer, setRemoteAnswer] = useState<ConciergeAnswer | null>(null);
   const [answerStatus, setAnswerStatus] = useState<"loading" | "live" | "fallback" | "offline">("loading");
-  const { demoEnabled, snapshot, nowUtc } = useSummitDemo();
+  const { snapshot, nowUtc } = useSummit();
   const { current, upcoming } = getNowAndUpcoming({
     audienceGroups: ["public"],
     nowUtc,
@@ -139,23 +141,16 @@ export default function HelpScreen() {
         snapshot,
         nowUtc,
         current,
-        upcoming,
-        demoEnabled
+        upcoming
       }),
-    [selectedPrompt, snapshot, nowUtc, current, upcoming, demoEnabled]
+    [selectedPrompt, snapshot, nowUtc, current, upcoming]
   );
   const answer = remoteAnswer ?? localAnswer;
 
   useEffect(() => {
-    if (demoEnabled) {
-      setRemoteAnswer(null);
-      setAnswerStatus("fallback");
-      return;
-    }
-
     const controller = new AbortController();
     setAnswerStatus("loading");
-    fetch(`${publicAppConfig.apiBaseUrl}/api/ai/attendee`, {
+    fetch(`${mobileApiBaseUrl}/api/ai/attendee`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question: selectedPrompt }),
@@ -180,11 +175,9 @@ export default function HelpScreen() {
       });
 
     return () => controller.abort();
-  }, [demoEnabled, selectedPrompt, snapshot]);
+  }, [selectedPrompt, snapshot]);
 
-  const answerKicker = demoEnabled
-    ? "Demo answer"
-    : answerStatus === "loading"
+  const answerKicker = answerStatus === "loading"
       ? "Checking live concierge"
       : answerStatus === "live"
         ? "Live AI answer"
@@ -196,11 +189,11 @@ export default function HelpScreen() {
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <ScrollView
         style={styles.screen}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={layout.contentStyle}
         contentInsetAdjustmentBehavior="automatic"
       >
-        <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.heroImage} style={styles.hero}>
-          <View style={styles.heroScrim}>
+        <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.heroImage} style={[styles.hero, layout.marginStyle]}>
+          <View style={[styles.heroScrim, layout.cardPaddingStyle]}>
             <Text style={styles.kicker}>Ask AI</Text>
             <Text style={styles.title}>Your summit concierge.</Text>
             <Text style={styles.copy}>
@@ -209,7 +202,7 @@ export default function HelpScreen() {
           </View>
         </ImageBackground>
 
-        <View style={styles.promptPanel}>
+        <View style={[styles.promptPanel, layout.marginStyle, layout.cardPaddingStyle]}>
           <Text style={styles.promptTitle}>How can I help today?</Text>
           <View style={styles.chipGrid}>
             {promptChips.map((prompt) => (
@@ -262,7 +255,7 @@ export default function HelpScreen() {
           </View>
         </View>
 
-        <View style={styles.answerPanel}>
+        <View style={[styles.answerPanel, layout.marginStyle, layout.cardPaddingStyle]}>
           <Text accessibilityLiveRegion="polite" style={styles.answerKicker}>{answerKicker}</Text>
           <Text style={styles.answerTitle}>{answer.title}</Text>
           <Text style={styles.answerBody}>{answer.body}</Text>
@@ -281,14 +274,14 @@ export default function HelpScreen() {
           ) : null}
         </View>
 
-        <View style={styles.panel}>
+        <View style={[styles.panel, layout.marginStyle]}>
           <CapabilityRow title="Schedule answers" body="Grounded in the same published agenda used by Home and Schedule." />
           <CapabilityRow title="Summit knowledge" body="Answers use published event context and clearly identify anything that is not yet confirmed." />
           <CapabilityRow title="Human escalation" body="Sensitive or unresolved requests should route to a trained event team member." />
         </View>
 
         <Link href="/schedule" asChild>
-          <Pressable accessibilityLabel="Open full schedule" accessibilityRole="button" style={({ pressed }) => [styles.scheduleLink, pressed && styles.pressed]}>
+          <Pressable accessibilityLabel="Open full schedule" accessibilityRole="button" style={({ pressed }) => [styles.scheduleLink, layout.marginStyle, pressed && styles.pressed]}>
             <Text style={styles.scheduleLinkText}>Open Full Schedule</Text>
           </Pressable>
         </Link>
@@ -302,21 +295,19 @@ function getLocalConciergeAnswer({
   snapshot,
   nowUtc,
   current,
-  upcoming,
-  demoEnabled
+  upcoming
 }: {
   prompt: string;
   snapshot: EventSnapshot;
   nowUtc: string;
   current: ScheduleItem[];
   upcoming: ScheduleItem[];
-  demoEnabled: boolean;
 }) {
   const normalizedPrompt = prompt.toLowerCase();
   const allItems = [...snapshot.scheduleItems].sort((left, right) => left.startUtc.localeCompare(right.startUtc));
   const firstUpcoming = upcoming[0] ?? allItems.find((item) => item.published);
   const currentItem = current[0];
-  const answerMode = demoEnabled ? "Demo Mode is on, so this answer uses the live-day demo timeline." : "This answer uses the current prototype schedule loaded from last year's production timeline.";
+  const answerMode = "This answer uses the latest schedule published by the event team.";
   const featuredPerson = findFeaturedPerson(normalizedPrompt);
 
   if (allItems.length === 0) {
@@ -373,8 +364,8 @@ function getLocalConciergeAnswer({
         ? `${featuredPerson.name} does not have a scheduled app time yet.`
         : `${featuredPerson.name} is listed in public summit materials.`,
       body: asksForTiming
-        ? `${featuredPerson.name} is listed publicly as ${featuredPerson.role} in ${featuredPerson.group}, but the current loaded prototype schedule does not include a specific session time or room for them yet. Once staff adds or publishes that session, this answer will show the exact time and location.`
-        : `${featuredPerson.name} is listed publicly as ${featuredPerson.role} in ${featuredPerson.group}. No dedicated session card is loaded for them in the prototype schedule yet.`,
+        ? `${featuredPerson.name} is listed publicly as ${featuredPerson.role} in ${featuredPerson.group}, but the current schedule does not include a specific session time or room for them yet. Once the event team publishes that session, this answer will show the exact time and location.`
+        : `${featuredPerson.name} is listed publicly as ${featuredPerson.role} in ${featuredPerson.group}. No dedicated session is currently listed for them.`,
       items: []
     };
   }
@@ -417,7 +408,7 @@ function getLocalConciergeAnswer({
   if (matchesAny(normalizedPrompt, ["when", "date", "dates", "november"])) {
     return {
       title: `The summit is scheduled for ${summitKnowledge.dates}.`,
-      body: `The prototype schedule is organized around ${summitKnowledge.dates}. Final session times should still be verified by staff before publishing to attendees.`,
+      body: `The current schedule is organized around ${summitKnowledge.dates}. Session times will reflect the latest details published by the event team.`,
       items: allItems.slice(0, 4)
     };
   }
@@ -426,7 +417,7 @@ function getLocalConciergeAnswer({
     return {
       title: `The summit venue is ${summitKnowledge.venue}.`,
       body:
-        "The current prototype schedule uses Wynn room and wayfinding labels so the app can guide attendees by session location. Final room assignments should be confirmed before launch.",
+        "The current schedule uses Wynn room and wayfinding labels to guide attendees by session location. Check the app for the latest room assignments before each session.",
       items: uniqueScheduleItems([currentItem, firstUpcoming, ...upcoming.slice(0, 3)].filter(Boolean) as ScheduleItem[])
     };
   }
@@ -461,7 +452,7 @@ function getLocalConciergeAnswer({
     return {
       title: "For a quieter reset, use the wellness programming.",
       body:
-        "The calmest prototype options are meditation, breathwork, stretching, and wellness-room sessions. Check the room name before walking over, because the final 2026 room plan may change.",
+        "The calmest options include meditation, breathwork, stretching, and wellness-room sessions. Check the room name before walking over, as room assignments may change.",
       items: quietItems.slice(0, 4)
     };
   }
@@ -473,7 +464,7 @@ function getLocalConciergeAnswer({
     });
     return {
       title: "Tonight centers on dinner, performances, and awards moments.",
-      body: "The prototype evening flow includes founder dinner, opening night performances, the Not Alone Awards, and the closing dinner/concert. Visibility labels show which moments are invite-only.",
+      body: "The evening flow includes founder dinner, opening night performances, the Not Alone Awards, and the closing dinner and concert. Visibility labels show which moments are invite-only.",
       items: eveningItems.slice(0, 5)
     };
   }
@@ -481,8 +472,8 @@ function getLocalConciergeAnswer({
   if (matchesAny(normalizedPrompt, ["jewel", "music", "performance"])) {
     const musicItems = findItems(allItems, ["jewel", "performance", "music", "concert", "harry hudson", "rachel platten"]);
     return {
-      title: "Here are the prototype music moments.",
-      body: "These are adapted from the prior summit timeline and should be replaced with approved 2026 artist details when confirmed.",
+      title: "Here are the music moments currently listed.",
+      body: "Artist details and performance times will reflect the latest schedule published by the event team.",
       items: musicItems.slice(0, 5)
     };
   }
@@ -491,7 +482,7 @@ function getLocalConciergeAnswer({
     const founderItems = allItems.filter((item) => item.visibilityScope.id === "founders");
     return {
       title: "Founder-only moments are labeled clearly.",
-      body: "The current prototype schedule includes founder cocktails and Founder's Dinner. These are separated with a Founders only visibility label so the app can later support audience-specific experiences.",
+      body: "The current schedule includes founder cocktails and Founder's Dinner. These are marked Founders only so access is clear at a glance.",
       items: founderItems
     };
   }
@@ -499,7 +490,7 @@ function getLocalConciergeAnswer({
   if (matchesAny(normalizedPrompt, ["community"])) {
     const communityItems = allItems.filter((item) => item.visibilityScope.id === "community");
     return {
-      title: "Community Day has its own prototype flow.",
+      title: "Community Day has its own dedicated flow.",
       body: "The current schedule includes pickleball, life-plan workshop, DBT, emotional intelligence, panels, lunch, and a closing mindfulness/music moment for Community Day.",
       items: communityItems.slice(0, 6)
     };
@@ -508,8 +499,8 @@ function getLocalConciergeAnswer({
   if (matchesAny(normalizedPrompt, ["lunch", "food", "eat", "meal"])) {
     const mealItems = findItems(allItems, ["lunch", "dinner", "nourish"]);
     return {
-      title: "Meals are already represented in the prototype agenda.",
-      body: "Lunch and dinner blocks are included so the app can preview reminders, venue routing, and day planning around food moments.",
+      title: "Meals are included in the agenda.",
+      body: "Lunch and dinner blocks are included to support reminders, venue routing, and day planning.",
       items: mealItems.slice(0, 5)
     };
   }
@@ -544,7 +535,7 @@ function getLocalConciergeAnswer({
     return {
       title: "Nothing is live at this moment yet.",
       body: firstUpcoming
-        ? `The next prototype session is ${firstUpcoming.title}, scheduled for ${toEventTimeRange(firstUpcoming, snapshot.event.timeZone)} in ${firstUpcoming.locationName}. ${answerMode}`
+        ? `The next scheduled session is ${firstUpcoming.title}, scheduled for ${toEventTimeRange(firstUpcoming, snapshot.event.timeZone)} in ${firstUpcoming.locationName}. ${answerMode}`
         : "No upcoming session is available.",
       items: firstUpcoming ? uniqueScheduleItems([firstUpcoming, ...upcoming.slice(0, 2)]) : []
     };
@@ -554,7 +545,7 @@ function getLocalConciergeAnswer({
   if (matchingItems.length > 0) {
     return {
       title: "I found schedule matches for that.",
-      body: "These are the closest prototype agenda items from the currently loaded schedule.",
+      body: "These are the closest matches from the current schedule.",
       items: matchingItems.slice(0, 5)
     };
   }
@@ -563,7 +554,7 @@ function getLocalConciergeAnswer({
     title: "Here is the best current guidance.",
     body: firstUpcoming
       ? `${answerMode} The next known item is ${firstUpcoming.title} at ${toEventTimeRange(firstUpcoming, snapshot.event.timeZone)} in ${firstUpcoming.locationName}.`
-      : `${answerMode} Open the full schedule for all loaded prototype sessions.`,
+      : `${answerMode} Open the full schedule to browse all sessions.`,
     items: firstUpcoming ? uniqueScheduleItems([firstUpcoming, ...upcoming.slice(0, 4)]) : allItems.slice(0, 4)
   };
 }
@@ -612,9 +603,6 @@ const styles = StyleSheet.create({
   },
   screen: {
     backgroundColor: colors.canvas
-  },
-  content: {
-    paddingBottom: 116
   },
   hero: {
     backgroundColor: colors.midnight,

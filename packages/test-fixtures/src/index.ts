@@ -56,7 +56,7 @@ export const demoSnapshot: EventSnapshot = eventSnapshotSchema.parse({
     venueName: "Wynn Las Vegas",
     city: "Las Vegas, Nevada",
     positioning:
-      "Prototype attendee agenda based on the 2025 Not Alone Summit production timeline. Final 2026 programming will replace these records as details are approved.",
+      "A thoughtfully curated gathering centered on human connection, emotional wellbeing, and meaningful action. Schedule details will continue to evolve as programming is confirmed.",
     presentedBy: "Villa Bibbiani",
     poweredBy: "Steven & Alexandra Cohen Foundation",
     tracks: [
@@ -145,7 +145,7 @@ export const demoSnapshot: EventSnapshot = eventSnapshotSchema.parse({
       id: locationIds.giftingSuite,
       eventId,
       name: "Mouton 1 - Gifting Suite",
-      description: "Prototype location for attendee gifting, speaker holding, and support.",
+      description: "Attendee gifting, speaker hospitality, and event support.",
       mapX: 0.36,
       mapY: 0.72
     },
@@ -153,7 +153,7 @@ export const demoSnapshot: EventSnapshot = eventSnapshotSchema.parse({
       id: locationIds.swSteakhouse,
       eventId,
       name: "SW Steakhouse",
-      description: "Prototype founder dinner location from the prior summit timeline.",
+      description: "Hosted dining location for designated summit gatherings.",
       mapX: 0.72,
       mapY: 0.82
     },
@@ -161,7 +161,7 @@ export const demoSnapshot: EventSnapshot = eventSnapshotSchema.parse({
       id: locationIds.boaSteakhouse,
       eventId,
       name: "BOA Steakhouse",
-      description: "Prototype off-site closing dinner and concert location.",
+      description: "Off-site location listed for closing dinner and music programming.",
       mapX: 0.8,
       mapY: 0.88
     },
@@ -169,19 +169,41 @@ export const demoSnapshot: EventSnapshot = eventSnapshotSchema.parse({
       id: locationIds.laTache,
       eventId,
       name: "La Tache",
-      description: "Prototype red carpet and award-show support area.",
+      description: "Arrival and hospitality area for awards programming.",
       mapX: 0.6,
       mapY: 0.42
     }
   ],
   scheduleItems: createPrototypeSchedule(),
+  speakers: [
+    { id: speakerIds.jewel, eventId, name: "Jewel", role: "Singer-songwriter and mental health advocate", bio: "Artist, author, and advocate supporting practical tools for emotional wellbeing.", headshotUrl: null, published: true },
+    { id: speakerIds.harryHudson, eventId, name: "Harry Hudson", role: "Artist and advocate", bio: "Artist and advocate using storytelling and community to support young people.", headshotUrl: null, published: true },
+    { id: speakerIds.yvette, eventId, name: "Yvette Noel-Schure", role: "Communications leader", bio: "Communications leader and summit guest.", headshotUrl: null, published: true },
+    { id: speakerIds.wade, eventId, name: "Dwyane Wade", role: "Entrepreneur and philanthropist", bio: "Athlete, entrepreneur, and philanthropist focused on community impact.", headshotUrl: null, published: true },
+    { id: speakerIds.kelseyPatel, eventId, name: "Kelsey J. Patel", role: "Wellness expert", bio: "Wellness expert and facilitator.", headshotUrl: null, published: true },
+    { id: speakerIds.tallulahWillis, eventId, name: "Tallulah Willis", role: "Artist and mental health advocate", bio: "Artist and advocate sharing honest conversations about wellbeing.", headshotUrl: null, published: true },
+    { id: speakerIds.bryanBrothers, eventId, name: "The Bryan Brothers", role: "Tennis champions and wellness guests", bio: "Champions and community wellness guests.", headshotUrl: null, published: true },
+    { id: speakerIds.rachelPlatten, eventId, name: "Rachel Platten", role: "Singer-songwriter", bio: "Singer-songwriter and closing dinner performer.", headshotUrl: null, published: true },
+    { id: speakerIds.hostTeam, eventId, name: "Summit Host Team", role: "Event hosts", bio: "The Not Alone Summit host team.", headshotUrl: null, published: true },
+    { id: speakerIds.wellnessTeam, eventId, name: "Summit Wellness Team", role: "Wellness facilitators", bio: "Facilitators supporting movement, mindfulness, and restoration throughout the summit.", headshotUrl: null, published: true }
+  ],
+  faqs: [
+    { id: "60000000-0000-4000-8000-000000000001", question: "Where can I get schedule help?", answer: "Visit the Registration Desk for schedule support, credentials, and wayfinding.", category: "Event help", published: true },
+    { id: "60000000-0000-4000-8000-000000000002", question: "Can the schedule change?", answer: "Yes. The attendee app reflects the latest schedule published by the event team.", category: "Schedule", published: true }
+  ],
+  sponsors: [
+    { id: "70000000-0000-4000-8000-000000000001", name: "Villa Bibbiani", tier: "Presented by", websiteUrl: null, logoUrl: null, published: true },
+    { id: "70000000-0000-4000-8000-000000000002", name: "Steven & Alexandra Cohen Foundation", tier: "Powered by", websiteUrl: null, logoUrl: null, published: true }
+  ],
+  media: [],
+  notices: [],
   contentPages: [
     {
       id: "40000000-0000-4000-8000-000000000001",
-      slug: "prototype-schedule-note",
-      title: "Prototype Schedule Note",
+      slug: "schedule-note",
+      title: "Schedule Note",
       body:
-        "This app is currently loaded with prototype attendee programming adapted from the 2025 Not Alone Summit production timeline. It is not final 2026 programming.",
+        "The current agenda is provided for planning and will be updated as 2026 programming, rooms, and appearances are confirmed.",
       published: true,
       revision
     },
@@ -544,7 +566,7 @@ function createPrototypeSchedule(): ScheduleItem[] {
       end: "8:00 AM",
       title: "Community Day Pickleball Clinic",
       shortTitle: "Pickleball",
-      summary: "A morning pickleball session adapted for the Community Day prototype.",
+      summary: "A morning pickleball session designed for movement, play, and community.",
       locationId: locationIds.wellnessZoneTwo,
       locationName: "Pomerol - Wellness Room Zone 2",
       speakerIds: [speakerIds.bryanBrothers],
@@ -586,7 +608,7 @@ function createPrototypeSchedule(): ScheduleItem[] {
       end: "9:00 AM",
       title: "The Power of Emotional Intelligence",
       shortTitle: "Emotional Intelligence",
-      summary: "A prototype workshop on turning insight into impact.",
+      summary: "A practical workshop on turning emotional insight into meaningful action.",
       locationId: locationIds.nourishRoom,
       locationName: "Mouton 2 - Nourish Room",
       audience: "community",
@@ -627,7 +649,7 @@ function createPrototypeSchedule(): ScheduleItem[] {
       end: "4:00 PM",
       title: "Community Day Afternoon Panel Sessions",
       shortTitle: "Afternoon Panels",
-      summary: "Afternoon main-stage programming for the Community Day prototype.",
+      summary: "Afternoon main-stage conversations for the Community Day program.",
       locationId: locationIds.wisdomForum,
       locationName: "Margaux - Wisdom Forum",
       audience: "community",
@@ -677,7 +699,7 @@ function createScheduleItem(session: PrototypeSession, index: number): ScheduleI
     title: session.title,
     shortTitle: session.shortTitle,
     summary: session.summary,
-    description: `${session.summary} This is prototype content adapted from the 2025 Not Alone Summit production timeline and will be replaced with approved 2026 details.`,
+    description: `${session.summary} Program details may change as the 2026 agenda is finalized.`,
     startUtc: localEventTimeToUtc(session.day, session.start),
     endUtc: localEventTimeToUtc(session.day, session.end),
     eventTimeZone: timeZone,

@@ -10,11 +10,11 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, typography } from "@not-alone/design-tokens";
+import { useResponsiveLayout } from "./responsive-layout";
 
 const launchArt = require("../assets/launch-art-premium.png");
 
@@ -48,8 +48,9 @@ export function OpeningGreeting() {
   const [visible, setVisible] = useState(!hasShownThisLaunch);
   const [enterReady, setEnterReady] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const { height } = useWindowDimensions();
-  const compact = height < 720;
+  const layout = useResponsiveLayout();
+  const compact = layout.height < 720 || layout.compact;
+  const landscape = layout.landscape;
   const entrance = useRef(new Animated.Value(0)).current;
   const titleEntrance = useRef(new Animated.Value(0)).current;
   const buttonEntrance = useRef(new Animated.Value(0)).current;
@@ -363,6 +364,7 @@ export function OpeningGreeting() {
               style={[
                 styles.titleStack,
                 compact && styles.titleStackCompact,
+                landscape && styles.titleStackLandscape,
                 {
                   opacity: titleEntrance,
                   transform: [
@@ -371,17 +373,17 @@ export function OpeningGreeting() {
                 }
               ]}
             >
-              <Text maxFontSizeMultiplier={1.1} numberOfLines={1} style={[styles.title, compact && styles.titleCompact]}>
+              <Text maxFontSizeMultiplier={1.1} numberOfLines={1} style={[styles.title, compact && styles.titleCompact, landscape && styles.titleLandscape]}>
                 Not Alone
               </Text>
-              <Text maxFontSizeMultiplier={1.1} numberOfLines={1} style={[styles.title, compact && styles.titleCompact]}>
+              <Text maxFontSizeMultiplier={1.1} numberOfLines={1} style={[styles.title, compact && styles.titleCompact, landscape && styles.titleLandscape]}>
                 Summit
               </Text>
               <LinearGradient
                 colors={["#76B8FF", "#FFF1CA", "#F1C461"]}
                 end={{ x: 1, y: 0.5 }}
                 start={{ x: 0, y: 0.5 }}
-                style={styles.yearCapsule}
+                style={[styles.yearCapsule, landscape && styles.yearCapsuleLandscape]}
               >
                 <Text
                   adjustsFontSizeToFit
@@ -399,6 +401,7 @@ export function OpeningGreeting() {
               style={[
                 styles.enterWrap,
                 compact && styles.enterWrapCompact,
+                landscape && styles.enterWrapLandscape,
                 {
                   opacity: buttonEntrance,
                   transform: [
@@ -523,6 +526,9 @@ const styles = StyleSheet.create({
   titleStackCompact: {
     top: "47%"
   },
+  titleStackLandscape: {
+    top: "35%"
+  },
   title: {
     color: "#FAFCFF",
     fontFamily: typography.black,
@@ -536,6 +542,10 @@ const styles = StyleSheet.create({
   titleCompact: {
     fontSize: 43,
     lineHeight: 46
+  },
+  titleLandscape: {
+    fontSize: 34,
+    lineHeight: 36
   },
   yearCapsule: {
     alignItems: "center",
@@ -557,6 +567,11 @@ const styles = StyleSheet.create({
     letterSpacing: 3.4,
     paddingLeft: 3.4
   },
+  yearCapsuleLandscape: {
+    height: 34,
+    marginTop: 8,
+    width: 112
+  },
   enterWrap: {
     alignSelf: "center",
     bottom: 78,
@@ -565,6 +580,9 @@ const styles = StyleSheet.create({
   },
   enterWrapCompact: {
     bottom: 38
+  },
+  enterWrapLandscape: {
+    bottom: 20
   },
   enterButton: {
     alignItems: "center",

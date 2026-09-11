@@ -6,7 +6,7 @@ export function NotificationControl({ enabled }: { enabled: boolean }) {
   const [confirmed, setConfirmed] = useState(false);
   const [message, setMessage] = useState(
     enabled
-      ? "The worker is armed. Confirm before manually processing notifications that are due now."
+      ? "The worker is armed. Confirm before sending public broadcasts that are due now."
       : "Manual dispatch remains safely unavailable until push credentials and both delivery flags are enabled."
   );
   const [working, setWorking] = useState(false);
@@ -14,7 +14,7 @@ export function NotificationControl({ enabled }: { enabled: boolean }) {
   async function dispatch() {
     if (!enabled || !confirmed || working) return;
     setWorking(true);
-    setMessage("Claiming and processing due notification jobs...");
+    setMessage("Claiming and processing due attendee broadcasts...");
     try {
       const response = await fetch("/api/notifications/dispatch", { method: "POST", cache: "no-store" });
       const result = (await response.json()) as {
@@ -40,7 +40,7 @@ export function NotificationControl({ enabled }: { enabled: boolean }) {
     <section className="panel notificationControl">
       <div>
         <div className="label">Manual operations</div>
-        <h2>Process due reminders</h2>
+        <h2>Send due broadcasts</h2>
         <p>{message}</p>
       </div>
       <label className="confirmRow">
@@ -50,10 +50,10 @@ export function NotificationControl({ enabled }: { enabled: boolean }) {
           onChange={(event) => setConfirmed(event.target.checked)}
           type="checkbox"
         />
-        I confirm that due reminders may be sent to registered attendee devices.
+        I confirm that due public broadcasts may be sent to every registered attendee device.
       </label>
       <button className="button" disabled={!enabled || !confirmed || working} onClick={dispatch} type="button">
-        {working ? "Processing..." : "Process Due Reminders"}
+        {working ? "Processing..." : "Send Due Broadcasts"}
       </button>
     </section>
   );

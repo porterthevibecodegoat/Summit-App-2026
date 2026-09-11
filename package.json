@@ -15,6 +15,7 @@
     "mobile:preview": "node scripts/mobile-preview.mjs",
     "mobile:sync-verify": "node scripts/verify-mobile-sync-cache.mjs",
     "mobile:release-verify": "node scripts/verify-ios-release-bundle.mjs",
+    "test:responsive": "playwright test --config playwright.mobile.config.ts",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
@@ -29,6 +30,7 @@
     "supabase:seed-sql": "node --import tsx scripts/supabase-staging.mjs seed-sql"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "26.4.0",
     "tsx": "4.23.13",
     "typescript": "6.0.3",

@@ -1,31 +1,38 @@
 import { Tabs } from "expo-router";
-import { SymbolView, type SFSymbol } from "expo-symbols";
-import { StyleSheet, Text, View } from "react-native";
+import { CalendarDays, House, Info, Map, Sparkles, type LucideIcon } from "lucide-react-native";
+import { StyleSheet, View, type ColorValue } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors, typography } from "@not-alone/design-tokens";
+import { useResponsiveLayout } from "../../components/responsive-layout";
 
 const tabScreens = [
-  { name: "index", title: "Home", icon: "house", activeIcon: "house.fill" },
-  { name: "schedule", title: "Schedule", icon: "calendar", activeIcon: "calendar" },
-  { name: "help", title: "Ask AI", icon: "sparkles", activeIcon: "sparkles" },
-  { name: "map", title: "Map", icon: "map", activeIcon: "map.fill" },
-  { name: "info", title: "Info", icon: "info.circle", activeIcon: "info.circle.fill" }
+  { name: "index", title: "Home", icon: House },
+  { name: "schedule", title: "Schedule", icon: CalendarDays },
+  { name: "help", title: "Ask AI", icon: Sparkles },
+  { name: "map", title: "Map", icon: Map },
+  { name: "info", title: "Info", icon: Info }
 ] as const;
 
 export default function TabsLayout() {
+  const layout = useResponsiveLayout();
+  const insets = useSafeAreaInsets();
+  const compact = layout.compact || layout.short;
+  const bottomInset = Math.max(insets.bottom, compact ? 5 : 8);
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.muted,
-        tabBarLabelStyle: { fontFamily: typography.semibold, fontSize: 11 },
+        tabBarLabelStyle: { fontFamily: typography.semibold, fontSize: compact ? 9 : 11 },
         tabBarBackground: () => <View style={styles.tabBarBackground} />,
         tabBarStyle: {
           backgroundColor: "transparent",
           borderTopColor: colors.border,
-          height: 86,
-          paddingBottom: 24,
-          paddingTop: 10
+          height: (compact ? 54 : 62) + bottomInset,
+          paddingBottom: bottomInset,
+          paddingTop: compact ? 6 : 9
         }
       }}
     >
@@ -35,19 +42,16 @@ export default function TabsLayout() {
           name={screen.name}
           options={{
             title: screen.title,
-            tabBarIcon: ({ color, focused }) => (
-              <SymbolView
-                name={(focused ? screen.activeIcon : screen.icon) as SFSymbol}
-                size={22}
-                tintColor={color}
-                fallback={<Text style={{ color, fontFamily: typography.bold, fontSize: 16 }}>{screen.title.slice(0, 1)}</Text>}
-              />
-            )
+            tabBarIcon: ({ color, focused }) => <TabIcon color={color} focused={focused} icon={screen.icon} />
           }}
         />
       ))}
     </Tabs>
   );
+}
+
+function TabIcon({ color, focused, icon: Icon }: { color: ColorValue; focused: boolean; icon: LucideIcon }) {
+  return <Icon color={color} size={22} strokeWidth={focused ? 2.5 : 2} />;
 }
 
 const styles = StyleSheet.create({

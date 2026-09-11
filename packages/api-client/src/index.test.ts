@@ -41,7 +41,6 @@ describe("fetchPublishedSnapshot", () => {
     expect(result.revision).toBe(1);
     expect(fetchMock).toHaveBeenCalledWith("https://staff.example.com/api/snapshot", expect.objectContaining({
       cache: "no-store",
-      headers: { "Cache-Control": "no-cache" },
       signal: expect.any(AbortSignal)
     }));
   });
