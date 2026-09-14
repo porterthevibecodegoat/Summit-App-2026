@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildPublishedSnapshotFromDraftSessions,
   createNotificationJobsForPublish,
+  hydrateSnapshotContent,
   staffContentSchema,
   staffDraftSessionsSchema,
   type StaffDraftSession
@@ -50,6 +51,21 @@ describe("live operations input safety", () => {
     expect(snapshot.contentPages).toEqual(demoSnapshot.contentPages);
   });
 
+  it("keeps valid session IDs stable and assigns day order by event day", () => {
+    const original = demoSnapshot.scheduleItems[0]!;
+    const sessions: StaffDraftSession[] = [
+      { ...session, id: original.id, day: "Mon Nov 2", start: "1:00 PM", end: "2:00 PM", title: original.title },
+      { ...session, id: "same-day-session", day: "Mon Nov 2", start: "3:00 PM", end: "4:00 PM", title: "Same Day" },
+      { ...session, id: "next-day-session", day: "Tue Nov 3", start: "9:00 AM", end: "10:00 AM", title: "Next Day" }
+    ];
+
+    const snapshot = buildPublishedSnapshotFromDraftSessions(sessions, 5, "2026-09-10T17:00:00.000Z", demoSnapshot);
+
+    expect(snapshot.scheduleItems.map((item) => item.dayOrder)).toEqual([0, 0, 1]);
+    expect(snapshot.scheduleItems[0]?.id).toBe(original.id);
+    expect(snapshot.scheduleItems[0]?.summary).toBe(original.summary);
+  });
+
   it("validates timed notices before staff can publish them", () => {
     const result = staffContentSchema.safeParse({
       event: demoSnapshot.event,
@@ -70,5 +86,31 @@ describe("live operations input safety", () => {
       contentPages: demoSnapshot.contentPages
     });
     expect(result.success).toBe(false);
+  });
+
+  it("removes known migration placeholders without overwriting staff content", () => {
+    const placeholderSnapshot = {
+      ...demoSnapshot,
+      locations: demoSnapshot.locations.map((location, index) => ({
+        ...location,
+        description: index === 0 ? "Published staff-controlled event location." : location.description
+      })),
+      scheduleItems: demoSnapshot.scheduleItems.map((item, index) => ({
+        ...item,
+        summary: index === 0 ? "Host Team at Registration Desk." : item.summary,
+        description: index === 0
+          ? "Published from the staff live-ops control room. Replace this with approved production copy."
+          : index === 1
+            ? "Staff-approved custom session copy."
+            : item.description
+      }))
+    };
+
+    const hydrated = hydrateSnapshotContent(placeholderSnapshot);
+
+    expect(hydrated.scheduleItems[0]?.summary).toBe(demoSnapshot.scheduleItems[0]?.summary);
+    expect(hydrated.scheduleItems[0]?.description).toBe(demoSnapshot.scheduleItems[0]?.description);
+    expect(hydrated.scheduleItems[1]?.description).toBe("Staff-approved custom session copy.");
+    expect(hydrated.locations[0]?.description).toBe(demoSnapshot.locations[0]?.description);
   });
 });

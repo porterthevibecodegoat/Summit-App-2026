@@ -13,7 +13,10 @@ export function OPTIONS() {
 }
 
 export async function POST(request: NextRequest) {
-  const rateLimit = checkRateLimit(request, "attendee-ai", { limit: 30, windowMs: 60_000 });
+  const rateLimit = checkRateLimit(request, "attendee-ai", {
+    limit: process.env.RESPONSIVE_TEST_MODE === "1" ? 10_000 : 30,
+    windowMs: 60_000
+  });
   if (!rateLimit.allowed) {
     return NextResponse.json(
       { ok: false, error: "Too many concierge requests. Please wait a moment and try again." },

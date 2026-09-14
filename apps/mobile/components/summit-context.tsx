@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchPublishedSnapshot } from "@not-alone/api-client";
 import { publicAppConfig } from "@not-alone/config";
 import { demoSnapshot as canonicalSnapshot } from "@not-alone/test-fixtures";
+import { sanitizePublishedSnapshotContent } from "@not-alone/domain";
 import { eventSnapshotSchema, type EventSnapshot } from "@not-alone/validation";
 import { mobileApiBaseUrl } from "../lib/mobile-api";
 import { selectCachedSnapshot, selectPublishedSnapshot } from "../lib/snapshot-sync";
@@ -52,7 +53,10 @@ export function SummitProvider({ children }: PropsWithChildren) {
     }
 
     try {
-      const remoteSnapshot = await fetchPublishedSnapshot(mobileApiBaseUrl, { timeoutMs: 6000 });
+      const remoteSnapshot = sanitizePublishedSnapshotContent(
+        await fetchPublishedSnapshot(mobileApiBaseUrl, { timeoutMs: 6000 }),
+        canonicalSnapshot
+      );
       const syncedAt = new Date().toISOString();
       if (!mountedRef.current) {
         return;
@@ -102,7 +106,10 @@ export function SummitProvider({ children }: PropsWithChildren) {
         }
 
         const cachedValue = JSON.parse(cached) as { snapshot?: unknown; syncedAt?: unknown };
-        const parsed = eventSnapshotSchema.parse(cachedValue.snapshot ?? cachedValue);
+        const parsed = sanitizePublishedSnapshotContent(
+          eventSnapshotSchema.parse(cachedValue.snapshot ?? cachedValue),
+          canonicalSnapshot
+        );
         const selection = selectCachedSnapshot(publishedSnapshotRef.current, parsed);
         if (selection.snapshot !== parsed) {
           return;

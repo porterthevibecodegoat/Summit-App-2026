@@ -13,6 +13,80 @@ export type SessionTemporalState = "completed" | "current" | "upcoming" | "cance
 export type EventPhase = "empty" | "before" | "live" | "after";
 export type OperationalNotice = Pick<EventNotice, "id" | "title" | "body" | "severity"> & { scheduleItemId?: string };
 
+const schedulePlaceholderPattern = /published from the staff live-ops control room|replace this with approved production copy|program details may change as the 2026 agenda is finalized|host team at registration desk/i;
+const locationPlaceholderPattern = /published staff-controlled event location/i;
+const eventPlaceholderPattern = /prototype attendee agenda/i;
+
+export function isSchedulePlaceholderCopy(value: string): boolean {
+  return schedulePlaceholderPattern.test(value);
+}
+
+export function isLocationPlaceholderCopy(value: string): boolean {
+  return locationPlaceholderPattern.test(value);
+}
+
+export function sanitizePublishedSnapshotContent(snapshot: EventSnapshot, fallback: EventSnapshot): EventSnapshot {
+  const fallbackScheduleByIdentity = new Map(
+    fallback.scheduleItems.map((item) => [scheduleContentIdentity(item), item])
+  );
+  const fallbackLocationByName = new Map(
+    fallback.locations.map((location) => [normalizeContentText(location.name), location])
+  );
+  const fallbackPageBySlug = new Map(fallback.contentPages.map((page) => [page.slug, page]));
+
+  return {
+    ...snapshot,
+    event: {
+      ...snapshot.event,
+      positioning: eventPlaceholderPattern.test(snapshot.event.positioning)
+        ? fallback.event.positioning
+        : snapshot.event.positioning
+    },
+    scheduleItems: snapshot.scheduleItems.map((item) => {
+      const fallbackItem = fallbackScheduleByIdentity.get(scheduleContentIdentity(item));
+      const summary = isSchedulePlaceholderCopy(item.summary)
+        ? fallbackItem?.summary ?? `${item.title} takes place in ${item.locationName}.`
+        : item.summary;
+      const description = isSchedulePlaceholderCopy(item.description)
+        ? fallbackItem?.description ?? summary
+        : item.description;
+
+      return { ...item, summary, description };
+    }),
+    locations: snapshot.locations.map((location) => {
+      if (!isLocationPlaceholderCopy(location.description)) {
+        return location;
+      }
+
+      const fallbackLocation = fallbackLocationByName.get(normalizeContentText(location.name));
+      return {
+        ...location,
+        description: fallbackLocation?.description ?? `${location.name} is listed in the current event schedule.`
+      };
+    }),
+    contentPages: snapshot.contentPages.map((page) => {
+      const slug = page.slug === "prototype-schedule-note" ? "schedule-note" : page.slug;
+      const fallbackPage = fallbackPageBySlug.get(slug);
+      return {
+        ...page,
+        slug,
+        body: schedulePlaceholderPattern.test(page.body)
+          ? fallbackPage?.body ?? "Current event information will appear here when published by summit staff."
+          : page.body
+      };
+    })
+  };
+}
+
+function scheduleContentIdentity(item: Pick<ScheduleItem, "startUtc" | "eventTimeZone" | "title">): string {
+  const eventDate = DateTime.fromISO(item.startUtc, { zone: "utc" }).setZone(item.eventTimeZone).toISODate();
+  return `${eventDate}:${normalizeContentText(item.title)}`;
+}
+
+function normalizeContentText(value: string): string {
+  return value.trim().toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
 export function canSeeScheduleItem(item: ScheduleItem, audienceGroups: string[]): boolean {
   return item.published && (item.visibilityScope.id === "public" || audienceGroups.includes(item.visibilityScope.id));
 }

@@ -54,19 +54,20 @@ export default defineConfig({
   },
   webServer: [
     {
-      command: "node scripts/start-admin-next.mjs dev --webpack --port 3000",
-      env: { CI: "1", NEXT_TELEMETRY_DISABLED: "1" },
-      reuseExistingServer: true,
-      timeout: 120_000,
-      url: "http://127.0.0.1:3000/api/health"
-    },
-    {
-      command: "pnpm mobile:web -- --port 8086",
+      command: "node scripts/start-admin-next.mjs start --port 3010",
       env: {
         CI: "1",
-        EXPO_PUBLIC_API_BASE_URL: "http://127.0.0.1:3000"
+        HOME: `${process.cwd()}/work/runtime`,
+        NEXT_TELEMETRY_DISABLED: "1",
+        RESPONSIVE_TEST_MODE: "1"
       },
-      reuseExistingServer: true,
+      reuseExistingServer: false,
+      timeout: 120_000,
+      url: "http://127.0.0.1:3010/api/health"
+    },
+    {
+      command: "node scripts/serve-static-spa.mjs work/responsive-web-export 8086",
+      reuseExistingServer: false,
       timeout: 120_000,
       url: "http://127.0.0.1:8086"
     }

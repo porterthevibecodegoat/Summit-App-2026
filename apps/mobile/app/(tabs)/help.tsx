@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
 import { getNowAndUpcoming, toEventTimeRange } from "@not-alone/domain";
@@ -8,8 +8,7 @@ import type { EventSnapshot, ScheduleItem } from "@not-alone/validation";
 import { useSummit } from "../../components/summit-context";
 import { useResponsiveLayout } from "../../components/responsive-layout";
 import { mobileApiBaseUrl } from "../../lib/mobile-api";
-
-const summitArt = require("../../assets/summit-art-v2.png");
+import { sessionHref } from "../../lib/session-link";
 
 const promptChips = [
   "What is happening now?",
@@ -146,10 +145,14 @@ export default function HelpScreen() {
     [selectedPrompt, snapshot, nowUtc, current, upcoming]
   );
   const answer = remoteAnswer ?? localAnswer;
+  const canSend = customQuestion.trim().length > 0;
 
   useEffect(() => {
     const controller = new AbortController();
+    let disposed = false;
+    const timeout = setTimeout(() => controller.abort(), 8000);
     setAnswerStatus("loading");
+    setRemoteAnswer(null);
     fetch(`${mobileApiBaseUrl}/api/ai/attendee`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -165,16 +168,22 @@ export default function HelpScreen() {
         const items = (result.answer.items ?? [])
           .map((item) => item.id ? itemById.get(item.id) : undefined)
           .filter((item): item is ScheduleItem => Boolean(item));
+        if (disposed) return;
         setRemoteAnswer({ title: result.answer.title, body: result.answer.body, items });
         setAnswerStatus(result.engine === "openai" ? "live" : "fallback");
       })
-      .catch((error: unknown) => {
-        if (error instanceof Error && error.name === "AbortError") return;
+      .catch(() => {
+        if (disposed) return;
         setRemoteAnswer(null);
         setAnswerStatus("offline");
-      });
+      })
+      .finally(() => clearTimeout(timeout));
 
-    return () => controller.abort();
+    return () => {
+      disposed = true;
+      clearTimeout(timeout);
+      controller.abort();
+    };
   }, [selectedPrompt, snapshot]);
 
   const answerKicker = answerStatus === "loading"
@@ -192,18 +201,14 @@ export default function HelpScreen() {
         contentContainerStyle={layout.contentStyle}
         contentInsetAdjustmentBehavior="automatic"
       >
-        <ImageBackground source={summitArt} resizeMode="cover" imageStyle={styles.heroImage} style={[styles.hero, layout.marginStyle]}>
-          <View style={[styles.heroScrim, layout.cardPaddingStyle]}>
-            <Text style={styles.kicker}>Ask AI</Text>
-            <Text style={styles.title}>Your summit concierge.</Text>
-            <Text style={styles.copy}>
-              Personal guidance grounded in the latest published schedule and summit information.
-            </Text>
-          </View>
-        </ImageBackground>
+        <View style={[styles.header, layout.paddingStyle]}>
+          <Text style={styles.kicker}>Summit concierge</Text>
+          <Text style={styles.title}>Ask AI</Text>
+          <Text style={styles.copy}>Clear answers from the latest published event information.</Text>
+        </View>
 
         <View style={[styles.promptPanel, layout.marginStyle, layout.cardPaddingStyle]}>
-          <Text style={styles.promptTitle}>How can I help today?</Text>
+          <Text style={styles.promptTitle}>How can I help?</Text>
           <View style={styles.chipGrid}>
             {promptChips.map((prompt) => (
               <Pressable
@@ -241,14 +246,17 @@ export default function HelpScreen() {
               value={customQuestion}
             />
             <Pressable
+              accessibilityLabel="Send question"
               accessibilityRole="button"
+              accessibilityState={{ disabled: !canSend }}
+              disabled={!canSend}
               onPress={() => {
                 const question = customQuestion.trim();
                 if (question.length > 0) {
                   setSelectedPrompt(question);
                 }
               }}
-              style={({ pressed }) => [styles.sendButton, pressed && styles.pressed]}
+              style={({ pressed }) => [styles.sendButton, !canSend && styles.sendButtonDisabled, pressed && canSend && styles.pressed]}
             >
               <Text style={styles.sendText}>Send</Text>
             </Pressable>
@@ -262,7 +270,7 @@ export default function HelpScreen() {
           {answer.items.length > 0 ? (
             <View style={styles.answerList}>
               {answer.items.map((item, index) => (
-                <Link key={`${item.id}-${item.startUtc}-${index}`} href={{ pathname: "/session/[id]", params: { id: item.id } }} asChild>
+                <Link key={`${item.id}-${item.startUtc}-${index}`} href={sessionHref(item)} asChild>
                   <Pressable accessibilityLabel={`${item.title}. ${toEventTimeRange(item, snapshot.event.timeZone)}. ${item.locationName}`} accessibilityRole="button" style={({ pressed }) => [styles.answerItem, pressed && styles.pressed]}>
                     <Text style={styles.answerItemTime}>{toEventTimeRange(item, snapshot.event.timeZone)}</Text>
                     <Text style={styles.answerItemTitle}>{item.title}</Text>
@@ -272,12 +280,6 @@ export default function HelpScreen() {
               ))}
             </View>
           ) : null}
-        </View>
-
-        <View style={[styles.panel, layout.marginStyle]}>
-          <CapabilityRow title="Schedule answers" body="Grounded in the same published agenda used by Home and Schedule." />
-          <CapabilityRow title="Summit knowledge" body="Answers use published event context and clearly identify anything that is not yet confirmed." />
-          <CapabilityRow title="Human escalation" body="Sensitive or unresolved requests should route to a trained event team member." />
         </View>
 
         <Link href="/schedule" asChild>
@@ -459,7 +461,7 @@ function getLocalConciergeAnswer({
 
   if (matchesAny(normalizedPrompt, ["tonight", "evening", "dinner", "show", "concert", "awards", "red carpet"])) {
     const eveningItems = allItems.filter((item) => {
-      const hour = new Date(item.startUtc).getUTCHours() - 8;
+      const hour = getEventHour(item.startUtc, snapshot.event.timeZone);
       return hour >= 17 || matchesAny(searchText(item), ["dinner", "performance", "awards", "concert", "red carpet", "jewel", "rachel"]);
     });
     return {
@@ -500,7 +502,7 @@ function getLocalConciergeAnswer({
     const mealItems = findItems(allItems, ["lunch", "dinner", "nourish"]);
     return {
       title: "Meals are included in the agenda.",
-      body: "Lunch and dinner blocks are included to support reminders, venue routing, and day planning.",
+      body: "Lunch and dinner blocks are included to support event updates, venue routing, and day planning.",
       items: mealItems.slice(0, 5)
     };
   }
@@ -587,13 +589,13 @@ function findFeaturedPerson(prompt: string) {
   return featuredPeople.find((person) => matchesAny(prompt, person.aliases));
 }
 
-function CapabilityRow({ title, body }: { title: string; body: string }) {
-  return (
-    <View style={styles.helpRow}>
-      <Text style={styles.helpTitle}>{title}</Text>
-      <Text style={styles.helpBody}>{body}</Text>
-    </View>
-  );
+function getEventHour(value: string, timeZone: string) {
+  const hour = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    hourCycle: "h23",
+    timeZone
+  }).formatToParts(new Date(value)).find((part) => part.type === "hour")?.value;
+  return Number(hour ?? 0);
 }
 
 const styles = StyleSheet.create({
@@ -604,46 +606,34 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: colors.canvas
   },
-  hero: {
-    backgroundColor: colors.midnight,
-    borderColor: "rgba(230, 192, 111, 0.18)",
-    borderRadius: 8,
-    borderWidth: 1,
+  header: {
+    borderBottomColor: "rgba(230, 192, 111, 0.2)",
+    borderBottomWidth: 1,
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
-    minHeight: 220,
-    overflow: "hidden"
-  },
-  heroImage: {
-    borderRadius: 8
-  },
-  heroScrim: {
-    backgroundColor: "rgba(5, 10, 30, 0.62)",
-    flex: 1,
-    justifyContent: "flex-end",
-    padding: spacing.lg
+    paddingBottom: spacing.lg,
+    paddingTop: spacing.lg
   },
   kicker: {
     color: colors.gold,
     fontFamily: typography.bold,
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: "700",
     textTransform: "uppercase"
   },
   title: {
     color: colors.ink,
     fontFamily: typography.display,
-    fontSize: 39,
+    fontSize: 34,
     fontWeight: "700",
     letterSpacing: 0,
-    lineHeight: 43,
-    marginTop: spacing.xs
+    lineHeight: 40,
+    marginTop: spacing.sm
   },
   copy: {
     color: colors.surfaceMuted,
-    fontSize: 16,
-    lineHeight: 23,
-    marginTop: spacing.md
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: spacing.sm
   },
   promptPanel: {
     backgroundColor: "#0D1530",
@@ -702,8 +692,11 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm
   },
   inputText: {
-    color: colors.muted,
-    fontSize: 14
+    color: colors.ink,
+    flex: 1,
+    fontSize: 14,
+    minWidth: 0,
+    paddingRight: spacing.sm
   },
   sendButton: {
     backgroundColor: colors.gold,
@@ -711,6 +704,9 @@ const styles = StyleSheet.create({
     marginRight: spacing.sm,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm
+  },
+  sendButtonDisabled: {
+    opacity: 0.38
   },
   sendText: {
     color: colors.midnight,
@@ -780,45 +776,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     lineHeight: 18,
     marginTop: 4
-  },
-  previewButton: {
-    alignSelf: "flex-start",
-    backgroundColor: colors.gold,
-    borderRadius: 8,
-    marginTop: spacing.lg,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md
-  },
-  previewButtonText: {
-    color: colors.midnight,
-    fontFamily: typography.bold,
-    fontSize: 13,
-    fontWeight: "800"
-  },
-  panel: {
-    backgroundColor: "rgba(13, 21, 48, 0.72)",
-    borderColor: colors.border,
-    borderRadius: 8,
-    borderWidth: 1,
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.lg
-  },
-  helpRow: {
-    borderTopColor: colors.border,
-    borderTopWidth: 1,
-    padding: spacing.lg
-  },
-  helpTitle: {
-    color: colors.ink,
-    fontFamily: typography.bold,
-    fontSize: 18,
-    fontWeight: "700"
-  },
-  helpBody: {
-    color: colors.body,
-    fontSize: 14,
-    lineHeight: 21,
-    marginTop: spacing.xs
   },
   scheduleLink: {
     alignItems: "center",

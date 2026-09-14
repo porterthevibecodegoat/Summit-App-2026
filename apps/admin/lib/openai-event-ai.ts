@@ -62,8 +62,7 @@ export async function createOpenAiAttendeeAnswer({
       event: snapshot.event,
       publicContext: {
         foundation: "Inspiring Children Foundation is a Las Vegas-based 501(c)(3) nonprofit supporting young people through whole-human development.",
-        summit: "Not Alone Summit is a human-development convening focused on emotional and mental health.",
-        prototypeNotice: "The current agenda is prototype content adapted from a prior production timeline until final 2026 details are approved."
+        summit: "Not Alone Summit is a human-development convening focused on emotional and mental health."
       },
       publishedSchedule: snapshot.scheduleItems.map((item) => ({
         id: item.id,

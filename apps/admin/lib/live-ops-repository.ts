@@ -695,7 +695,12 @@ function parseDraftSessions(value: unknown, snapshot: EventSnapshot): StaffDraft
 
   return snapshot.scheduleItems.map((item) => ({
     id: item.id,
-    day: `Day ${item.dayOrder + 1}`,
+    day: new Intl.DateTimeFormat("en-US", {
+      day: "numeric",
+      month: "short",
+      timeZone: snapshot.event.timeZone,
+      weekday: "short"
+    }).format(new Date(item.startUtc)),
     start: new Intl.DateTimeFormat("en-US", {
       hour: "numeric",
       minute: "2-digit",

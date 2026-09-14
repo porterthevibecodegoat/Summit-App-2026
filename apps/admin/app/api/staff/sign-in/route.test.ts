@@ -46,4 +46,25 @@ describe("staff sign-in link route", () => {
     expect(response.status).toBe(422);
     expect(fetchMock).not.toHaveBeenCalled();
   });
+
+  it("reports email throttling without claiming the staff invitation is missing", async () => {
+    process.env.SUPABASE_URL = "https://example.supabase.co";
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "publishable-test-key";
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(
+      new Response(null, { status: 429, headers: { "Retry-After": "60" } })
+    ));
+    const request = new NextRequest("https://staff.example.com/api/staff/sign-in", {
+      method: "POST",
+      body: JSON.stringify({ email: "staff@example.com" }),
+      headers: { "Content-Type": "application/json" }
+    });
+
+    const response = await POST(request);
+    const result = await response.json();
+
+    expect(response.status).toBe(429);
+    expect(response.headers.get("Retry-After")).toBe("60");
+    expect(result.error).toContain("Too many sign-in links");
+    expect(result.error).not.toContain("invitation");
+  });
 });

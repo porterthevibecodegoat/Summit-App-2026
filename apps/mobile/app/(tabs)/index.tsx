@@ -1,4 +1,5 @@
 import { Link } from "expo-router";
+import { CalendarClock, ChevronRight, Sparkles } from "lucide-react-native";
 import { useState } from "react";
 import { Image, ImageBackground, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View, type ImageSourcePropType, type StyleProp, type ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,11 +9,10 @@ import type { ScheduleItem, Speaker } from "@not-alone/validation";
 import { useSummit } from "../../components/summit-context";
 import { OpeningGreeting } from "../../components/opening-greeting";
 import { useResponsiveLayout } from "../../components/responsive-layout";
+import { sessionHref } from "../../lib/session-link";
 
 const summitArt = require("../../assets/summit-art-v2.png");
 const steveWozniakHeadshot = require("../../assets/steve-wozniak-headshot.jpg");
-
-const homePrompts = ["What should I do now?", "Where is the next session?"];
 
 export default function TodayScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -20,7 +20,6 @@ export default function TodayScreen() {
   const {
     snapshot,
     nowUtc,
-    lastSuccessfulSyncAt,
     lastRevisionUpdateAt,
     syncing,
     syncError,
@@ -38,6 +37,7 @@ export default function TodayScreen() {
     ? snapshot.speakers.find((speaker) => speaker.published && currentItem.speakerIds.includes(speaker.id))
     : undefined;
   const operationalNotices = getActiveOperationalNotices(snapshot, nowUtc);
+  const showSyncStatus = syncing || Boolean(syncError) || Boolean(lastRevisionUpdateAt);
 
   async function handleRefresh() {
     setRefreshing(true);
@@ -69,22 +69,20 @@ export default function TodayScreen() {
           <Text style={styles.headerMeta}>{snapshot.event.dateLabel} · {snapshot.event.venueName}</Text>
         </View>
 
-        <View style={[styles.syncStrip, layout.marginStyle]}>
-          <View style={[styles.syncDot, syncError ? styles.syncDotWarn : styles.syncDotReady]} />
-          <Text style={styles.syncText}>
-            {syncing
+        {showSyncStatus ? (
+          <View style={[styles.syncStrip, layout.marginStyle]}>
+            <View style={[styles.syncDot, syncError ? styles.syncDotWarn : styles.syncDotReady]} />
+            <Text style={styles.syncText}>
+              {syncing
                 ? "Checking for the latest schedule."
-              : syncError
-                ? "Using saved schedule while reconnecting."
-                : lastRevisionUpdateAt
-                  ? `New schedule received ${formatSyncTime(lastRevisionUpdateAt)}`
-                : lastSuccessfulSyncAt
-                  ? `Schedule updated ${formatSyncTime(lastSuccessfulSyncAt)}`
-                  : "Your event guide is ready."}
-          </Text>
-        </View>
+                : syncError
+                  ? "Using the saved schedule while reconnecting."
+                  : `New schedule received ${formatSyncTime(lastRevisionUpdateAt!)}`}
+            </Text>
+          </View>
+        ) : null}
 
-        {operationalNotices.length > 0 ? <NoticeStack insetStyle={layout.marginStyle} notices={operationalNotices} /> : null}
+        {operationalNotices.length > 0 ? <NoticeStack insetStyle={layout.marginStyle} notices={operationalNotices} scheduleItems={snapshot.scheduleItems} /> : null}
 
         {currentItem ? (
           <LiveSessionCard insetStyle={layout.marginStyle} item={currentItem} nowUtc={nowUtc} speaker={currentSpeaker} />
@@ -110,7 +108,7 @@ export default function TodayScreen() {
               <Text style={styles.waitingTitle}>You are not alone.</Text>
               <Text style={styles.waitingBody}>
                 {snapshot.scheduleItems.length > 0
-                  ? "Your schedule, venue guide, and event information are together in one place."
+                  ? "The event schedule, venue guide, and essential information are together in one place."
                   : "Programming will appear here as soon as the event team publishes it."}
               </Text>
             </View>
@@ -124,40 +122,22 @@ export default function TodayScreen() {
             value={eventPhase === "after" ? "The summit has concluded" : nextItem ? nextItem.title : "Schedule coming soon"}
             meta={eventPhase === "after" ? "View the completed agenda" : nextItem ? `${toEventTimeRange(nextItem, snapshot.event.timeZone)} · Starts in ${getCountdownLabel(nextItem.startUtc, nowUtc)}` : "Check back for event updates"}
             detail={nextItem ? `${nextItem.locationName} · ${nextItem.visibilityScope.label}` : undefined}
-            href={nextItem ? { pathname: "/session/[id]", params: { id: nextItem.id } } : "/schedule"}
-            railLabel={eventPhase === "after" ? "Done" : "Next"}
+            href={nextItem ? sessionHref(nextItem) : "/schedule"}
           />
           <View style={styles.divider} />
-          <View style={styles.aiBlock}>
-            <View style={styles.aiHeader}>
-              <View>
-                <Text style={styles.panelLabel}>Ask AI concierge</Text>
-                <Text style={styles.aiTitle}>Fast answers, grounded in the agenda.</Text>
+          <Link href="/help" asChild>
+            <Pressable accessibilityLabel="Ask the summit concierge" accessibilityRole="button" style={({ pressed }) => [styles.conciergeRow, pressed && styles.pressed]}>
+              <View style={styles.conciergeIcon}>
+                <Sparkles color={colors.gold} size={20} strokeWidth={2.2} />
               </View>
-              <Link href="/help" asChild>
-                <Pressable accessibilityLabel="Ask the summit concierge" accessibilityRole="button" style={({ pressed }) => [styles.smallButton, pressed && styles.pressed]}>
-                  <Text style={styles.smallButtonText}>Ask</Text>
-                </Pressable>
-              </Link>
-            </View>
-            <View style={styles.promptRow}>
-              {homePrompts.map((prompt) => (
-                <Link key={prompt} href="/help" asChild>
-                  <Pressable accessibilityLabel={`Ask: ${prompt}`} accessibilityRole="button" style={({ pressed }) => [styles.promptChip, pressed && styles.pressed]}>
-                    <Text style={styles.promptText}>{prompt}</Text>
-                  </Pressable>
-                </Link>
-              ))}
-            </View>
-          </View>
+              <View style={styles.conciergeText}>
+                <Text style={styles.panelLabel}>Ask AI concierge</Text>
+                <Text style={styles.aiTitle}>Get a clear answer from the latest agenda.</Text>
+              </View>
+              <ChevronRight color={colors.muted} size={18} strokeWidth={2.2} />
+            </Pressable>
+          </Link>
         </View>
-
-        <View style={[styles.toolsPanel, layout.marginStyle]}>
-          <ToolPill href="/schedule" label="Schedule" value={`${snapshot.scheduleItems.length} sessions`} />
-          <ToolPill href="/map" label="Map" value={snapshot.event.venueName} />
-          <ToolPill href="/help" label="Help" value="Concierge" />
-        </View>
-
       </ScrollView>
     </SafeAreaView>
   );
@@ -166,7 +146,7 @@ export default function TodayScreen() {
 function LiveSessionCard({ insetStyle, item, nowUtc, speaker }: { insetStyle: StyleProp<ViewStyle>; item: ScheduleItem; nowUtc: string; speaker: Speaker | undefined }) {
   const speakerImage = getSpeakerImage(speaker);
   return (
-    <Link href={{ pathname: "/session/[id]", params: { id: item.id } }} asChild>
+    <Link href={sessionHref(item)} asChild>
       <Pressable
         accessibilityLabel={`Live now. ${item.title}. ${item.locationName}`}
         accessibilityRole="button"
@@ -196,7 +176,7 @@ function LiveSessionCard({ insetStyle, item, nowUtc, speaker }: { insetStyle: St
   );
 }
 
-function NoticeStack({ insetStyle, notices }: { insetStyle: StyleProp<ViewStyle>; notices: OperationalNotice[] }) {
+function NoticeStack({ insetStyle, notices, scheduleItems }: { insetStyle: StyleProp<ViewStyle>; notices: OperationalNotice[]; scheduleItems: ScheduleItem[] }) {
   return (
     <View accessibilityLabel="Important event updates" style={[styles.noticeStack, insetStyle]}>
       {notices.map((notice) => {
@@ -205,7 +185,10 @@ function NoticeStack({ insetStyle, notices }: { insetStyle: StyleProp<ViewStyle>
           <Text style={styles.noticeTitle}>{notice.title}</Text>
           <Text style={styles.noticeBody}>{notice.body}</Text>
         </View>;
-        return notice.scheduleItemId ? <Link href={{ pathname: "/session/[id]", params: { id: notice.scheduleItemId } }} asChild key={notice.id}><Pressable accessibilityRole="button">{body}</Pressable></Link> : <View key={notice.id}>{body}</View>;
+        const item = notice.scheduleItemId
+          ? scheduleItems.find((candidate) => candidate.id === notice.scheduleItemId)
+          : undefined;
+        return notice.scheduleItemId ? <Link href={item ? sessionHref(item) : { pathname: "/session/[id]", params: { id: notice.scheduleItemId } }} asChild key={notice.id}><Pressable accessibilityRole="button">{body}</Pressable></Link> : <View key={notice.id}>{body}</View>;
       })}
     </View>
   );
@@ -217,20 +200,18 @@ function MiniStatus({
   meta,
   detail,
   href,
-  railLabel = "Next"
 }: {
   title: string;
   value: string;
   meta: string;
   detail?: string | undefined;
-  href: "/schedule" | { pathname: "/session/[id]"; params: { id: string } };
-  railLabel?: string | undefined;
+  href: "/schedule" | ReturnType<typeof sessionHref>;
 }) {
   return (
     <Link href={href} asChild>
       <Pressable accessibilityLabel={`${title}. ${value}. ${meta}`} accessibilityRole="button" style={({ pressed }) => [styles.miniStatus, pressed && styles.pressed]}>
-        <View style={styles.statusRail}>
-          <Text style={styles.statusRailText}>{railLabel}</Text>
+        <View style={styles.statusIcon}>
+          <CalendarClock color={colors.gold} size={22} strokeWidth={2.1} />
         </View>
         <View style={styles.statusText}>
           <Text style={styles.panelLabel}>{title}</Text>
@@ -238,17 +219,6 @@ function MiniStatus({
           <Text style={styles.statusMeta}>{meta}</Text>
           {detail ? <Text numberOfLines={2} style={styles.statusDetail}>{detail}</Text> : null}
         </View>
-      </Pressable>
-    </Link>
-  );
-}
-
-function ToolPill({ href, label, value }: { href: "/schedule" | "/map" | "/help"; label: string; value: string }) {
-  return (
-    <Link href={href} asChild>
-      <Pressable accessibilityLabel={`${label}. ${value}`} accessibilityRole="button" style={({ pressed }) => [styles.toolPill, pressed && styles.pressed]}>
-        <Text style={styles.toolLabel}>{label}</Text>
-        <Text style={styles.toolValue} numberOfLines={1}>{value}</Text>
       </Pressable>
     </Link>
   );
@@ -529,20 +499,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: spacing.md
   },
-  statusRail: {
+  statusIcon: {
     alignItems: "center",
     backgroundColor: colors.goldSoft,
     borderRadius: 8,
     height: 56,
     justifyContent: "center",
-    width: 58
-  },
-  statusRailText: {
-    color: colors.gold,
-    fontFamily: typography.bold,
-    fontSize: 11,
-    fontWeight: "800",
-    textTransform: "uppercase"
+    width: 56
   },
   statusText: {
     flex: 1
@@ -576,14 +539,24 @@ const styles = StyleSheet.create({
     height: 1,
     marginVertical: spacing.lg
   },
-  aiBlock: {
-    gap: spacing.md
-  },
-  aiHeader: {
+  conciergeRow: {
     alignItems: "center",
     flexDirection: "row",
     gap: spacing.md,
-    justifyContent: "space-between"
+    minHeight: 58
+  },
+  conciergeIcon: {
+    alignItems: "center",
+    borderColor: "rgba(230, 192, 111, 0.32)",
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 44,
+    justifyContent: "center",
+    width: 44
+  },
+  conciergeText: {
+    flex: 1,
+    minWidth: 0
   },
   aiTitle: {
     color: colors.ink,
@@ -592,72 +565,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     lineHeight: 23,
     marginTop: 3,
-    maxWidth: 230
-  },
-  smallButton: {
-    alignItems: "center",
-    borderColor: "rgba(230, 192, 111, 0.46)",
-    borderRadius: 8,
-    borderWidth: 1,
-    height: 42,
-    justifyContent: "center",
-    width: 58
-  },
-  smallButtonText: {
-    color: colors.gold,
-    fontFamily: typography.bold,
-    fontSize: 12,
-    fontWeight: "800",
-    textTransform: "uppercase"
-  },
-  promptRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.sm
-  },
-  promptChip: {
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    borderColor: "rgba(220, 229, 245, 0.12)",
-    borderRadius: 8,
-    borderWidth: 1,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm
-  },
-  promptText: {
-    color: colors.surfaceMuted,
-    fontFamily: typography.medium,
-    fontSize: 12,
-    fontWeight: "500"
-  },
-  toolsPanel: {
-    flexDirection: "row",
-    gap: spacing.sm,
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.lg
-  },
-  toolPill: {
-    backgroundColor: "rgba(13, 21, 48, 0.82)",
-    borderColor: colors.border,
-    borderRadius: 8,
-    borderWidth: 1,
-    flex: 1,
-    minHeight: 76,
-    padding: spacing.md
-  },
-  toolLabel: {
-    color: colors.gold,
-    fontFamily: typography.bold,
-    fontSize: 11,
-    fontWeight: "800",
-    textTransform: "uppercase"
-  },
-  toolValue: {
-    color: colors.ink,
-    fontFamily: typography.semibold,
-    fontSize: 13,
-    fontWeight: "600",
-    lineHeight: 18,
-    marginTop: spacing.sm
+    maxWidth: 420
   },
   pressed: {
     opacity: 0.84

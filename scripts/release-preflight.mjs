@@ -16,7 +16,7 @@ const expectedEasProjectId = "5a79b65b-7080-4c27-84e1-8eb5e9d119fd";
 check("App Store version is 1.0.0", appConfig.version === "1.0.0");
 check("iOS build number is initialized", appConfig.ios?.buildNumber === "1");
 check("iOS bundle identifier is final", appConfig.ios?.bundleIdentifier === "org.inspiringchildren.notalonesummit");
-check("App is iPhone-only and portrait-oriented", appConfig.ios?.supportsTablet === false && appConfig.orientation === "portrait");
+check("App supports iPhone and iPad with adaptive orientation", appConfig.ios?.supportsTablet === true && appConfig.orientation === "default");
 check("Export-compliance declaration is present", appConfig.ios?.infoPlist?.ITSAppUsesNonExemptEncryption === false && nativeInfo.includes("ITSAppUsesNonExemptEncryption"));
 check("Unused Face ID permission is absent", !nativeInfo.includes("NSFaceIDUsageDescription"));
 check("Notification purpose text is present", typeof appConfig.ios?.infoPlist?.NSUserNotificationsUsageDescription === "string");
@@ -37,7 +37,7 @@ check("Mobile API uses public HTTPS", isPublicHttpsUrl(apiBaseUrl));
 for (const profile of ["preview", "production"]) {
   const profileEnv = eas.build?.[profile]?.env ?? {};
   check(`${profile} build uses the deployed HTTPS API`, profileEnv.EXPO_PUBLIC_API_BASE_URL === apiBaseUrl && isPublicHttpsUrl(profileEnv.EXPO_PUBLIC_API_BASE_URL));
-  check(`${profile} build excludes Demo Mode`, profileEnv.EXPO_PUBLIC_ENABLE_DEMO_MODE === "false");
+  check(`${profile} build excludes Demo Mode`, !("EXPO_PUBLIC_ENABLE_DEMO_MODE" in profileEnv));
   check(`${profile} push remains safely disabled`, profileEnv.EXPO_PUBLIC_ENABLE_PUSH_DELIVERY === "false");
 }
 

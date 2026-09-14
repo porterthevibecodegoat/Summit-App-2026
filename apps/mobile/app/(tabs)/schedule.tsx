@@ -1,13 +1,14 @@
-import { Link } from "expo-router";
+import { Link, useFocusEffect } from "expo-router";
 import { ChevronRight, Clock3, MapPin } from "lucide-react-native";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
 import { getEventPhase, getJumpToNowItem, getSessionTemporalState, groupScheduleByEventDay, type SessionTemporalState } from "@not-alone/domain";
 import type { ScheduleItem } from "@not-alone/validation";
 import { useSummit } from "../../components/summit-context";
 import { useResponsiveLayout, type ResponsiveLayout } from "../../components/responsive-layout";
+import { sessionHref } from "../../lib/session-link";
 
 export default function ScheduleScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -16,17 +17,49 @@ export default function ScheduleScreen() {
   const scrollRef = useRef<ScrollView>(null);
   const daySectionY = useRef(0);
   const timelineY = useRef(0);
+  const hasSelectedInitialDay = useRef(false);
   const [jumpTargetId, setJumpTargetId] = useState<string | null>(null);
   const groups = useMemo(() => groupScheduleByEventDay(snapshot.scheduleItems), [snapshot.scheduleItems]);
   const eventPhase = getEventPhase(snapshot, nowUtc);
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
   const selectedGroup = groups[Math.min(selectedDayIndex, Math.max(groups.length - 1, 0))];
 
+  useFocusEffect(
+    useCallback(() => {
+      let timeout: ReturnType<typeof setTimeout> | undefined;
+      const frame = requestAnimationFrame(() => {
+        timeout = setTimeout(() => {
+          scrollRef.current?.scrollTo({ y: 0, animated: false });
+        }, 50);
+      });
+
+      return () => {
+        cancelAnimationFrame(frame);
+        if (timeout) clearTimeout(timeout);
+      };
+    }, [])
+  );
+
   useEffect(() => {
+    if (groups.length === 0) {
+      setSelectedDayIndex(0);
+      return;
+    }
+
+    if (!hasSelectedInitialDay.current) {
+      const target = getJumpToNowItem(snapshot.scheduleItems, nowUtc);
+      const targetIndex = target
+        ? groups.findIndex((group) => group.items.some((item) => item.id === target.id))
+        : 0;
+      setSelectedDayIndex(Math.max(targetIndex, 0));
+      hasSelectedInitialDay.current = true;
+      return;
+    }
+
     if (selectedDayIndex >= groups.length) {
       setSelectedDayIndex(0);
     }
-  }, [groups.length, selectedDayIndex]);
+  }, [groups, nowUtc, selectedDayIndex, snapshot.scheduleItems]);
 
   async function handleRefresh() {
     setRefreshing(true);
@@ -41,6 +74,7 @@ export default function ScheduleScreen() {
     const target = getJumpToNowItem(snapshot.scheduleItems, nowUtc);
     if (!target) return;
     const targetIndex = groups.findIndex((group) => group.items.some((item) => item.id === target.id));
+    hasSelectedInitialDay.current = true;
     setSelectedDayIndex(Math.max(targetIndex, 0));
     setJumpTargetId(target.id);
   }
@@ -115,7 +149,10 @@ export default function ScheduleScreen() {
                     accessibilityRole="tab"
                     accessibilityState={{ selected }}
                     key={group.dayLabel}
-                    onPress={() => setSelectedDayIndex(index)}
+                    onPress={() => {
+                      hasSelectedInitialDay.current = true;
+                      setSelectedDayIndex(index);
+                    }}
                     style={({ pressed }) => [
                       styles.dayTab,
                       selected && styles.dayTabActive,
@@ -235,7 +272,7 @@ function ScheduleCard({ compact, item, nowUtc }: { compact: boolean; item: Sched
   const current = temporalState === "current";
 
   return (
-    <Link href={{ pathname: "/session/[id]", params: { id: item.id } }} asChild>
+    <Link href={sessionHref(item)} asChild>
       <Pressable
         accessibilityLabel={`${canceled ? "Canceled. " : current ? "Live now. " : completed ? "Completed. " : "Upcoming. "}${start.time} ${start.period} to ${end.time} ${end.period}. ${item.title}. ${item.locationName}. ${item.visibilityScope.label}`}
         accessibilityRole="button"
@@ -259,7 +296,7 @@ function ScheduleCard({ compact, item, nowUtc }: { compact: boolean; item: Sched
 
           <View style={styles.metaRow}>
             <MapPin color={colors.gold} size={12} strokeWidth={2.2} />
-            <Text numberOfLines={1} style={styles.meta}>{item.locationName}</Text>
+            <Text numberOfLines={2} style={styles.meta}>{item.locationName}</Text>
           </View>
           <Text numberOfLines={1} style={styles.access}>{item.visibilityScope.label}</Text>
         </View>
@@ -440,9 +477,10 @@ const styles = StyleSheet.create({
   timelineDotCurrent: {
     backgroundColor: colors.gold,
     borderColor: "#FFF4D5",
-    shadowColor: colors.gold,
-    shadowOpacity: 0.65,
-    shadowRadius: 5
+    ...Platform.select({
+      web: { boxShadow: `0 0 5px ${colors.gold}` },
+      default: { shadowColor: colors.gold, shadowOpacity: 0.65, shadowRadius: 5 }
+    })
   },
   timelineDotCompleted: { backgroundColor: colors.muted, borderColor: colors.muted },
   timelineLine: { backgroundColor: colors.border, bottom: -spacing.md, left: 57, position: "absolute", top: 25, width: 1 },

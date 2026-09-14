@@ -4,6 +4,11 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 import { demoSnapshot } from "@not-alone/test-fixtures";
 import {
+  isLocationPlaceholderCopy,
+  isSchedulePlaceholderCopy,
+  sanitizePublishedSnapshotContent
+} from "@not-alone/domain";
+import {
   eventSnapshotSchema,
   type AttendeeDeviceRegistration,
   type ChangeSource,
@@ -167,13 +172,10 @@ export async function readLiveOpsStore(): Promise<LiveOpsStore> {
 export function hydrateSnapshotContent(value: unknown): EventSnapshot {
   const source = value as Partial<EventSnapshot> | undefined;
   const parsed = eventSnapshotSchema.parse(value);
-  const positioning = /prototype attendee agenda/i.test(parsed.event.positioning)
-    ? demoSnapshot.event.positioning
-    : parsed.event.positioning;
+  const sanitized = sanitizePublishedSnapshotContent(parsed, demoSnapshot);
 
   return eventSnapshotSchema.parse({
-    ...parsed,
-    event: { ...parsed.event, positioning },
+    ...sanitized,
     speakers: Array.isArray(source?.speakers) ? parsed.speakers : demoSnapshot.speakers,
     faqs: Array.isArray(source?.faqs) ? parsed.faqs : demoSnapshot.faqs,
     sponsors: Array.isArray(source?.sponsors) ? parsed.sponsors : demoSnapshot.sponsors,
@@ -183,6 +185,38 @@ export function hydrateSnapshotContent(value: unknown): EventSnapshot {
       page.slug === "prototype-schedule-note" ? { ...page, slug: "schedule-note" } : page
     )
   });
+}
+
+function scheduleIdentity(item: Pick<ScheduleItem, "startUtc" | "eventTimeZone" | "title">) {
+  return `${eventDateKey(item.startUtc, item.eventTimeZone)}:${normalizeText(item.title)}`;
+}
+
+function normalizeText(value: string) {
+  return value.trim().toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function isSchedulePlaceholder(value: string) {
+  return isSchedulePlaceholderCopy(value);
+}
+
+function isLocationPlaceholder(value: string) {
+  return isLocationPlaceholderCopy(value);
+}
+
+function createLocationDescription(name: string) {
+  const normalized = normalizeText(name);
+
+  if (normalized.includes("la tache")) return "Arrival and hospitality area for awards programming.";
+  if (normalized.includes("registration")) return "Guest check-in, credential support, schedule help, and wayfinding.";
+  if (normalized.includes("margaux") || normalized.includes("wisdom forum")) return "Main room for summit programming, panels, performances, and award moments.";
+  if (normalized.includes("lafleur")) return "Movement, mindfulness, meditation, and reset programming.";
+  if (normalized.includes("pomerol")) return "Fitness, recreation, and community wellness programming.";
+  if (normalized.includes("mouton 1")) return "Attendee gifting, speaker hospitality, and event support.";
+  if (normalized.includes("mouton")) return "Meals, workshops, and quieter conversation spaces.";
+  if (normalized.includes("outside sw")) return "Arrival point for designated gatherings at SW Steakhouse.";
+  if (normalized.includes("sw steakhouse")) return "Hosted dining location for designated summit gatherings.";
+  if (normalized.includes("boa")) return "Closing dinner and music programming location.";
+  return "Event room used by the published schedule.";
 }
 
 export async function writeLiveOpsStore(store: LiveOpsStore) {
@@ -268,7 +302,7 @@ export async function rollbackLastPublishedSnapshot(options: { notifyAttendees: 
     ...store,
     draftSessions: publishedSnapshot.scheduleItems.map((item) => ({
       id: item.id,
-      day: `Day ${item.dayOrder + 1}`,
+      day: formatDraftDay(item.startUtc, publishedSnapshot.event.timeZone),
       start: new Intl.DateTimeFormat("en-US", {
         hour: "numeric",
         minute: "2-digit",
@@ -312,12 +346,19 @@ export function buildPublishedSnapshotFromDraftSessions(
   baseSnapshot: EventSnapshot = demoSnapshot
 ) {
   const normalizedSessions = normalizeDraftSessions(sessions);
+  const eventDays = [...new Set(normalizedSessions.map((session) =>
+    eventDateKey(localEventTimeToUtc(session.day, session.start), baseSnapshot.event.timeZone)
+  ))].sort();
   return eventSnapshotSchema.parse({
     ...baseSnapshot,
     revision,
     serverTimeUtc: nowUtc,
-    scheduleItems: normalizedSessions.map((session, index) => createScheduleItem(session, index, revision, nowUtc, baseSnapshot)),
-    locations: createLocations(normalizedSessions, baseSnapshot.event.id)
+    scheduleItems: normalizedSessions.map((session, index) => {
+      const startUtc = localEventTimeToUtc(session.day, session.start);
+      const dayOrder = eventDays.indexOf(eventDateKey(startUtc, baseSnapshot.event.timeZone));
+      return createScheduleItem(session, index, Math.max(dayOrder, 0), revision, nowUtc, baseSnapshot);
+    }),
+    locations: createLocations(normalizedSessions, baseSnapshot)
   });
 }
 
@@ -434,25 +475,40 @@ function createInitialDraftSessions(): StaffDraftSession[] {
   ];
 }
 
-function createScheduleItem(session: StaffDraftSession, index: number, revision: number, nowUtc: string, baseSnapshot: EventSnapshot): ScheduleItem {
+function createScheduleItem(session: StaffDraftSession, index: number, dayOrder: number, revision: number, nowUtc: string, baseSnapshot: EventSnapshot): ScheduleItem {
   const startUtc = localEventTimeToUtc(session.day, session.start);
   const endUtc = localEventTimeToUtc(session.day, session.end);
   const visibility = audienceToScope(session.audience);
   const title = session.title.trim();
   const speaker = session.speaker.trim() || "Unassigned";
   const location = session.location.trim();
+  const id = stableUuid(session.id);
+  const previousItem = baseSnapshot.scheduleItems.find((item) => item.id === id) ??
+    baseSnapshot.scheduleItems.find((item) => scheduleIdentity(item) === scheduleIdentity({
+      startUtc,
+      eventTimeZone: baseSnapshot.event.timeZone,
+      title
+    }));
+  const summary = previousItem && !isSchedulePlaceholder(previousItem.description)
+    ? previousItem.summary
+    : speaker === "Unassigned"
+      ? `${title} takes place in ${location}.`
+      : `${title} with ${speaker}.`;
+  const description = previousItem && !isSchedulePlaceholder(previousItem.description)
+    ? previousItem.description
+    : summary;
 
   return {
-    id: stableUuid(session.id),
+    id,
     eventId: baseSnapshot.event.id,
     title,
     shortTitle: title.slice(0, 36),
-    summary: `${speaker} at ${location}.`,
-    description: "Published from the staff live-ops control room. Replace this with approved production copy.",
+    summary,
+    description,
     startUtc,
     endUtc,
     eventTimeZone: baseSnapshot.event.timeZone,
-    dayOrder: index,
+    dayOrder,
     locationId: stableUuid(`location:${location}`),
     locationName: location,
     speakerIds: speaker === "Unassigned"
@@ -465,7 +521,7 @@ function createScheduleItem(session: StaffDraftSession, index: number, revision:
     eligibilityScope: visibility,
     notificationScope: visibility,
     notificationOffsetsMinutes: parseReminderOffsets(session.reminders),
-    featured: index === 0,
+    featured: previousItem?.featured ?? index === 0,
     published: true,
     revision,
     updatedAt: nowUtc,
@@ -473,15 +529,20 @@ function createScheduleItem(session: StaffDraftSession, index: number, revision:
   };
 }
 
-function createLocations(sessions: StaffDraftSession[], eventId: string) {
-  return [...new Set(sessions.map((session) => session.location.trim()).filter(Boolean))].map((locationName, index, locations) => ({
-    id: stableUuid(`location:${locationName}`),
-    eventId,
-    name: locationName,
-    description: "Published staff-controlled event location.",
-    mapX: locations.length <= 1 ? 0.5 : 0.18 + (index / Math.max(locations.length - 1, 1)) * 0.64,
-    mapY: 0.36 + (index % 3) * 0.18
-  }));
+function createLocations(sessions: StaffDraftSession[], baseSnapshot: EventSnapshot) {
+  return [...new Set(sessions.map((session) => session.location.trim()).filter(Boolean))].map((locationName, index, locations) => {
+    const existing = baseSnapshot.locations.find((location) => normalizeText(location.name) === normalizeText(locationName));
+    return {
+      id: existing?.id ?? stableUuid(`location:${locationName}`),
+      eventId: baseSnapshot.event.id,
+      name: locationName,
+      description: existing && !isLocationPlaceholder(existing.description)
+        ? existing.description
+        : createLocationDescription(locationName),
+      mapX: existing?.mapX ?? (locations.length <= 1 ? 0.5 : 0.18 + (index / Math.max(locations.length - 1, 1)) * 0.64),
+      mapY: existing?.mapY ?? 0.36 + (index % 3) * 0.18
+    };
+  });
 }
 
 export function createNotificationJobs(snapshot: EventSnapshot) {
@@ -527,8 +588,32 @@ function parseReminderOffsets(value: string) {
 }
 
 function stableUuid(input: string) {
+  if (z.string().uuid().safeParse(input).success) {
+    return input;
+  }
+
   const hash = createHash("sha256").update(input).digest("hex");
   return `${hash.slice(0, 8)}-${hash.slice(8, 12)}-4${hash.slice(13, 16)}-8${hash.slice(17, 20)}-${hash.slice(20, 32)}`;
+}
+
+function eventDateKey(value: string, timeZone: string) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone,
+    year: "numeric"
+  }).formatToParts(new Date(value));
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((candidate) => candidate.type === type)?.value ?? "";
+  return `${part("year")}-${part("month")}-${part("day")}`;
+}
+
+function formatDraftDay(value: string, timeZone: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "short",
+    timeZone,
+    weekday: "short"
+  }).format(new Date(value));
 }
 
 function normalizeDraftSessions(sessions: StaffDraftSession[]): StaffDraftSession[] {

@@ -22,7 +22,7 @@ describe("temporary attendee AI", () => {
       nowUtc: demoSnapshot.serverTimeUtc
     });
 
-    expect(answer.title).toBe("Mike Tyson in the current app schedule");
+    expect(answer.title).toBe("Mike Tyson does not have a published appearance time yet");
     expect(answer.body).toContain("does not include a specific published appearance time yet");
     expect(answer.items).toHaveLength(0);
   });

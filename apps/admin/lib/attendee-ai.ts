@@ -66,7 +66,9 @@ export function createAttendeeConciergeAnswer({
 
   if (personMatch) {
     return createAnswer({
-      title: `${personMatch.name} in the current app schedule`,
+      title: personMatch.items.length > 0
+        ? `${personMatch.name} in the current app schedule`
+        : `${personMatch.name} does not have a published appearance time yet`,
       body:
         personMatch.items.length > 0
           ? `${personMatch.name} appears in the loaded schedule below.`

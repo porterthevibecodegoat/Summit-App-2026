@@ -1,9 +1,29 @@
 import { describe, expect, it } from "vitest";
-import { canSeeScheduleItem, getActiveOperationalNotices, getCountdownLabel, getEventPhase, getJumpToNowItem, getNowAndUpcoming, getSessionTemporalState, toEventTimeRange } from ".";
+import { canSeeScheduleItem, getActiveOperationalNotices, getCountdownLabel, getEventPhase, getJumpToNowItem, getNowAndUpcoming, getSessionTemporalState, sanitizePublishedSnapshotContent, toEventTimeRange } from ".";
 import { demoSnapshot } from "@not-alone/test-fixtures";
 import type { ScheduleItem } from "@not-alone/validation";
 
 describe("schedule domain", () => {
+  it("removes internal publishing placeholders from attendee snapshots", () => {
+    const firstItem = demoSnapshot.scheduleItems[0]!;
+    const firstLocation = demoSnapshot.locations[0]!;
+    const sanitized = sanitizePublishedSnapshotContent({
+      ...demoSnapshot,
+      event: { ...demoSnapshot.event, positioning: "Prototype attendee agenda." },
+      scheduleItems: [{
+        ...firstItem,
+        summary: "Program details may change as the 2026 agenda is finalized.",
+        description: "Published from the staff live-ops control room. Replace this with approved production copy."
+      }],
+      locations: [{ ...firstLocation, description: "Published staff-controlled event location." }]
+    }, demoSnapshot);
+
+    expect(sanitized.event.positioning).toBe(demoSnapshot.event.positioning);
+    expect(sanitized.scheduleItems[0]?.summary).toBe(firstItem.summary);
+    expect(sanitized.scheduleItems[0]?.description).toBe(firstItem.description);
+    expect(sanitized.locations[0]?.description).toBe(firstLocation.description);
+  });
+
   it("handles an event with no published schedule items yet", () => {
     const result = getNowAndUpcoming({
       snapshot: { ...demoSnapshot, scheduleItems: [] },

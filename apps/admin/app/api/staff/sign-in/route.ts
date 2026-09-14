@@ -26,9 +26,22 @@ export async function POST(request: NextRequest) {
   });
 
   if (!response.ok) {
+    if (response.status === 429) {
+      const retryAfter = response.headers.get("retry-after");
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "Too many sign-in links were requested. Use the newest email already sent or wait a few minutes before trying again."
+        },
+        retryAfter
+          ? { status: 429, headers: { "Retry-After": retryAfter } }
+          : { status: 429 }
+      );
+    }
+
     return NextResponse.json(
       { ok: false, error: "This email does not have an active staff invitation." },
-      { status: response.status === 429 ? 429 : 403 }
+      { status: 403 }
     );
   }
 

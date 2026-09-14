@@ -1,15 +1,25 @@
 import { Link, useLocalSearchParams } from "expo-router";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
 import { toEventTimeRange } from "@not-alone/domain";
 import { useSummit } from "../../components/summit-context";
 import { useResponsiveLayout } from "../../components/responsive-layout";
 
+const steveWozniakHeadshot = require("../../assets/steve-wozniak-headshot.jpg");
+
 export default function SessionDetailScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const params = useLocalSearchParams<{ id: string | string[]; startsAtUtc?: string | string[]; title?: string | string[] }>();
   const { snapshot } = useSummit();
   const layout = useResponsiveLayout();
-  const item = snapshot.scheduleItems.find((scheduleItem) => scheduleItem.id === id);
+  const id = firstParam(params.id);
+  const startsAtUtc = firstParam(params.startsAtUtc);
+  const title = firstParam(params.title);
+  const titleMatches = title
+    ? snapshot.scheduleItems.filter((scheduleItem) => scheduleItem.title === title)
+    : [];
+  const item = snapshot.scheduleItems.find((scheduleItem) => scheduleItem.id === id)
+    ?? titleMatches.find((scheduleItem) => scheduleItem.startUtc === startsAtUtc)
+    ?? (titleMatches.length === 1 ? titleMatches[0] : undefined);
   const speakers = snapshot.speakers.filter((speaker) => speaker.published && item?.speakerIds.includes(speaker.id));
 
   if (!item) {
@@ -20,6 +30,9 @@ export default function SessionDetailScreen() {
       </View>
     );
   }
+
+  const accessLabelsDiffer = item.eligibilityScope.label !== item.visibilityScope.label;
+  const hasExpandedDescription = item.description.trim() !== item.summary.trim();
 
   return (
     <ScrollView
@@ -36,30 +49,34 @@ export default function SessionDetailScreen() {
       {speakers.length > 0 ? (
         <View style={[styles.speakerSection, layout.marginStyle]}>
           <Text style={styles.sectionLabel}>{speakers.length === 1 ? "Speaker" : "Speakers"}</Text>
-          {speakers.map((speaker) => (
-            <View key={speaker.id} style={[styles.speakerPanel, layout.cardPaddingStyle]}>
-              {speaker.headshotUrl ? (
-                <Image accessibilityLabel={`${speaker.name} headshot`} source={{ uri: speaker.headshotUrl }} style={styles.speakerImage} />
-              ) : (
-                <View accessibilityLabel={speaker.name} style={styles.speakerFallback}>
-                  <Text style={styles.speakerInitials}>{initials(speaker.name)}</Text>
+          {speakers.map((speaker) => {
+            const speakerImage = getSpeakerImage(speaker);
+            return (
+              <View key={speaker.id} style={[styles.speakerPanel, layout.cardPaddingStyle]}>
+                {speakerImage ? (
+                  <Image accessibilityLabel={`${speaker.name} headshot`} resizeMode="cover" source={speakerImage} style={styles.speakerImage} />
+                ) : (
+                  <View accessibilityLabel={speaker.name} style={styles.speakerFallback}>
+                    <Text style={styles.speakerInitials}>{initials(speaker.name)}</Text>
+                  </View>
+                )}
+                <View style={styles.speakerText}>
+                  <Text style={styles.speakerName}>{speaker.name}</Text>
+                  <Text style={styles.speakerRole}>{speaker.role}</Text>
+                  {speaker.bio ? <Text style={styles.speakerBio}>{speaker.bio}</Text> : null}
                 </View>
-              )}
-              <View style={styles.speakerText}>
-                <Text style={styles.speakerName}>{speaker.name}</Text>
-                <Text style={styles.speakerRole}>{speaker.role}</Text>
-                {speaker.bio ? <Text style={styles.speakerBio}>{speaker.bio}</Text> : null}
               </View>
-            </View>
-          ))}
+            );
+          })}
         </View>
       ) : null}
 
       <View style={[styles.panel, layout.marginStyle, layout.cardPaddingStyle]}>
+        <Text style={styles.panelTitle}>Session details</Text>
         <DetailRow label="Location" value={item.locationName} />
-        <DetailRow label="Access" value={item.eligibilityScope.label} />
-        <DetailRow label="Visibility" value={item.visibilityScope.label} />
-        <DetailRow label="Status" value={item.status} />
+        <DetailRow label="Access" value={item.visibilityScope.label} />
+        {accessLabelsDiffer ? <DetailRow label="Eligibility" value={item.eligibilityScope.label} /> : null}
+        {item.status !== "scheduled" ? <DetailRow label="Status" value={item.status} /> : null}
       </View>
 
       <View style={[styles.actionGrid, layout.marginStyle]}>
@@ -77,20 +94,18 @@ export default function SessionDetailScreen() {
         </Link>
       </View>
 
-      <View style={[styles.panel, layout.marginStyle, layout.cardPaddingStyle]}>
-        <Text style={styles.panelTitle}>About this session</Text>
-        <Text style={styles.description}>{item.description}</Text>
-      </View>
-
-      <View style={[styles.panel, layout.marginStyle, layout.cardPaddingStyle]}>
-        <Text style={styles.panelTitle}>Event Context</Text>
-        <Text style={styles.description}>
-          {snapshot.event.name} brings together mental health advocates, artists, athletes, philanthropists,
-          clinicians, researchers, youth ambassadors, and business leaders at {snapshot.event.venueName}.
-        </Text>
-      </View>
+      {hasExpandedDescription ? (
+        <View style={[styles.panel, layout.marginStyle, layout.cardPaddingStyle]}>
+          <Text style={styles.panelTitle}>About this session</Text>
+          <Text style={styles.description}>{item.description}</Text>
+        </View>
+      ) : null}
     </ScrollView>
   );
+}
+
+function firstParam(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value;
 }
 
 function DetailRow({ label, value }: { label: string; value: string }) {
@@ -104,6 +119,11 @@ function DetailRow({ label, value }: { label: string; value: string }) {
 
 function initials(name: string) {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("");
+}
+
+function getSpeakerImage(speaker: { name: string; headshotUrl: string | null }): ImageSourcePropType | undefined {
+  if (speaker.headshotUrl) return { uri: speaker.headshotUrl };
+  return /steve wozniak/i.test(speaker.name) ? steveWozniakHeadshot : undefined;
 }
 
 const styles = StyleSheet.create({

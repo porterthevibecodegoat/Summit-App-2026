@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AccessibilityInfo,
   Animated,
@@ -59,6 +59,28 @@ export function OpeningGreeting() {
   const sweep = useRef(new Animated.Value(0)).current;
   const exit = useRef(new Animated.Value(1)).current;
   const sparkAnimations = useMemo(() => sparks.map(() => new Animated.Value(0)), []);
+
+  const handleEnter = useCallback(() => {
+    if (!enterReady) {
+      return;
+    }
+
+    if (reduceMotion) {
+      setVisible(false);
+      return;
+    }
+
+    Animated.timing(exit, {
+      duration: 360,
+      easing: Easing.inOut(Easing.cubic),
+      toValue: 0,
+      useNativeDriver: Platform.OS !== "web"
+    }).start(({ finished }) => {
+      if (finished) {
+        setVisible(false);
+      }
+    });
+  }, [enterReady, exit, reduceMotion]);
 
   useEffect(() => {
     if (!visible) {
@@ -213,27 +235,14 @@ export function OpeningGreeting() {
     };
   }, [ambient, buttonEntrance, entrance, exit, halo, reduceMotion, sparkAnimations, sweep, titleEntrance, visible]);
 
-  function handleEnter() {
-    if (!enterReady) {
+  useEffect(() => {
+    if (!visible || !enterReady) {
       return;
     }
 
-    if (reduceMotion) {
-      setVisible(false);
-      return;
-    }
-
-    Animated.timing(exit, {
-      duration: 360,
-      easing: Easing.inOut(Easing.cubic),
-      toValue: 0,
-      useNativeDriver: Platform.OS !== "web"
-    }).start(({ finished }) => {
-      if (finished) {
-        setVisible(false);
-      }
-    });
-  }
+    const autoEnterTimer = setTimeout(handleEnter, reduceMotion ? 1200 : 1800);
+    return () => clearTimeout(autoEnterTimer);
+  }, [enterReady, handleEnter, reduceMotion, visible]);
 
   if (!visible) {
     return null;
@@ -256,7 +265,7 @@ export function OpeningGreeting() {
               {
                 scale: entrance.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [1.14, 1.06]
+                  outputRange: [1.14, 1]
                 })
               },
               {
@@ -269,7 +278,7 @@ export function OpeningGreeting() {
           }
         ]}
       >
-        <ImageBackground source={launchArt} resizeMode="cover" style={styles.artwork}>
+        <ImageBackground imageStyle={styles.artworkImage} source={launchArt} resizeMode="cover" style={styles.artwork}>
           <View style={styles.deepScrim} />
           <Animated.View
             style={[
@@ -446,6 +455,10 @@ const styles = StyleSheet.create({
     flex: 1,
     overflow: "hidden"
   },
+  artworkImage: {
+    height: "100%",
+    width: "100%"
+  },
   deepScrim: {
     backgroundColor: "rgba(1, 6, 19, 0.16)",
     bottom: 0,
@@ -564,8 +577,7 @@ const styles = StyleSheet.create({
     fontFamily: typography.black,
     fontSize: 19,
     fontWeight: "900",
-    letterSpacing: 3.4,
-    paddingLeft: 3.4
+    letterSpacing: 0
   },
   yearCapsuleLandscape: {
     height: 34,
@@ -611,7 +623,6 @@ const styles = StyleSheet.create({
     fontFamily: typography.black,
     fontSize: 13,
     fontWeight: "900",
-    letterSpacing: 2.2,
-    paddingLeft: 2.2
+    letterSpacing: 0
   }
 });

@@ -12,6 +12,7 @@ type StaffSession = {
 const LEGACY_ACCESS_TOKEN_KEY = "not-alone.staff.supabaseAccessToken";
 const LEGACY_REFRESH_TOKEN_KEY = "not-alone.staff.supabaseRefreshToken";
 const LEGACY_EXPIRES_AT_KEY = "not-alone.staff.supabaseTokenExpiresAt";
+const AUTH_REQUEST_TIMEOUT_MS = 8000;
 
 export function StaffAuthBridge({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -20,6 +21,7 @@ export function StaffAuthBridge({ children }: { children: ReactNode }) {
   const [staffSession, setStaffSession] = useState<StaffSession | null>(null);
   const [email, setEmail] = useState("");
   const [authMessage, setAuthMessage] = useState("");
+  const [sendingLink, setSendingLink] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -27,35 +29,46 @@ export function StaffAuthBridge({ children }: { children: ReactNode }) {
     void bootstrapSession();
 
     async function bootstrapSession() {
-      const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
-      const accessToken = hash.get("access_token") ?? window.localStorage.getItem(LEGACY_ACCESS_TOKEN_KEY);
-      const refreshToken = hash.get("refresh_token") ?? window.localStorage.getItem(LEGACY_REFRESH_TOKEN_KEY);
-      const legacyExpiresAt = Number(window.localStorage.getItem(LEGACY_EXPIRES_AT_KEY) ?? 0);
-      const expiresIn = Number(hash.get("expires_in") ?? 0) || Math.max(Math.floor((legacyExpiresAt - Date.now()) / 1_000), 0);
+      try {
+        const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+        const accessToken = hash.get("access_token") ?? window.localStorage.getItem(LEGACY_ACCESS_TOKEN_KEY);
+        const refreshToken = hash.get("refresh_token") ?? window.localStorage.getItem(LEGACY_REFRESH_TOKEN_KEY);
+        const legacyExpiresAt = Number(window.localStorage.getItem(LEGACY_EXPIRES_AT_KEY) ?? 0);
+        const expiresIn = Number(hash.get("expires_in") ?? 0) || Math.max(Math.floor((legacyExpiresAt - Date.now()) / 1_000), 0);
 
-      if (accessToken) {
-        window.history.replaceState(null, document.title, `${window.location.pathname}${window.location.search}`);
-        const exchange = await fetch("/api/staff/session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ accessToken, refreshToken, expiresIn }),
-          cache: "no-store"
-        });
-        if (!exchange.ok) {
-          const result = (await exchange.json().catch(() => ({}))) as { error?: string };
-          clearLegacySession();
-          if (active) {
-            setAuthMessage(result.error ?? "The secure sign-in link could not be verified.");
-            setAuthState("signed-out");
+        if (accessToken) {
+          window.history.replaceState(null, document.title, `${window.location.pathname}${window.location.search}`);
+          const exchange = await fetchWithTimeout("/api/staff/session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ accessToken, refreshToken, expiresIn }),
+            cache: "no-store"
+          });
+          if (!exchange.ok) {
+            const result = (await exchange.json().catch(() => ({}))) as { error?: string };
+            clearLegacySession();
+            if (active) {
+              setAuthMessage(result.error ?? "The secure sign-in link could not be verified.");
+              setAuthState("signed-out");
+            }
+            return;
           }
-          return;
+          clearLegacySession();
+          router.refresh();
         }
-        clearLegacySession();
-        router.refresh();
-      }
 
-      if (active) {
-        await verifyStaffSession();
+        if (active) {
+          await verifyStaffSession();
+        }
+      } catch (error) {
+        clearLegacySession();
+        if (active) {
+          setStaffSession(null);
+          setAuthMessage(error instanceof Error && error.name !== "AbortError"
+            ? error.message
+            : "The staff session service did not respond. Please sign in again.");
+          setAuthState("signed-out");
+        }
       }
     }
 
@@ -67,11 +80,11 @@ export function StaffAuthBridge({ children }: { children: ReactNode }) {
   async function verifyStaffSession() {
     setAuthState("checking");
     try {
-      let response = await fetch("/api/staff/me", { cache: "no-store" });
+      let response = await fetchWithTimeout("/api/staff/me", { cache: "no-store" });
       if (response.status === 401) {
-        const refreshed = await fetch("/api/staff/session", { method: "PATCH", cache: "no-store" });
+        const refreshed = await fetchWithTimeout("/api/staff/session", { method: "PATCH", cache: "no-store" });
         if (refreshed.ok) {
-          response = await fetch("/api/staff/me", { cache: "no-store" });
+          response = await fetchWithTimeout("/api/staff/me", { cache: "no-store" });
         }
       }
 
@@ -99,9 +112,10 @@ export function StaffAuthBridge({ children }: { children: ReactNode }) {
       return;
     }
 
+    setSendingLink(true);
     setAuthMessage("Sending a secure sign-in link...");
     try {
-      const response = await fetch("/api/staff/sign-in", {
+      const response = await fetchWithTimeout("/api/staff/sign-in", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: normalizedEmail }),
@@ -113,7 +127,11 @@ export function StaffAuthBridge({ children }: { children: ReactNode }) {
       }
       setAuthMessage("Check your email for the secure staff sign-in link.");
     } catch (error) {
-      setAuthMessage(error instanceof Error ? error.message : "Unable to send the sign-in link.");
+      setAuthMessage(error instanceof Error && error.name !== "AbortError"
+        ? error.message
+        : "The sign-in service did not respond. Please try again.");
+    } finally {
+      setSendingLink(false);
     }
   }
 
@@ -146,7 +164,9 @@ export function StaffAuthBridge({ children }: { children: ReactNode }) {
                 type="email"
                 value={email}
               />
-              <button type="button" onClick={requestSignInLink}>Email Secure Sign-In Link</button>
+              <button disabled={sendingLink} type="button" onClick={requestSignInLink}>
+                {sendingLink ? "Sending..." : "Email Secure Sign-In Link"}
+              </button>
               {authMessage ? <span className="staffAuthMessage">{authMessage}</span> : null}
             </div>
           ) : <div className="loginProgress" />}
@@ -175,4 +195,15 @@ function clearLegacySession() {
   window.localStorage.removeItem(LEGACY_ACCESS_TOKEN_KEY);
   window.localStorage.removeItem(LEGACY_REFRESH_TOKEN_KEY);
   window.localStorage.removeItem(LEGACY_EXPIRES_AT_KEY);
+}
+
+async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}) {
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), AUTH_REQUEST_TIMEOUT_MS);
+
+  try {
+    return await fetch(input, { ...init, signal: controller.signal });
+  } finally {
+    window.clearTimeout(timeout);
+  }
 }

@@ -45,7 +45,7 @@ check(
 
 const forbidden = [
   ["Supabase service credential", /sb_secret_[A-Za-z0-9_-]{8,}/],
-  ["OpenAI credential", /sk-[A-Za-z0-9_-]{16,}/],
+  ["OpenAI credential", /(?<![A-Za-z0-9_-])sk-(?:proj-|svcacct-)?[A-Za-z0-9_-]{16,}(?![A-Za-z0-9_-])/],
   ["service-role environment name", /SUPABASE_SERVICE_ROLE_KEY/],
   ["OpenAI environment name", /OPENAI_API_KEY/],
   ["cron credential name", /CRON_SECRET/],
