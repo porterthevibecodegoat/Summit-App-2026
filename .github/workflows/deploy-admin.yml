@@ -1,0 +1,33 @@
+name: Deploy Staff Portal
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Trigger Vercel production deployment
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger deployment
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$VERCEL_DEPLOY_HOOK_URL" ]; then
+            echo "VERCEL_DEPLOY_HOOK_URL is not configured." >&2
+            exit 1
+          fi
+
+          response="$(curl --fail --silent --show-error \
+            --request POST \
+            "$VERCEL_DEPLOY_HOOK_URL")"
+
+          node -e '
+            const response = JSON.parse(process.argv[1]);
+            const job = response.job ?? response;
+            console.log(`Vercel accepted deployment ${job.id ?? "(pending id)"}.`);
+            if (job.url) console.log(`Deployment: https://${job.url}`);
+          ' "$response"
