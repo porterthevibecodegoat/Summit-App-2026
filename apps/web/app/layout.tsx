@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: "The Not Alone Summit attendee website and connection directory.",
   manifest: "/manifest.webmanifest",
   alternates: { canonical: "/" },
-  icons: { icon: [{ url: "/icf-mark-transparent.png", sizes: "1254x1254", type: "image/png" }], apple: "/icf-mark-transparent.png" },
+  icons: { icon: [{ url: "/challenge-logo.png", sizes: "2424x2699", type: "image/png" }], apple: "/challenge-logo.png" },
   appleWebApp: { capable: true, title: "notalonesummit.org", statusBarStyle: "black-translucent" }
 };
 export const viewport: Viewport = { themeColor: "#8177c9" };
