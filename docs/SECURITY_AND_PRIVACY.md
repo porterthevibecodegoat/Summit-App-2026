@@ -17,7 +17,7 @@
 
 ## Data Minimization
 
-The attendee app does not currently require an account. My Schedule remains on the device, reducing identity and deletion obligations. Device push tokens are pseudonymous operational identifiers and should be retained only while useful for the event.
+The attendee app does not currently require an account and does not store a personal schedule. Device push tokens are pseudonymous operational identifiers and should be retained only while useful for the event.
 
 See `docs/PRIVACY_DATA_INVENTORY.md` for the working disclosure inventory.
 

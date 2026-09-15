@@ -4,8 +4,7 @@ This is a working engineering inventory, not final legal advice. Legal/privacy o
 
 | Data | Purpose | Location | Linked To Identity | Retention / Control |
 | --- | --- | --- | --- | --- |
-| Published event snapshot | Offline schedule, map, info, help | App SQLite cache | No | Replaced/pruned by newer revisions; removed with app data |
-| Saved session IDs | My Schedule | App SQLite database | No account currently | User-editable; removed with app data |
+| Published event snapshot | Offline schedule, map, info, help | Device AsyncStorage cache | No | Replaced by newer revisions; removed with app data |
 | Expo push token | Operational event notifications | Supabase server tables | Pseudonymous device registration | Disable on invalid token; define post-event deletion window |
 | Device platform/app version/access group | Routing and delivery diagnostics | Supabase server tables | Associated with push registration | Same retention as push token |
 | Concierge question | Answer an attendee request | Server request processing/provider when AI enabled | Not intentionally linked | Do not store by default; provider calls use minimal retention configuration |
@@ -33,6 +32,6 @@ Contacts, photos, camera, microphone, precise location, health records, payment 
 - Notification delivery attempts: delete 90 days after the event after operational review.
 - Staff publication and audit history: retain 12 months after the event.
 - Concierge questions: do not store in application tables by default.
-- Device-local saved sessions and snapshot cache: remain until removed in the app or with app data.
+- Device-local snapshot cache: remains until replaced by a newer revision or removed with app data.
 
 These are conservative engineering defaults and require legal/privacy owner approval before production activation.

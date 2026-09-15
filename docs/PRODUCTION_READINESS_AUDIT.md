@@ -21,11 +21,11 @@ The authenticated staff API exposes the same report at `GET /api/production/read
 - Strict target matching for Official Change AI; ambiguous or missing sessions produce no mutation proposal.
 - PDF/TXT/CSV extraction and staged import review with file-size/type safeguards and no automatic publishing.
 - Header-aware CSV ingestion with quoted-field support, deterministic duplicate handling, schema validation, and a downloadable staff template.
-- Mobile SQLite cache, resilient synchronization, event-clock correction, refresh triggers, stale data rejection, and local My Schedule persistence.
+- Mobile AsyncStorage cache, resilient synchronization, event-clock correction, refresh triggers, and stale data rejection.
 - Durable push dispatcher and receipt reconciliation code with database claims, retries, attempt audit, and invalid-token handling.
 - Premium app icon/launch art, public privacy/support drafts, and initial reviewer documentation.
 - Invite-only staff sign-in with automatic `ADMIN` activation for approved invited identities.
-- Deployed Supabase publish-to-mobile proof completed on 2026-09-09: canonical revision 3, HTTPS snapshot revision 3, and native SQLite cache revision 3 with 34 schedule items.
+- Deployed Supabase publish-to-mobile proof rerun on 2026-09-15: HTTPS snapshot revision 4 and native Simulator cache revision 4 matched across 34 schedule items, 12 locations, and 3 content pages. Repeat this proof after creating the signed TestFlight release candidate.
 - Live disposable-identity RLS matrix passes 17/17 checks across anonymous, viewer, editor, publisher, admin, and protected publish-RPC boundaries, with automatic cleanup.
 - Public privacy and support pages are live; App Store metadata, privacy-answer draft, QA matrix, and incident response runbook are prepared.
 - Release preflight passes configuration, asset, policy URL, live API, and secret-boundary checks.

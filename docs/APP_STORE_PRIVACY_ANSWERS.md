@@ -12,7 +12,6 @@ Complete App Store Connect from the exact production behavior. This is the engin
 
 - Attendee account required: `No`
 - Name, email, phone, contacts, photos, precise location, payment, health records: `Not collected by the app`
-- Saved sessions: stored only on the device and not linked to an identity
 - Published event content: cached only to support offline use
 
 ## Notifications
@@ -37,7 +36,7 @@ Hosting and infrastructure providers may process IP address, request metadata, e
 - Notification delivery attempts: through 90 days after the event
 - Staff publication/audit history: 12 months after the event
 - Concierge questions: not stored by the application
-- Saved schedule and snapshot cache: until the user deletes the app or app data
+- Published snapshot cache: until replaced by a newer revision or the user deletes the app or app data
 
 ## Final Approval Questions
 

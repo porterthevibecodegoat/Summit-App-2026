@@ -20,6 +20,24 @@ export const colors = {
   warning: "#D8B867"
 } as const;
 
+export const brandColors = {
+  summit: {
+    deep: "#21113F",
+    primary: "#4B2782",
+    bright: "#7045B8",
+    soft: "#EEE8F8"
+  },
+  awards: {
+    ink: "#17151B",
+    gold: "#D7B15D",
+    goldSoft: "#F3DDA4"
+  },
+  foundation: {
+    sky: "#8BD6E8",
+    paper: "#FBFAFC"
+  }
+} as const;
+
 export const spacing = {
   xs: 4,
   sm: 8,

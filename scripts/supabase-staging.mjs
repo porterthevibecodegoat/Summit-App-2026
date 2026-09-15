@@ -2,13 +2,13 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { resolve } from "node:path";
 import { eventSnapshotSchema } from "../packages/validation/src/index.ts";
+import { demoSnapshot } from "../packages/test-fixtures/src/index.ts";
 
 const command = process.argv[2] ?? "check";
 const rootDir = findRepoRoot(process.cwd());
 const envEntries = loadDotEnvEntries(rootDir);
 const env = Object.fromEntries(envEntries.map((entry) => [entry.key, entry.value]));
-const snapshotPath = resolve(rootDir, "apps/mobile/assets/demo-snapshot.json");
-const snapshot = eventSnapshotSchema.parse(JSON.parse(readFileSync(snapshotPath, "utf8")));
+const snapshot = eventSnapshotSchema.parse(demoSnapshot);
 const urlResult = readEnvValue(["SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_URL"], isSupabaseUrl);
 const publicKeyResult = readEnvValue(
   ["NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "SUPABASE_ANON_KEY"],

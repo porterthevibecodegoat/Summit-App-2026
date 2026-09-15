@@ -1,16 +1,16 @@
 # Release QA Matrix
 
-Status reflects evidence available on 2026-09-11. Re-run the commands for every release candidate.
+Status reflects evidence available on 2026-09-15. Re-run the commands for every release candidate.
 
 | Area | Current Evidence | Status |
 | --- | --- | --- |
-| Type safety and unit behavior | Lint, typecheck, and all 82 tests passed | Passed |
+| Type safety and unit behavior | Lint, typecheck, and all 86 tests passed | Passed |
 | Admin production compilation | Next.js production build passed with 26 application/API routes | Passed |
 | Dependency advisory scan | `pnpm audit --prod --audit-level moderate` found no known vulnerabilities | Passed |
 | Public staging API | Supabase health, snapshot revision 4, 34 sessions, and protected readiness behavior verified | Passed |
 | Release configuration and assets | `pnpm release:preflight` passed 28/28 checks | Passed |
 | Supabase role/RLS boundaries | `pnpm security:rls` passed 17/17 checks; disposable records cleaned up | Passed |
-| Portal publish to native cache | Revision 4, all 34 sessions, 12 locations, and 3 content pages matched with `pnpm mobile:sync-verify` | Passed on Simulator |
+| Portal publish to native cache | Revision 4, all 34 sessions, 12 locations, and 3 content pages matched with `pnpm mobile:sync-verify` on 2026-09-15 | Passed on current Simulator cache |
 | Native Release compilation | Xcode Release build and Apple bundle validation passed for an explicit arm64 Simulator destination | Passed |
 | Compiled iOS bundle | `pnpm mobile:release-verify` passed 18/18 identity, privacy, permission, HTTPS, router-hardening, and secret-boundary checks | Passed |
 | Native attendee visual fit | Release build inspected on iPhone 17 Pro and iPad mini across Home, Schedule, Ask AI, Map, Info, and session detail with no clipping or overlap | Passed on Simulator |

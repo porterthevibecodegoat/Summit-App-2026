@@ -17,13 +17,12 @@ pnpm production:readiness
 - Read-only State AI and review-required Official Change AI. The deterministic no-key mode refuses ambiguous edits rather than guessing.
 - PDF, TXT, and CSV import staging with validation, skipped-row reporting, import history, and no direct-to-publish path.
 - Atomic publish transaction, immutable revisions, audit records, notification job regeneration, and restricted database function privileges.
-- SQLite mobile snapshot cache, stale-revision protection, server-clock offset, launch/foreground/interval/manual refresh, notification-open refresh, and corrupt-cache recovery.
-- Local My Schedule persistence with automatic pruning when sessions disappear.
+- Device AsyncStorage snapshot cache, stale-revision protection, server-clock offset, launch/foreground/interval/manual refresh, notification-open refresh, and corrupt-cache recovery.
 - Durable push dispatch and receipt worker: guarded claims, retries, Expo batching, delivery attempts, receipt reconciliation, and invalid-device disabling.
 - Premium icon and launch artwork, public privacy/support drafts, responsive staff portal, and attendee information links.
 - HTTPS staff portal/API deployment backed by the staging Supabase project.
 - Invite-only staff sign-in; authenticated invited staff are automatically activated as `ADMIN` by the current product policy.
-- Production-path sync proof: an unchanged staff publish advanced the canonical snapshot to revision 3, the HTTPS API returned revision 3, and the running iOS Simulator app refreshed its SQLite cache from revision 2 to revision 3 with all 34 sessions.
+- Production-path sync proof: an unchanged staff publish advanced the canonical snapshot to revision 3, the HTTPS API returned revision 3, and the running iOS Simulator app refreshed its native cache from revision 2 to revision 3 with all 34 sessions. Repeat this proof on the current release candidate before TestFlight.
 
 ## Remaining Approved Content
 

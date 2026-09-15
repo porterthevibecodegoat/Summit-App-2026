@@ -17,7 +17,6 @@ jobs:
       EXPO_PUBLIC_API_BASE_URL: https://summit-app-2026-admin.vercel.app
       APP_STORE_PRIVACY_URL: https://summit-app-2026-admin.vercel.app/privacy
       APP_SUPPORT_URL: https://summit-app-2026-admin.vercel.app/support
-      EXPO_PUBLIC_ENABLE_DEMO_MODE: "false"
       EXPO_PUBLIC_ENABLE_PUSH_DELIVERY: "false"
     steps:
       - uses: actions/checkout@v5

@@ -1,10 +1,11 @@
 # Not Alone Summit Platform
 
-Official app platform for the 2026 Not Alone Summit, built as a production-oriented event system for Inspiring Children Foundation.
+Connected digital platform for the 2026 Not Alone Summit and Not Alone Awards, built for Inspiring Children Foundation.
 
 ## Apps
 
 - `apps/mobile`: Expo React Native attendee app.
+- `apps/web`: Public website and responsive browser event companion.
 - `apps/admin`: Next.js staff Event Control Portal.
 
 ## Commands
@@ -14,6 +15,7 @@ pnpm install
 pnpm dev
 pnpm dev:mobile
 pnpm dev:admin
+pnpm dev:web
 pnpm ios
 pnpm mobile:web
 pnpm mobile:preview
@@ -27,7 +29,7 @@ pnpm production:readiness
 
 ## Current Status
 
-The staging backend and staff portal are live over HTTPS. Supabase Auth, invited-staff administrator activation, atomic schedule publishing, the public snapshot API, and native mobile refresh are connected. A controlled production-path verification published revision 3 and the running iOS app adopted the same 34-session revision without reinstalling.
+The staging backend and staff portal are live over HTTPS. Supabase Auth, invited-staff administrator activation, atomic schedule publishing, the public snapshot API, and native mobile refresh are connected. The public web application now provides distinct Summit and Awards experiences plus a responsive browser event companion that reads the same canonical published event snapshot as mobile.
 
 Push delivery remains intentionally disabled until Apple credentials and physical-device validation are complete. Server-side OpenAI integration is deployed with deterministic fallback; live model responses remain blocked only by provider account credits and final evaluation sign-off. Final 2026 content, legal approval, accessibility/device review, TestFlight, and App Store submission also remain release gates.
 

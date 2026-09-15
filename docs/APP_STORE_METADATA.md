@@ -17,19 +17,18 @@ This copy is ready for App Store Connect entry. Final event facts, screenshots, 
 
 ## Promotional Text
 
-Your calm, beautifully organized companion for the Not Alone Summit, with the live schedule, venue guidance, saved sessions, event updates, and answers in one place.
+Your calm, beautifully organized companion for the Not Alone Summit, with the live schedule, venue guidance, event updates, and answers in one place.
 
 ## Description
 
 Not Alone Summit is the official attendee companion from Inspiring Children Foundation.
 
-Move through the event with clarity. See what is happening now, understand what is coming next, explore the complete day-by-day schedule, save sessions that matter to you, and find venue information without searching through emails or printed agendas.
+Move through the event with clarity. See what is happening now, understand what is coming next, explore the complete day-by-day schedule, and find venue information without searching through emails or printed agendas.
 
 The app includes:
 
 - A live event home screen focused on what is happening now and next
 - A clear day-by-day schedule with session details
-- A personal, device-local saved schedule
 - Venue and room guidance
 - Published event information and attendee support
 - An event concierge grounded in approved summit information
@@ -46,7 +45,7 @@ The concierge provides event information only. It is not medical, emergency, or 
 
 ## Version 1.0 Release Notes
 
-Welcome to the official Not Alone Summit attendee app. View the live schedule, save sessions, navigate event spaces, receive optional operational updates, and find the information you need throughout the summit.
+Welcome to the official Not Alone Summit attendee app. View the live schedule, navigate event spaces, receive optional operational updates, and find the information you need throughout the summit.
 
 ## Initial Age-Rating Position
 
