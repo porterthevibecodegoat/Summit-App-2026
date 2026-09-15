@@ -227,7 +227,7 @@ function createPrototypeSchedule(): ScheduleItem[] {
       summary: "A grounding movement session to begin the afternoon.",
       locationId: locationIds.wellnessZoneOne,
       locationName: "Lafleur - Wellness Room Zone 1",
-      speakerIds: [speakerIds.yvette],
+      speakerIds: [],
       offsets: [15]
     },
     {
@@ -240,7 +240,7 @@ function createPrototypeSchedule(): ScheduleItem[] {
       summary: "A high-energy movement session focused on strength, stamina, and an energizing start to the summit.",
       locationId: locationIds.wellnessZoneOne,
       locationName: "Lafleur - Wellness Room Zone 1",
-      speakerIds: [speakerIds.wade],
+      speakerIds: [],
       offsets: [15]
     },
     {
@@ -376,7 +376,7 @@ function createPrototypeSchedule(): ScheduleItem[] {
       summary: "A short morning pilates session.",
       locationId: locationIds.wellnessZoneOne,
       locationName: "Lafleur - Wellness Room Zone 1",
-      speakerIds: [speakerIds.yvette],
+      speakerIds: [],
       offsets: [15]
     },
     {

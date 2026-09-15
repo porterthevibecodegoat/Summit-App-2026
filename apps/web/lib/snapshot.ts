@@ -19,7 +19,7 @@ export type WebScheduleItem = Pick<
 
 export function publicScheduleItems(snapshot: EventSnapshot): WebScheduleItem[] {
   return snapshot.scheduleItems
-    .filter((item) => item.published && item.visibilityScope.id === "public")
+    .filter((item) => item.published)
     .sort((left, right) => left.startUtc.localeCompare(right.startUtc))
     .map(({ id, title, shortTitle, summary, startUtc, endUtc, eventTimeZone, locationName, status, featured }) => ({
       id,

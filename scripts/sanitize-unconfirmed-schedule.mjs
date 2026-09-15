@@ -40,7 +40,9 @@ const unsupportedNameReplacements = [
   [/\bJewel\b/gi, "featured artist"],
   [/Kelsey Patel/gi, "meditation guide"],
   [/Tallulah Willis/gi, "featured guest"],
-  [/Rachel Platten/gi, "featured artist"]
+  [/Rachel Platten/gi, "featured artist"],
+  [/Yvette(?: Noel-Schure)?/gi, "wellness facilitator"],
+  [/Dwyane Wade|\bWade\b/gi, "fitness facilitator"]
 ];
 const nowUtc = new Date().toISOString();
 const nextRevision = current.revision + 1;
