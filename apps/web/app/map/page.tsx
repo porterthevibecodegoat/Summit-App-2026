@@ -1,0 +1,1 @@
+export default function MapPage() { return <main className="contentPage"><p className="eyebrow">Wynn Las Vegas</p><h1>Summit Map</h1><div className="mapPlaceholder"><span>Venue map coming soon</span><p>Room locations and accessible routes will be published after venue approval.</p></div></main>; }

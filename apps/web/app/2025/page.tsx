@@ -1,0 +1,7 @@
+import Link from "next/link";
+import { people2025 } from "../../lib/people";
+
+export default function ArchivePage() {
+  const founders = people2025.filter((person) => person.categories.includes("Founders")).sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
+  return <main className="contentPage"><p className="eyebrow">Past summit archive</p><h1>Not Alone Summit 2025</h1><p className="lead">Speakers, awards, partners, and the 2025 face book remain together in this archive. The active directory defaults to 2026.</p><div className="archiveLinks"><a href="#speakers">Speakers</a><a href="#awards">Awards</a><a href="#partners">Partners</a></div><section id="speakers"><h2>2025 people</h2><div className="peopleGrid">{people2025.map((person) => <Link className="personCard" href={`/directory/${person.slug}`} key={person.slug}><div className="portrait">{person.image ? <img src={person.image} alt="" /> : <span>{person.name.split(" ").map((part) => part[0]).slice(0,2).join("")}</span>}</div><div><h3>{person.name}</h3><p>{person.role}</p></div></Link>)}</div></section><section><h2>Founders order updates</h2>{founders.map((person) => <p key={person.slug}>{person.order}. {person.name}</p>)}</section><section id="awards"><h2>Awards</h2><p>2025 awards content remains part of this archive.</p></section><section id="partners"><h2>Partners</h2><p>Villa Bibiana is retained only as historical 2025 information.</p></section></main>;
+}

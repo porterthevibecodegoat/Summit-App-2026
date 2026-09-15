@@ -1,0 +1,1 @@
+export default function SchedulePage() { return <main className="contentPage"><p className="eyebrow">Plan your summit</p><h1>2026 Schedule</h1><div className="noticeCard"><h2>Programming is being finalized.</h2><p>The web and native app read the same published schedule. Approved sessions will appear here automatically.</p></div></main>; }
