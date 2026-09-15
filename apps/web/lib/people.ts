@@ -57,7 +57,8 @@ export const people2026: SummitPerson[] = [
   make("Caroline Jones", ["Musicians", "Sponsors"], "Singer-Songwriter and Summit Sponsor", 2026, { image: "/people/caroline-jones.png" }),
   make("Nick Dana", ["Sponsors"], "Summit Sponsor", 2026, { image: "/people/nick-dana.png" }),
   make("Lexi Hensler", ["Entertainers & Athletes"], "Speaker or performer — details pending approval", 2026, { image: "/people/lexi-hensler.png" }),
-  ...["Margaret Hines", "Brandon Saho", "Caroline Silby", "Anthony Ramos", "Mario Martinez", "Alana Springsteen"].map((name) => make(name, ["Entertainers & Athletes"], "Speaker or performer — details pending approval")),
+  ...["Brandon Saho", "Caroline Silby", "Anthony Ramos", "Mario Martinez", "Alana Springsteen"].map((name) => make(name, ["Entertainers & Athletes"], "Speaker or performer — details pending approval")),
+  make("Margaret Hines", ["Business Leaders & Philanthropists"], "Business leader and philanthropist", 2026, { image: "/people/margaret-hines.png" }),
   ...["John Ratcliff", "Jessica Edwards", "Morgan Marler", "Erica McGraw", "Jay McGraw", "Leah Smith", "Michael Townsend"].map((name) => make(name, ["Business Leaders & Philanthropists"], "Summit participant — details pending approval")),
   ...["Casey Caruso", "Paige Neuenschwander", "Payton McDonald", "Sydney Fleischmann", "Porter Winterton", "Bianca Mok"].map((name) => make(name, ["Producers"], "Associate Producer")),
   ...["Aphrah Brokaw", "Clark Cummings", "Jan Thwaites", "Sally Dewhurst", "Sophie Novak", "Trent Alenik", "Trevor Short"].map((name) => make(name, ["Producers"], "Summit producer or staff — details pending approval"))

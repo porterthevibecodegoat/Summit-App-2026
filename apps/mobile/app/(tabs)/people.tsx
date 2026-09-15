@@ -3,7 +3,7 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-nati
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
 
-type Category = "Co-Chairs" | "Hosts" | "Founders" | "Mental Health Nonprofit Founding Partners" | "Musicians" | "Entertainers & Athletes" | "Experts" | "Sponsors" | "Producers" | "Attendees";
+type Category = "Co-Chairs" | "Hosts" | "Founders" | "Mental Health Nonprofit Founding Partners" | "Musicians" | "Entertainers & Athletes" | "Experts" | "Business Leaders & Philanthropists" | "Sponsors" | "Producers" | "Attendees";
 type Person = { name: string; role: string; category: Category; secondaryCategory?: Category; image?: string };
 
 const people: Person[] = [
@@ -27,6 +27,7 @@ const people: Person[] = [
   { name: "Loni Love", role: "Comedian and Not Alone Awards Host", category: "Hosts", secondaryCategory: "Entertainers & Athletes", image: "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156f6f1b4111d77a8bc8/1762071920597/Loni+Love+Alex+Hill+sq+copy.jpg" },
   { name: "Mike Majlak", role: "Entertainer and podcast host", category: "Entertainers & Athletes", image: "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68df05be96aceb2b1149c844/1759446467479/Mike+Majlak.png?format=500w" },
   { name: "Lexi Hensler", role: "Speaker or performer — details pending approval", category: "Entertainers & Athletes", image: "local:lexi" },
+  { name: "Margaret Hines", role: "Business leader and philanthropist", category: "Business Leaders & Philanthropists", image: "local:margaret" },
   { name: "Marc Brackett", role: "Psychologist, Yale", category: "Experts", image: "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defbcb1087564f13f32bdc/1759443920958/Marc+Brackett.png?format=500w" },
   { name: "Wendy Oliver-Pyatt", role: "Internationally Recognized Psychiatrist, Author & Educator", category: "Experts", image: "local:wendy" },
   { name: "David Eagleman", role: "Neuroscientist & Inventor", category: "Experts", image: "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713aa32f0d432b696a34f/1762071467583/David+Eagleman.jpg?format=500w" },
@@ -40,7 +41,7 @@ const people: Person[] = [
   { name: "Bianca Mok", role: "Associate Producer", category: "Producers" },
   { name: "Morgan Marler", role: "Summit attendee", category: "Attendees" }
 ];
-const categories: Category[] = ["Co-Chairs", "Hosts", "Founders", "Mental Health Nonprofit Founding Partners", "Musicians", "Entertainers & Athletes", "Experts", "Sponsors", "Producers", "Attendees"];
+const categories: Category[] = ["Co-Chairs", "Hosts", "Founders", "Mental Health Nonprofit Founding Partners", "Musicians", "Entertainers & Athletes", "Experts", "Business Leaders & Philanthropists", "Sponsors", "Producers", "Attendees"];
 
 export default function PeopleScreen() {
   const [category, setCategory] = useState<Category>("Co-Chairs");
@@ -48,7 +49,7 @@ export default function PeopleScreen() {
   return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={styles.content}>
     <Text style={styles.eyebrow}>2026 Summit</Text><Text style={styles.title}>Featuring</Text><Text style={styles.intro}>Meet the people advancing emotional and mental health through science, lived experience, storytelling, music, and innovation.</Text>
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabs}>{categories.map((item) => <Pressable key={item} onPress={() => setCategory(item)} style={[styles.tab, item === category && styles.activeTab]}><Text style={[styles.tabText, item === category && styles.activeTabText]}>{item}</Text></Pressable>)}</ScrollView>
-    <View style={styles.grid}>{visible.map((person, index) => <Pressable key={`${person.name}-${index}`} style={styles.card}><View style={styles.portrait}>{person.image ? <Image source={person.image === "local:nami" ? require("../../assets/nami.png") : person.image === "local:caroline" ? require("../../assets/caroline-jones.png") : person.image === "local:nick" ? require("../../assets/nick-dana.png") : person.image === "local:wendy" ? require("../../assets/wendy-oliver-pyatt.jpg") : person.image === "local:jennifer" ? require("../../assets/jennifer-smorgon.png") : person.image === "local:mcgraw" ? require("../../assets/erica-jay-mcgraw.png") : person.image === "local:resonance" ? require("../../assets/resonance-philanthropies.png") : person.image === "local:lexi" ? require("../../assets/lexi-hensler.png") : { uri: person.image }} style={styles.image} /> : <Text style={styles.initials}>{person.name.split(" ").map((part) => part[0]).slice(0,2).join("")}</Text>}</View><Text style={styles.name}>{person.name}</Text><Text style={styles.role}>{person.role}</Text><Text style={styles.connect}>View bio · Connect</Text></Pressable>)}</View>
+    <View style={styles.grid}>{visible.map((person, index) => <Pressable key={`${person.name}-${index}`} style={styles.card}><View style={styles.portrait}>{person.image ? <Image source={person.image === "local:nami" ? require("../../assets/nami.png") : person.image === "local:caroline" ? require("../../assets/caroline-jones.png") : person.image === "local:nick" ? require("../../assets/nick-dana.png") : person.image === "local:wendy" ? require("../../assets/wendy-oliver-pyatt.jpg") : person.image === "local:jennifer" ? require("../../assets/jennifer-smorgon.png") : person.image === "local:mcgraw" ? require("../../assets/erica-jay-mcgraw.png") : person.image === "local:resonance" ? require("../../assets/resonance-philanthropies.png") : person.image === "local:lexi" ? require("../../assets/lexi-hensler.png") : person.image === "local:margaret" ? require("../../assets/margaret-hines.png") : { uri: person.image }} style={styles.image} /> : <Text style={styles.initials}>{person.name.split(" ").map((part) => part[0]).slice(0,2).join("")}</Text>}</View><Text style={styles.name}>{person.name}</Text><Text style={styles.role}>{person.role}</Text><Text style={styles.connect}>View bio · Connect</Text></Pressable>)}</View>
   </ScrollView></SafeAreaView>;
 }
 
