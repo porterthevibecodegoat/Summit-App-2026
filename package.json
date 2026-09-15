@@ -22,6 +22,8 @@
     "test": "pnpm -r test",
     "snapshot:pull": "node --import tsx scripts/export-snapshot.mjs",
     "content:export": "pnpm snapshot:pull",
+    "content:confirmed-2026": "node --import tsx scripts/publish-confirmed-2026-content.mjs",
+    "content:sanitize-schedule": "node --import tsx scripts/sanitize-unconfirmed-schedule.mjs",
     "production:readiness": "node --import tsx scripts/production-readiness.mjs",
     "release:preflight": "node --import tsx scripts/release-preflight.mjs",
     "staging:verify": "node scripts/verify-staging-deployment.mjs",

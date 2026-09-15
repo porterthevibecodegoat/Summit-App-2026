@@ -22,3 +22,4 @@ output/
 **/.next/
 apps/mobile/.expo
 apps/admin/.next
+.vercel

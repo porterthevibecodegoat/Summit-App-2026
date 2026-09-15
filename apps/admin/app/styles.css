@@ -1672,3 +1672,4 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+.contentImportBar{align-items:center;background:#f6f0fa;border:1px solid #dacbe6;border-radius:6px;display:flex;gap:24px;justify-content:space-between;margin:0 0 20px;padding:18px 20px}.contentImportBar>div{display:grid;gap:4px}.contentImportBar span{color:var(--muted);font-size:13px;line-height:1.45}@media(max-width:700px){.contentImportBar{align-items:stretch;flex-direction:column}.contentImportBar .secondaryButton{width:100%}}

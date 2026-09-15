@@ -1,3 +1,5 @@
+import { confirmedSummitGuests2026 } from "@not-alone/config";
+
 export type PersonCategory = "Co-Chairs" | "Hosts" | "Founders" | "Mental Health Nonprofit Founding Partners" | "Musicians" | "Entertainers & Athletes" | "Experts" | "Business Leaders & Philanthropists" | "Sponsors" | "Executive Producers" | "Producers" | "Attendees";
 
 export type SummitPerson = {
@@ -25,7 +27,7 @@ const make = (name: string, categories: PersonCategory[], role: string, year: 20
   ...extra
 });
 
-export const people2026: SummitPerson[] = [
+const candidateProfiles2026: SummitPerson[] = [
   make("Jewel", ["Co-Chairs", "Musicians"], "4-Time Grammy Nominated Singer-Songwriter and Mental Health Pioneer", 2026, { image: "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def5c21087564f13f1c2ec/1759442376820/Jewel+smiling.png?format=500w" }),
   make("Steve Wozniak", ["Co-Chairs"], "Co-Founder of Apple & Mental Health Advocate", 2026, { image: "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def5c245388537d1d83190/1759442374837/Woz.png?format=500w" }),
   make("Cherrial Odell", ["Co-Chairs"], "Inspiring Children Alumna", 2026, { image: "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def5c296aceb2b11467a66/1759442375847/Cherrial.png?format=500w" }),
@@ -63,6 +65,11 @@ export const people2026: SummitPerson[] = [
   ...["Casey Caruso", "Paige Neuenschwander", "Payton McDonald", "Sydney Fleischmann", "Porter Winterton", "Bianca Mok"].map((name) => make(name, ["Producers"], "Associate Producer")),
   ...["Aphrah Brokaw", "Clark Cummings", "Jan Thwaites", "Sally Dewhurst", "Sophie Novak", "Trent Alenik", "Trevor Short"].map((name) => make(name, ["Producers"], "Summit producer or staff — details pending approval"))
 ];
+
+export const people2026: SummitPerson[] = confirmedSummitGuests2026.map((name) => {
+  const profile = candidateProfiles2026.find((candidate) => candidate.name === name);
+  return profile ?? make(name, ["Attendees"], "Confirmed 2026 summit guest");
+});
 
 export const people2025: SummitPerson[] = [
   make("Loni Love", ["Hosts", "Entertainers & Athletes"], "Comedian and Not Alone Awards Host", 2025, { image: "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156f6f1b4111d77a8bc8/1762071920597/Loni+Love+Alex+Hill+sq+copy.jpg" }),

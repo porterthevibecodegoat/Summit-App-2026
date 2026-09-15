@@ -57,7 +57,7 @@ export const demoSnapshot: EventSnapshot = eventSnapshotSchema.parse({
     city: "Las Vegas, Nevada",
     positioning:
       "A thoughtfully curated gathering centered on human connection, emotional wellbeing, and meaningful action. Schedule details will continue to evolve as programming is confirmed.",
-    presentedBy: "Villa Bibbiani",
+    presentedBy: "Inspiring Children Foundation",
     poweredBy: "Steven & Alexandra Cohen Foundation",
     tracks: [
       "Main Stage",
@@ -69,33 +69,7 @@ export const demoSnapshot: EventSnapshot = eventSnapshotSchema.parse({
       "Founder Events",
       "Community Day"
     ],
-    featuredPeople: [
-      {
-        name: "Jewel",
-        role: "Singer-songwriter and mental health advocate",
-        group: "Featured Artist"
-      },
-      {
-        name: "Harry Hudson",
-        role: "Artist and advocate",
-        group: "Featured Performer"
-      },
-      {
-        name: "Tallulah Willis",
-        role: "Artist and mental health advocate",
-        group: "Workshop Guest"
-      },
-      {
-        name: "The Bryan Brothers",
-        role: "Tennis champions and wellness guests",
-        group: "Community Day"
-      },
-      {
-        name: "Rachel Platten",
-        role: "Singer-songwriter",
-        group: "Closing Dinner Performer"
-      }
-    ],
+    featuredPeople: [],
     demo: false
   },
   revision,
@@ -192,7 +166,6 @@ export const demoSnapshot: EventSnapshot = eventSnapshotSchema.parse({
     { id: "60000000-0000-4000-8000-000000000002", question: "Can the schedule change?", answer: "Yes. The attendee app reflects the latest schedule published by the event team.", category: "Schedule", published: true }
   ],
   sponsors: [
-    { id: "70000000-0000-4000-8000-000000000001", name: "Villa Bibbiani", tier: "Presented by", websiteUrl: null, logoUrl: null, published: true },
     { id: "70000000-0000-4000-8000-000000000002", name: "Steven & Alexandra Cohen Foundation", tier: "Powered by", websiteUrl: null, logoUrl: null, published: true }
   ],
   media: [],
@@ -344,12 +317,12 @@ function createPrototypeSchedule(): ScheduleItem[] {
       day: 2,
       start: "8:10 PM",
       end: "8:20 PM",
-      title: "Harry Hudson Performance",
-      shortTitle: "Harry Hudson",
+      title: "Opening Night Performance",
+      shortTitle: "Opening Performance",
       summary: "A short opening-night music performance.",
       locationId: locationIds.wisdomForum,
       locationName: "Margaux - Wisdom Forum",
-      speakerIds: [speakerIds.harryHudson],
+      speakerIds: [],
       featured: true,
       offsets: [10]
     },
@@ -358,12 +331,12 @@ function createPrototypeSchedule(): ScheduleItem[] {
       day: 2,
       start: "8:25 PM",
       end: "9:10 PM",
-      title: "Jewel Performance",
-      shortTitle: "Jewel",
-      summary: "A featured main-stage performance by Jewel.",
+      title: "Featured Main-Stage Performance",
+      shortTitle: "Featured Performance",
+      summary: "A featured main-stage performance.",
       locationId: locationIds.wisdomForum,
       locationName: "Margaux - Wisdom Forum",
-      speakerIds: [speakerIds.jewel],
+      speakerIds: [],
       featured: true,
       offsets: [30, 10]
     },
@@ -429,7 +402,7 @@ function createPrototypeSchedule(): ScheduleItem[] {
       summary: "A quiet guided meditation to begin the day with focus and calm.",
       locationId: locationIds.wellnessZoneOne,
       locationName: "Lafleur Patio",
-      speakerIds: [speakerIds.kelseyPatel],
+      speakerIds: [],
       offsets: [15]
     },
     {
@@ -442,7 +415,7 @@ function createPrototypeSchedule(): ScheduleItem[] {
       summary: "A creative conversation exploring the relationship between art, expression, and healing.",
       locationId: locationIds.nourishRoom,
       locationName: "Mouton 2 - Nourish Room",
-      speakerIds: [speakerIds.tallulahWillis],
+      speakerIds: [],
       featured: true,
       offsets: [15]
     },
@@ -661,12 +634,12 @@ function createPrototypeSchedule(): ScheduleItem[] {
       day: 4,
       start: "4:00 PM",
       end: "4:25 PM",
-      title: "Mindfulness and Music by Jewel",
+      title: "Mindfulness and Music",
       shortTitle: "Mindfulness Music",
       summary: "A closing main-stage mindfulness and music moment.",
       locationId: locationIds.wisdomForum,
       locationName: "Margaux - Wisdom Forum",
-      speakerIds: [speakerIds.jewel],
+      speakerIds: [],
       audience: "community",
       featured: true,
       offsets: [30, 10]
@@ -676,12 +649,12 @@ function createPrototypeSchedule(): ScheduleItem[] {
       day: 4,
       start: "6:30 PM",
       end: "10:00 PM",
-      title: "Closing Dinner and Rachel Platten Concert",
+      title: "Closing Dinner and Concert",
       shortTitle: "Closing Dinner",
-      summary: "A closing dinner followed by a featured concert from Rachel Platten.",
+      summary: "A closing dinner followed by a featured concert.",
       locationId: locationIds.boaSteakhouse,
       locationName: "BOA Steakhouse",
-      speakerIds: [speakerIds.rachelPlatten],
+      speakerIds: [],
       featured: true,
       offsets: [60, 15]
     }

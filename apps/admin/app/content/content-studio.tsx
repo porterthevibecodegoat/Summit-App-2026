@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import type { EventNotice, EventSnapshot, Faq, MediaItem, Speaker, Sponsor } from "@not-alone/validation";
 import { getStaffAuthHeaders } from "../staff-auth-bridge";
 
 type Section = "event" | "speakers" | "faqs" | "sponsors" | "media" | "notices";
-type EditableEvent = Pick<EventSnapshot["event"], "name" | "organizationName" | "dateLabel" | "venueName" | "city" | "positioning" | "presentedBy" | "poweredBy" | "tracks">;
+type EditableEvent = Pick<EventSnapshot["event"], "name" | "organizationName" | "dateLabel" | "venueName" | "city" | "positioning" | "presentedBy" | "poweredBy" | "tracks" | "featuredPeople" | "demo">;
 
 export function ContentStudio({
   initialSnapshot,
@@ -26,12 +26,37 @@ export function ContentStudio({
   const [contentPages] = useState(initialSnapshot.contentPages);
   const [dirty, setDirty] = useState(false);
   const [publishing, setPublishing] = useState(false);
+  const [importingGuests, setImportingGuests] = useState(false);
+  const guestImportRef = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState(`Published revision ${initialSnapshot.revision} loaded from ${mode}.`);
   const counts = useMemo(() => ({ speakers: speakers.length, faqs: faqs.length, sponsors: sponsors.length, media: media.length, notices: notices.length }), [speakers, faqs, sponsors, media, notices]);
 
   function changed() {
     setDirty(true);
     setMessage("Unpublished content changes");
+  }
+
+  async function reviewAirtableGuests(file: File) {
+    setImportingGuests(true);
+    setMessage(`Reviewing ${file.name}...`);
+    try {
+      const form = new FormData();
+      form.set("file", file);
+      const response = await fetch("/api/import/airtable-guests", {
+        method: "POST",
+        headers: getStaffAuthHeaders(),
+        body: form
+      });
+      const result = await response.json() as { ok?: boolean; error?: string; message?: string; speakers?: Speaker[]; withheldRows?: number; duplicateRows?: number };
+      if (!response.ok || !result.ok || !result.speakers) throw new Error(result.error ?? "Guest review failed.");
+      setSpeakers(result.speakers);
+      setDirty(true);
+      setMessage(`${result.message} ${result.withheldRows ?? 0} non-confirmed/TBC row(s) withheld and ${result.duplicateRows ?? 0} duplicate(s) removed. Review profiles and switch Visible on individually before publishing.`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Guest review failed.");
+    } finally {
+      setImportingGuests(false);
+    }
   }
 
   async function publish() {
@@ -80,6 +105,12 @@ export function ContentStudio({
       </div>
 
       <div className={`contentStatus ${dirty ? "contentStatusDirty" : ""}`} role="status">{message}</div>
+
+      {active === "speakers" ? <div className="contentImportBar">
+        <div><strong>Refresh from Airtable</strong><span>CSV review only. Confirmed rows are staged as hidden; pending, blank, TBC, and duplicate rows are withheld.</span></div>
+        <button className="secondaryButton" disabled={importingGuests} onClick={() => guestImportRef.current?.click()} type="button">{importingGuests ? "Reviewing..." : "Review guest CSV"}</button>
+        <input className="visuallyHidden" ref={guestImportRef} type="file" accept=".csv,text/csv" onChange={(event) => { const file = event.target.files?.[0]; if (file) void reviewAirtableGuests(file); event.currentTarget.value = ""; }} />
+      </div> : null}
 
       <div className="contentTabs" role="tablist" aria-label="Content sections">
         <Tab active={active === "event"} label="Event information" onClick={() => setActive("event")} />
@@ -192,8 +223,8 @@ function Field({ label, value, onChange, area = false }: { label: string; value:
 }
 
 function pickEvent(snapshot: EventSnapshot): EditableEvent {
-  const { name, organizationName, dateLabel, venueName, city, positioning, presentedBy, poweredBy, tracks } = snapshot.event;
-  return { name, organizationName, dateLabel, venueName, city, positioning, presentedBy, poweredBy, tracks };
+  const { name, organizationName, dateLabel, venueName, city, positioning, presentedBy, poweredBy, tracks, featuredPeople, demo } = snapshot.event;
+  return { name, organizationName, dateLabel, venueName, city, positioning, presentedBy, poweredBy, tracks, featuredPeople, demo };
 }
 
 function update<T extends { id: string }>(items: T[], id: string, patch: Partial<T>) { return items.map((item) => item.id === id ? { ...item, ...patch } : item); }

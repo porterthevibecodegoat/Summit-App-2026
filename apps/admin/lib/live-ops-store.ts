@@ -43,7 +43,13 @@ export const staffContentSchema = z.object({
     positioning: z.string().trim().min(1).max(600),
     presentedBy: z.string().trim().min(1).max(160),
     poweredBy: z.string().trim().min(1).max(160),
-    tracks: z.array(z.string().trim().min(1).max(80)).max(30)
+    tracks: z.array(z.string().trim().min(1).max(80)).max(30),
+    featuredPeople: z.array(z.object({
+      name: z.string().trim().min(1).max(160),
+      role: z.string().trim().min(1).max(200),
+      group: z.string().trim().min(1).max(120)
+    })).max(100),
+    demo: z.boolean()
   }),
   speakers: z.array(z.object({
     id: z.string().uuid(),

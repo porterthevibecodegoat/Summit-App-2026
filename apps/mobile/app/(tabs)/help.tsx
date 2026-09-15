@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
+import { confirmedSummitGuests2026 } from "@not-alone/config";
 import { getNowAndUpcoming, toEventTimeRange } from "@not-alone/domain";
 import type { EventSnapshot, ScheduleItem } from "@not-alone/validation";
 import { useSummit } from "../../components/summit-context";
@@ -23,7 +24,7 @@ const summitKnowledge = {
   venue: "Wynn Las Vegas",
   tagline: "The Davos of Human Development",
   presenting:
-    "The summit is presented by Villa Bibbiani, powered by the Steven & Alexandra Cohen Foundation, and produced by the Inspiring Children Foundation.",
+    "The 2026 summit is powered by the Steven & Alexandra Cohen Foundation and produced by the Inspiring Children Foundation.",
   purpose:
     "Not Alone Summit brings CEOs, artists, athletes, philanthropists, clinicians, researchers, and youth ambassadors together to advance emotional and mental health through dialogue, collaboration, storytelling, music, and awards.",
   community:
@@ -31,11 +32,11 @@ const summitKnowledge = {
   foundation:
     "Inspiring Children Foundation is a 501(c)(3) nonprofit with more than 25 years serving young people facing financial hardship, anxiety, depression, and suicidal ideation through a daily whole-human-development model.",
   hosts:
-    "Public summit materials list Steve Wozniak, Jewel, and Cherrial Odell as co-chairs, Jason Kennedy as summit host, and Loni Love as awards host.",
+    "Summit leadership and hosting roles will appear here after the event team approves them for the 2026 program.",
   formats:
     "The summit experience includes panels, pitches, awards, debates, concerts, seminars, meditation, workshops, VIP dinners, philanthropy, fitness and yoga, product launches, group discussions, and exclusive VIP experiences.",
   featured:
-    "Public materials highlight experts, celebrities, athletes, business leaders, philanthropists, musicians, and Not Alone supporters. Featured names include Jewel, Steve Wozniak, Mike Tyson, Jada Pinkett Smith, Loni Love, Jason Kennedy, Rachel Platten, Darryl McDaniels, Harry Hudson, Kevin Hines, and others.",
+    `The current confirmed guest list includes ${confirmedSummitGuests2026.slice(0, 10).join(", ")}, and additional confirmed guests shown in the People section.`,
   checkIn:
     "Check-in and registration appear in the current schedule. Credential pickup, guest services, and room assignments will reflect the latest details published by the event team.",
   support:
@@ -586,7 +587,8 @@ function matchesAny(value: string, terms: string[]) {
 }
 
 function findFeaturedPerson(prompt: string) {
-  return featuredPeople.find((person) => matchesAny(prompt, person.aliases));
+  const confirmed = new Set<string>(confirmedSummitGuests2026);
+  return featuredPeople.find((person) => confirmed.has(person.name) && matchesAny(prompt, person.aliases));
 }
 
 function getEventHour(value: string, timeZone: string) {

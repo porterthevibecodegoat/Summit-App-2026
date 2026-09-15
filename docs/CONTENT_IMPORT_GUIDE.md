@@ -2,6 +2,14 @@
 
 The import center accepts PDF, TXT, and CSV files up to 15 MB. Importing never changes the attendee app directly.
 
+## Airtable Guest Review
+
+1. Export the Airtable talent view as CSV with at least `Name` and `Summit Status` columns.
+2. In Content Studio, open Speakers and choose **Review guest CSV**.
+3. The reviewer includes only rows whose status is exactly `Confirmed`. Blank names, names marked `TBC`, pending rows, and duplicates are withheld.
+4. Imported profiles remain hidden. Review names, roles, biographies, and headshots, then enable **Visible** only for approved public profiles.
+5. **Review & Publish** creates one audited content revision. Importing alone never changes the attendee website or app.
+
 ## Safe Workflow
 
 1. Drop or choose one current schedule file in the staff Import Center.

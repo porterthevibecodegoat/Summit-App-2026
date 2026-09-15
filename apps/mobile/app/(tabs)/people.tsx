@@ -2,11 +2,12 @@ import { useMemo, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
+import { confirmedSummitGuests2026 } from "@not-alone/config";
 
 type Category = "Co-Chairs" | "Hosts" | "Founders" | "Mental Health Nonprofit Founding Partners" | "Musicians" | "Entertainers & Athletes" | "Experts" | "Business Leaders & Philanthropists" | "Sponsors" | "Producers" | "Attendees";
 type Person = { name: string; role: string; category: Category; secondaryCategory?: Category; image?: string };
 
-const people: Person[] = [
+const candidateProfiles: Person[] = [
   { name: "Jewel", role: "Singer-Songwriter and Mental Health Pioneer", category: "Co-Chairs", image: "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def5c21087564f13f1c2ec/1759442376820/Jewel+smiling.png?format=500w" },
   { name: "Steve Wozniak", role: "Co-Founder of Apple & Mental Health Advocate", category: "Co-Chairs", image: "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def5c245388537d1d83190/1759442374837/Woz.png?format=500w" },
   { name: "Cherrial Odell", role: "Inspiring Children Alumna", category: "Co-Chairs", image: "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def5c296aceb2b11467a66/1759442375847/Cherrial.png?format=500w" },
@@ -41,6 +42,13 @@ const people: Person[] = [
   { name: "Bianca Mok", role: "Associate Producer", category: "Producers" },
   { name: "Morgan Marler", role: "Summit attendee", category: "Attendees" }
 ];
+const people: Person[] = confirmedSummitGuests2026.map((name) =>
+  candidateProfiles.find((candidate) => candidate.name === name) ?? {
+    name,
+    role: "Confirmed 2026 summit guest",
+    category: "Attendees"
+  }
+);
 const categories: Category[] = ["Co-Chairs", "Hosts", "Founders", "Mental Health Nonprofit Founding Partners", "Musicians", "Entertainers & Athletes", "Experts", "Business Leaders & Philanthropists", "Sponsors", "Producers", "Attendees"];
 
 export default function PeopleScreen() {
