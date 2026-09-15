@@ -1,15 +1,22 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import type { ReactNode } from "react";
+import { AskAiBubble } from "../components/ask-ai-bubble";
+import { SiteHeader } from "../components/site-header";
 import "./styles.css";
+import "./enhancements.css";
 
 export const metadata: Metadata = {
-  title: { default: "Not Alone", template: "%s | Not Alone" },
-  description: "The Not Alone Summit and Awards, produced by Inspiring Children Foundation."
+  metadataBase: new URL("https://notalonesummit.org"),
+  applicationName: "notalonesummit.org",
+  title: { default: "notalonesummit.org", template: "%s | notalonesummit.org" },
+  description: "The Not Alone Summit attendee website and connection directory.",
+  manifest: "/manifest.webmanifest",
+  alternates: { canonical: "/" },
+  icons: { icon: [{ url: "/challenge-logo.png", sizes: "2424x2699", type: "image/png" }], apple: "/challenge-logo.png" },
+  appleWebApp: { capable: true, title: "notalonesummit.org", statusBarStyle: "black-translucent" }
 };
+export const viewport: Viewport = { themeColor: "#8177c9" };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return <html lang="en"><body><SiteHeader />{children}<footer><div className="footerBrand"><img src="/icf-logo.png" alt="Inspiring Children Foundation" /><div><strong>Powered by ICF</strong><p>Inspiring Children Foundation</p></div></div><p>Not Alone Summit · November 2–4, 2026 · Wynn Las Vegas</p><div><a href="https://www.inspiringchildren.org" target="_blank">Inspiring Children Foundation</a><a href="/contact">Contact</a><a href="/donate">Donate</a></div><small>This site is not for emergency or crisis help. Call 988 or 911 for immediate assistance.</small></footer><AskAiBubble /></body></html>;
 }

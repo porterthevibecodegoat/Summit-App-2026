@@ -1,66 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
-import { SiteFooter } from "../components/site-footer";
-import { SiteHeader } from "../components/site-header";
+import { Directory } from "../components/directory";
+import { TicketCheckout } from "../components/ticket-checkout";
 
 export default function HomePage() {
-  return (
-    <main>
-      <section className="home-hero image-hero">
-        <SiteHeader tone="dark" />
-        <div className="hero-shade" />
-        <div className="hero-content home-hero-content">
-          <p className="eyebrow">Inspiring Children Foundation presents</p>
-          <h1>Not Alone</h1>
-          <p className="hero-copy">A living platform for human connection, emotional wellbeing, and the people moving mental health forward.</p>
-          <div className="hero-actions">
-            <Link className="button button-primary" href="/summit">Enter the Summit</Link>
-            <Link className="button button-ghost" href="/awards">Explore the Awards</Link>
-          </div>
-        </div>
-        <div className="hero-event-line">
-          <span>November 2-4, 2026</span>
-          <span>Wynn Las Vegas</span>
-        </div>
-      </section>
-
-      <section className="choice-band section-shell">
-        <div className="section-heading">
-          <p className="eyebrow purple">One mission, two experiences</p>
-          <h2>Gather. Honor. Move forward.</h2>
-        </div>
-        <div className="experience-grid">
-          <Link className="experience-panel summit-panel" href="/summit">
-            <span>01</span>
-            <div>
-              <p>November 2-4</p>
-              <h3>Not Alone Summit</h3>
-              <p>Ideas, practice, music, science, and honest connection.</p>
-            </div>
-          </Link>
-          <Link className="experience-panel awards-panel" href="/awards">
-            <span>02</span>
-            <div>
-              <p>November 2</p>
-              <h3>Not Alone Awards</h3>
-              <p>Honoring the pioneers who invest in humanity.</p>
-            </div>
-          </Link>
-        </div>
-      </section>
-
-      <section className="mission-band">
-        <div className="mission-image">
-          <Image src="/images/wynn-las-vegas.webp" alt="Wynn Las Vegas, host venue for the Not Alone Summit" fill sizes="(max-width: 800px) 100vw, 50vw" />
-        </div>
-        <div className="mission-copy">
-          <p className="eyebrow purple">Built from lived experience</p>
-          <h2>Human development belongs at the center.</h2>
-          <p>The Not Alone Program brings together the Challenge, Summit, and Awards to turn compassionate conversation into practical tools and collective action.</p>
-          <a href="https://www.inspiringchildren.org/home" rel="noreferrer">Meet Inspiring Children Foundation</a>
-        </div>
-      </section>
-      <SiteFooter />
-    </main>
-  );
+  return <main>
+    <section className="hero"><div className="heroContent"><p className="eyebrow">November 2–4, 2026 · Wynn Las Vegas</p><h1>Not Alone Summit</h1><p className="heroCopy">A premier national convening bringing together leading CEOs, artists, athletes, philanthropists, clinicians, researchers, and youth ambassadors to advance emotional and mental health.</p><div className="heroActions"><Link href="#directory" className="primaryButton">Meet the 2026 Summit</Link><Link href="/schedule" className="secondaryButton">View schedule</Link></div></div><div className="heroArt" aria-hidden="true" /></section>
+    <section className="recapSection"><div className="recapIntro"><p className="eyebrow">Experience the Summit</p><h2>See what connection looks like.</h2><p>The official Not Alone Summit recap displays the highlights from last year. Join us for an improved and updated version of the Not Alone Summit in 2026, and explore the site to discover all the exciting experiences, people, and surprises that will be featured.</p></div><div className="videoFrame"><iframe src="https://www.youtube-nocookie.com/embed/bMAASyMiFHM?autoplay=1&mute=1&controls=0&loop=1&playlist=bMAASyMiFHM&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" title="Not Alone Summit recap video" allow="autoplay; encrypted-media; picture-in-picture" /></div></section>
+    <section className="jewelQuote"><blockquote>“The Davos of Human Development”</blockquote><p>— Jewel</p></section>
+    <Directory />
+    <TicketCheckout />
+    <section className="installSection"><div><p className="eyebrow">Website + app</p><h2>Follow along with the summit.</h2><p>Use every attendee feature in your browser, or add the website to your home screen. Native app users can also receive in-app notifications.</p></div><div className="installCard"><span className="appIcon">NA</span><div><strong>Not Alone Summit</strong><p>Install from your browser’s Share or Install menu.</p></div></div></section>
+  </main>;
 }

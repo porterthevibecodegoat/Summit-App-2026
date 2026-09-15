@@ -1,7 +1,5 @@
 import { getActiveOperationalNotices, getCountdownLabel, getEventPhase, getNowAndUpcoming, toEventTimeRange } from "@not-alone/domain";
 import Link from "next/link";
-import { SiteFooter } from "../../../components/site-footer";
-import { SiteHeader } from "../../../components/site-header";
 import { getPublicSnapshot } from "../../../lib/snapshot";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +16,6 @@ export default async function LivePage() {
 
   return (
     <main className="companion-theme">
-      <SiteHeader />
       <section className="companion-intro section-shell">
         <div>
           <p className="eyebrow purple">Not Alone Summit</p>
@@ -76,7 +73,6 @@ export default async function LivePage() {
         <a href="https://www.inspiringchildren.org/summit-venue" rel="noreferrer"><strong>Venue</strong><span>Find Wynn Las Vegas and venue details.</span></a>
         <a href="https://www.inspiringchildren.org/summit-contact" rel="noreferrer"><strong>Event help</strong><span>Contact the Summit team for assistance.</span></a>
       </section>
-      <SiteFooter />
     </main>
   );
 }

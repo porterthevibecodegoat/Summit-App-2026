@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { CalendarDays, House, Info, Map, Sparkles, type LucideIcon } from "lucide-react-native";
+import { Award, CalendarDays, House, Info, Map, Sparkles, Users, type LucideIcon } from "lucide-react-native";
 import { StyleSheet, View, type ColorValue } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors, typography } from "@not-alone/design-tokens";
@@ -8,6 +8,8 @@ import { useResponsiveLayout } from "../../components/responsive-layout";
 const tabScreens = [
   { name: "index", title: "Home", icon: House },
   { name: "schedule", title: "Schedule", icon: CalendarDays },
+  { name: "people", title: "People", icon: Users },
+  { name: "awards", title: "Awards", icon: Award },
   { name: "help", title: "Ask AI", icon: Sparkles },
   { name: "map", title: "Map", icon: Map },
   { name: "info", title: "Info", icon: Info }
