@@ -15,6 +15,7 @@ test-results
 work/
 outputs/
 output/
+tmp/
 *.tar.gz
 *.zip
 .DS_Store
