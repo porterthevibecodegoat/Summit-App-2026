@@ -2,6 +2,8 @@
 
 Connected digital platform for the 2026 Not Alone Summit and Not Alone Awards, built for Inspiring Children Foundation.
 
+For a complete GitHub/account/domain handoff that preserves this existing project exactly, start with `MASTER_PROJECT_TRANSFER_REPORT.md`.
+
 ## Apps
 
 - `apps/mobile`: Expo React Native attendee app.
