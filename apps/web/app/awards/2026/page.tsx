@@ -6,5 +6,5 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "2026 Not Alone Awards", description: "The 2026 Not Alone Awards at Wynn Las Vegas." };
 export default async function Awards2026Page() {
   const snapshot = await getReviewedContentSnapshot();
-  return <AwardsYearPage year={2026} program={snapshot ? publishedAwardsProgram(snapshot) : null} />;
+  return <AwardsYearPage year={2026} snapshot={snapshot} program={snapshot ? publishedAwardsProgram(snapshot) : null} />;
 }

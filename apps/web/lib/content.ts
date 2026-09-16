@@ -5,6 +5,14 @@ export type DirectoryGroup = { title: string; people: DirectoryPerson[] };
 
 export const summit2025Highlights = ["Panels", "Pitches", "Awards", "Debates", "Concerts", "Seminars", "Meditation", "Workshops", "VIP Dinners", "Philanthropy", "Fitness & Yoga", "Product Launches", "Group Discussions", "Exclusive VIP Experiences"] as const;
 
+// Verified on ICF's official YouTube channel and through YouTube oEmbed.
+export const awards2025Highlights = {
+  title: "Inside the 2025 Not Alone Awards: A Night of Music, Mental Health and Human Development",
+  watchUrl: "https://www.youtube.com/watch?v=z2NdP-X7_Mc",
+  embedUrl: "https://www.youtube-nocookie.com/embed/z2NdP-X7_Mc?rel=0",
+  duration: "1:38"
+} as const;
+
 export const summitPartners = {
   2025: { presentedBy: ["Villa Bibbiani"], poweredBy: ["Steven & Alexandra Cohen Foundation"] },
   2026: { presentedBy: [], poweredBy: ["Steven & Alexandra Cohen Foundation"] }

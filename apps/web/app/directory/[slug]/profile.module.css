@@ -1,0 +1,14 @@
+.page { background: white; color: #171717; font-family: "Original Poppins", Arial, sans-serif; }
+.page * { letter-spacing: 0; }
+.page h1 { font-family: inherit; font-size: 48px; line-height: 1.12; overflow-wrap: anywhere; }
+.page :global(.profileHero) { grid-template-columns: minmax(0, 340px) minmax(0, 1fr); }
+.page :global(.profilePortrait) { aspect-ratio: 1; border-radius: 4px; width: 100%; height: auto; background: #eeebf4; color: #634988; }
+.page :global(.profilePortrait img) { aspect-ratio: 1; object-fit: contain; }
+.page :global(.profileRole) { color: #634988; }
+.page :global(.profileBio) { white-space: pre-line; }
+.page a:focus-visible { outline: 3px solid #634988; outline-offset: 5px; }
+@media (max-width: 700px) {
+  .page h1 { font-size: 34px; }
+  .page :global(.profileHero) { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .page :global(.profilePortrait) { max-width: 300px; }
+}

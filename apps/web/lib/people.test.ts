@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { demoSnapshot } from "@not-alone/test-fixtures";
 import { directoryPeople, people2025, people2026 } from "./people";
 import { originalProducerCredits } from "@not-alone/config";
+import { personPortrait, personInitials } from "./person-portraits";
 
 describe("website reviewed directory", () => {
   it("restricts every producer listing to the original ICF credits", () => {
@@ -25,5 +26,20 @@ describe("website reviewed directory", () => {
     const speaker = { ...demoSnapshot.speakers[0]!, name: "Reviewed person", role: "Confirmed attendee", published: true };
     const people = directoryPeople({ ...demoSnapshot, event: { ...demoSnapshot.event, directoryEnabled: true }, speakers: [speaker] });
     expect(people[0]).toMatchObject({ name: speaker.name, slug: speaker.id, role: speaker.role, categories: ["Attendees"] });
+  });
+  it("reuses matching source portraits without changing reviewed roles, and prefers published headshots", () => {
+    const speaker = { ...demoSnapshot.speakers[0]!, name: "Daniel Gillison", role: "Confirmed attendee", published: true, headshotUrl: null };
+    const snapshot = { ...demoSnapshot, event: { ...demoSnapshot.event, directoryEnabled: true }, speakers: [speaker] };
+    expect(directoryPeople(snapshot)[0]).toMatchObject({ role: speaker.role, image: personPortrait("Daniel H. Gillison, Jr.") });
+    expect(directoryPeople(snapshot)[0]?.image).toMatch(/^\/original-2025\//);
+    expect(directoryPeople({ ...snapshot, speakers: [{ ...speaker, headshotUrl: "https://example.com/headshot.jpg" }] })[0]?.image).toBe("https://example.com/headshot.jpg");
+    expect(personPortrait("Not a matching guest")).toBeUndefined();
+    expect(personInitials("Sanem (Sam) Alkan")).toBe("SA");
+  });
+  it("uses the reviewed 2026 Airtable portraits without copying expiring attachment URLs", () => {
+    expect(personPortrait("Dr. Wendy Oliver-Pyatt")).toBe("/2026-headshots/wendy-oliver-pyatt.jpg");
+    expect(personPortrait("Jon Hershfield")).toBe("/2026-headshots/jon-hershfield.jpg");
+    expect(personPortrait("Steve Wozniak")).toBe("/2026-headshots/steve-wozniak.jpg");
+    expect(personPortrait("Dr. Blaise Aguirre")).toBe("/2026-headshots/blaise-aguirre.jpg");
   });
 });

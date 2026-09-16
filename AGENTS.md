@@ -33,3 +33,12 @@ Required quality gates:
 - Mobile iOS Simulator/development-build inspection before release-ready status.
 - Staff portal browser inspection.
 - Database migration/RLS review before connecting staging or production data.
+
+## Owner vision and factual provenance
+
+- Follow the owner's original product requirements and pre-collaboration design intent, plus later changes explicitly requested by the owner. The approved read-only 2026 Airtable replacement remains in scope; this instruction does not restore the old active agenda.
+- Do not introduce new features, roles, biographies, sponsors, attendance claims, session assignments, times, rooms, or event policies merely because they appeared in collaborator-authored code or notes. Existing code is not independent evidence that a fact is true.
+- Use the original ICF source content for the historical archive, reviewed 2026 Airtable records for current event facts, and explicit owner instructions for approved exceptions. Keep those sources and their years distinct. Missing or conflicting facts must remain unconfirmed, not filled in with plausible copy.
+- Do not infer a speaking slot, award, host role, or access entitlement from attendance alone. Preserve original production/chair credits only within the scope the owner explicitly approved; do not expand that list.
+- Do not reintroduce removed demo mode, personal schedules, collaborator-added native navigation, or retired submission flows without a new explicit owner request.
+- Before reverting work, inspect its provenance. Changes from another owner-authorized task are not collaborator changes. Preserve approved security, reliability, and 2026 publishing work; report any remaining uncertainty instead of claiming a complete historical reset or complete credential isolation.
