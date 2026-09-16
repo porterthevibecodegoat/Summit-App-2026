@@ -38,6 +38,7 @@ try {
         if (href?.startsWith("/") && !href.startsWith("//")) links.add(href.split("#")[0]);
       }
       assert.equal(await page.locator('form[action="/api/messages"], form[action="/api/tickets"]').count(), 0);
+      assert.equal(await page.locator('.aiBubble, .messageForm, .ticketSection').count(), 0, `${route} contains a retired collaborator widget`);
       checks.push(`${route} renders without overflow at ${viewport.width}px`);
     }
     await page.goto(base + "/contact", { waitUntil: "domcontentloaded" });
@@ -60,6 +61,11 @@ try {
     assert(response.ok, `Broken internal link ${path}: ${response.status}`);
   }
   checks.push(`${links.size} internal link destinations resolve`);
+  for (const path of ["/api/messages", "/api/tickets"]) {
+    const response = await fetch(base + path, { method: "POST", body: "{}" });
+    assert.equal(response.status, 410, `${path} must remain retired`);
+  }
+  checks.push("Retired messaging and ticket endpoints cannot submit data");
   const manifest = await fetch(base + "/manifest.webmanifest").then(r => r.json());
   assert.equal(manifest.name, "Not Alone Summit");
   checks.push("Manifest uses event identity rather than an unconnected domain");

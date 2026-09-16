@@ -68,6 +68,9 @@ try {
   await page.goto(base, { waitUntil: "domcontentloaded" });
   await expect(page.getByText("Jewel Murray", { exact: true })).toHaveCount(0);
   await expect(page.getByText("The guest directory is temporarily unavailable. Please try again shortly.", { exact: true })).toBeVisible();
+  await page.goto(`${base}/directory/${person.id}`);
+  await expect(page.getByRole("heading", { name: "Guest details temporarily unavailable" })).toBeVisible();
+  await expect(page.getByText("Approved biography", { exact: true })).toHaveCount(0);
   console.log("PASS backend outage does not restore old directory entries");
   const answer = await (await page.request.post(`${base}/api/ask-ai`, { data: { question: "How can I message someone?" } })).json();
   assert(answer.answer.includes("messaging is not available"));

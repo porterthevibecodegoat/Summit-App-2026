@@ -2,7 +2,7 @@
 
 Connected digital platform for the 2026 Not Alone Summit and Not Alone Awards, built for Inspiring Children Foundation.
 
-For a complete GitHub/account/domain handoff that preserves this existing project exactly, start with `MASTER_PROJECT_TRANSFER_REPORT.md`.
+For the owner-controlled repository, deployment and contribution boundaries, see `docs/PROJECT_OWNERSHIP.md`.
 
 ## Apps
 

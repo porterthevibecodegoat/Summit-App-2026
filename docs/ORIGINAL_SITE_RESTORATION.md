@@ -50,6 +50,18 @@ are not destructively rolled back.
 
 ## Access boundary
 
+The follow-up cleanup removes the floating website AI widget, unused attendee
+message/ticket components and collaborator-authored transfer guide. Ask AI remains
+available through the owner's normal app and website navigation. The old message
+and ticket endpoints return HTTP 410 and never forward attendee data to webhooks,
+even if legacy environment values are still configured. Applied database history
+is retained; no live records or migrations are destructively removed.
+
+This is not a byte-for-byte checkout of the pre-merge commit `0a806e9`. That would
+also remove subsequent owner-approved publishing, 2026 content, security and
+restoration work. Adapted website infrastructure used by those later features is
+still present. A full historical rollback requires an explicit choice of boundary.
+
 See `PROJECT_OWNERSHIP.md`. GitHub was rechecked: only the owner is a collaborator;
 repository invitations and webhooks are empty. The earlier Supabase, Expo and
 Vercel separation is documented there. Public forks/copies may continue to exist,
@@ -85,3 +97,12 @@ approval or final editorial approval of still-incomplete 2026 facts.
   all six mobile sync checks passed against production revision 9 (26 sessions).
 - The production staff browser required sign-in. Authenticated staff editing and
   publishing were not manually retested as part of this restoration.
+
+Follow-up cleanup verification: 129 current unit tests, lint, typecheck, website
+production build and Simulator Release build passed. The updated app was installed
+and opened on Home with five tabs. Browser acceptance passed for 12 routes at
+375/768/1440px and all 63 internal link destinations. Removed widgets are checked
+absent and retired submission endpoints are checked for HTTP 410. Reviewed-content
+tests passed at all three widths, including profile withdrawal and API outage.
+An outage previously made a current profile look deleted; it now shows an explicit
+temporary-unavailability state without exposing stale or unpublished data.

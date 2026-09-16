@@ -36,7 +36,7 @@ const summitKnowledge = {
   formats:
     "The summit experience includes panels, pitches, awards, debates, concerts, seminars, meditation, workshops, VIP dinners, philanthropy, fitness and yoga, product launches, group discussions, and exclusive VIP experiences.",
   featured:
-    `The current confirmed guest list includes ${confirmedSummitGuests2026.slice(0, 10).join(", ")}, and additional confirmed guests shown in the People section.`,
+    `The current confirmed guest list includes ${confirmedSummitGuests2026.slice(0, 10).join(", ")}. Check the event schedule for published session details.`,
   checkIn:
     "Check-in and registration appear in the current schedule. Credential pickup, guest services, and room assignments will reflect the latest details published by the event team.",
   support:
