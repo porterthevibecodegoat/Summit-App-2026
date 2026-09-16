@@ -3,6 +3,7 @@ import { publishedDirectory } from "@not-alone/domain";
 import type { EventSnapshot } from "@not-alone/validation";
 import original from "./original-sites.json";
 import { originalAsset } from "./original-assets";
+import { personPortrait } from "./person-portraits";
 
 export type PersonCategory = "Co-Chairs" | "Hosts" | "Founders" | "Mental Health Nonprofit Founding Partners" | "Musicians" | "Entertainers & Athletes" | "Experts" | "Business Leaders & Philanthropists" | "Sponsors" | "Executive Producers" | "Producers" | "Attendees";
 export type SummitPerson = { name: string; slug: string; categories: PersonCategory[]; role: string; bio: string; year: 2025 | 2026; image?: string; order?: number; messageable?: boolean };
@@ -28,9 +29,12 @@ export function directoryPeople(snapshot: EventSnapshot | null): SummitPerson[] 
   if (!snapshot) return [];
   const reviewed = publishedDirectory(snapshot);
   if (reviewed === null) return [];
-  return reviewed.map(person => ({
+  return reviewed.map(person => {
+    const image = person.headshotUrl || personPortrait(person.name);
+    return {
     name: person.name, slug: person.id, role: person.role, bio: person.bio, year: 2026,
     categories: person.directoryCategories?.length ? person.directoryCategories : ["Attendees"],
-    ...(person.headshotUrl ? { image: person.headshotUrl } : {})
-  }));
+    ...(image ? { image } : {})
+    };
+  });
 }

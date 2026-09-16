@@ -36,3 +36,11 @@ were removed while retaining our later fixes and live 2026 publication. See
 The owner confirmed that a GitHub token was previously shared. Revocation is still pending owner confirmation. Membership removal alone does not invalidate a token belonging to the owner, so complete access isolation must not be claimed until that credential is revoked. Token details belong in private account settings, not this public repository.
 
 Producer credits are restricted to the original ICF site list in `packages/config/src/producer-credits.ts`. Historical credits are not evidence of 2026 attendance.
+
+## Owner reaffirmation: original vision and verified facts
+
+On September 16, 2026, the owner reaffirmed that changes must stay within the original product vision and must not invent information or carry forward unapproved collaborator additions. This is a content and scope rule, not a request to erase later owner-approved work such as the 2026 Airtable import.
+
+The original ICF pages establish historical content. Reviewed read-only Airtable records establish the current program and attendance, subject to their actual confirmation status. Explicit owner instructions can approve narrow exceptions, including retaining the original production/chair credits on the website. Such an exception does not confirm additional attendees, honorees, speaking slots, or new credits. Unknown information remains unconfirmed.
+
+Current uncommitted website work was checked against the separate owner-authorized task, "Duplicate 2025 websites for 2026". It must not be deleted or described as collaborator work merely because it is uncommitted. No additional application behavior or event facts were changed by this instruction update. The scoped-restoration and pending shared-credential limitations above still apply.
