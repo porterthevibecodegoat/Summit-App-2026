@@ -346,6 +346,12 @@
   .refined.awards :global(.directorySection) { margin: 0; }
   .refined.awards .leaders article { flex-basis: 220px; }
 }
+@media (min-width: 601px) and (max-height: 800px) {
+  .refined.awards .years { padding-top: 8px; padding-bottom: 8px; }
+  .refined.awards .awardsHero { min-height: 390px; height: calc(100svh - 270px); padding-top: 24px; padding-bottom: 80px; }
+  .awardsEdition { font-size: 56px; margin-bottom: 20px; }
+  .refined.awards .awardsHero .heroVenue { margin-bottom: 12px; }
+}
 @media (max-width: 600px) and (max-height: 700px) {
   .refined.awards .awardsHero { min-height: 350px; height: calc(100svh - 208px); padding: 0 20px 66px; }
   .refined.awards .awardsHero .heroScene { object-position: 20% center; }
