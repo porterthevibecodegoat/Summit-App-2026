@@ -44,7 +44,11 @@ const checks = [
   ["schedule count matches", cached.scheduleItems?.length === remote.scheduleItems?.length],
   ["session identities, titles, times, locations, and status match", scheduleFingerprint(cached) === scheduleFingerprint(remote)],
   ["location count matches", cached.locations?.length === remote.locations?.length],
-  ["content-page count matches", cached.contentPages?.length === remote.contentPages?.length]
+  ["content-page count matches", cached.contentPages?.length === remote.contentPages?.length],
+  ["event information matches", JSON.stringify(cached.event) === JSON.stringify(remote.event)],
+  ["guest roster and content match", collectionFingerprint(cached.speakers) === collectionFingerprint(remote.speakers)],
+  ["location details match", collectionFingerprint(cached.locations) === collectionFingerprint(remote.locations)],
+  ["FAQs, sponsors, media, notices, and content-page text match", ["faqs", "sponsors", "media", "notices", "contentPages"].every(key => collectionFingerprint(cached[key]) === collectionFingerprint(remote[key]))]
 ];
 for (const [name, passed] of checks) console.log(`${passed ? "PASS" : "FAIL"} - ${name}`);
 console.log(`\nSimulator ${cacheSimulatorId}; remote revision ${remote.revision}; native cache revision ${cached.revision}; ${cached.scheduleItems?.length ?? 0} sessions.`);
@@ -55,6 +59,10 @@ function scheduleFingerprint(snapshot) {
     id: item.id, title: item.title, startUtc: item.startUtc, endUtc: item.endUtc,
     locationId: item.locationId, locationName: item.locationName, status: item.status
   })).sort((left, right) => left.id.localeCompare(right.id)));
+}
+
+function collectionFingerprint(items = []) {
+  return JSON.stringify([...items].sort((left, right) => left.id.localeCompare(right.id)));
 }
 
 function bootedSimulatorIds() {

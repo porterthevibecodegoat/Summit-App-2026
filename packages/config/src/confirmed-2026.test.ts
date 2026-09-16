@@ -10,7 +10,7 @@ describe("confirmed 2026 summit roster", () => {
 
   it("matches the reviewed read-only Airtable snapshot", () => {
     expect(confirmedSummitGuests2026).toHaveLength(53);
-    expect(confirmedSummitGuests2026Source.observedConfirmedRows).toBe(57);
+    expect(confirmedSummitGuests2026Source.observedConfirmedRows).toBe(56);
     expect(confirmedSummitGuests2026Source.publicConfirmedRows).toBe(confirmedSummitGuests2026.length);
     expect(confirmedSummitGuests2026).not.toEqual(expect.arrayContaining(["Erica McGraw", "Jay McGraw", "Raquelle Stevens"]));
     expect(confirmedSummitGuests2026).toEqual(expect.arrayContaining(["Jeff Levin", "Mike Tyson", "Darryl McDaniels (DMC)", "Janet Wozniak", "Cathy Olson"]));

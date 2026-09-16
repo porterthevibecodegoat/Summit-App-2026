@@ -11,8 +11,8 @@ describe("temporary attendee AI", () => {
     });
 
     expect(answer.title).toBe("Inspiring Children Foundation");
-    expect(answer.body).toContain("501(c)(3)");
-    expect(answer.body).toContain("whole-human development");
+    expect(answer.body).toBe(demoSnapshot.contentPages.find(page => page.slug === "inspiring-children-foundation")?.body);
+    expect(answer.body).toContain("supports young people");
   });
 
   it("does not invent an appearance time for public figures missing from the schedule", () => {

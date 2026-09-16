@@ -15,7 +15,7 @@ The event owner confirmed that source times mean Las Vegas/Pacific time (`Americ
 - Special access is labeled where the activity title identifies its audience. Other access remains unconfirmed, not a promise that every ticket grants admission.
 - No confirmed speaker-to-session assignments were invented. The panel's incomplete lineup remains unannounced.
 
-The talent grid showed 57 records in Confirmed Attendance: after excluding three TBC records and a duplicate DMC identity, 53 unique confirmed guests remain. Held or tentative records are not confirmation. Blank biographies and absent headshots stay blank rather than reusing unapproved historical claims.
+The initial talent review showed 57 records in Confirmed Attendance: after excluding three TBC records and a duplicate DMC identity, 53 unique confirmed guests remained. A second read-only review on September 16 showed 56 records because the separate DMC duplicate had been removed from Airtable. The same 53 public confirmed names remain. Held or tentative records are not confirmation. Blank biographies and absent headshots stay blank rather than reusing unapproved historical claims.
 
 ## Producer credits
 
@@ -49,3 +49,11 @@ Complete the five incomplete timing records; approve remaining rooms, access rul
 - Apple signing, a physical-device build, push delivery, and App Store review remain separate gates. These results do not establish completion of those gates.
 
 Do not run historical seed scripts against this populated production project. Routine changes must use guarded staff publishing; `scripts/publish-ros-2026.mjs` is a one-time import that requires the expected prior revision and intentionally refuses to repeat after revision 9.
+
+## Native follow-up review
+
+The second read-only ROS review matched all 32 source rows, including unchanged start/end times and the five incomplete entries. No new schedule revision was needed merely to repeat an identical import.
+
+The native Ask AI fallback still contained a separate historical program/role description list. It has been removed. Both the staff-hosted attendee endpoint and the phone's offline fallback now call `@not-alone/domain/concierge`, using the same published snapshot. Current guest attendance does not imply an old host role or a new speaking slot. The fallback no longer asserts old Community Day activities, a closing concert, registration rooms, or historical sponsors. Published pending-timing notes remain available offline.
+
+The native cache verifier now compares event information, full guest records, rooms, FAQs, sponsors, media, notices, and content-page text in addition to schedule identity/timing/revision checks.
