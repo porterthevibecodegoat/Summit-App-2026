@@ -134,7 +134,7 @@ function CurrentAwardsPage({ program, snapshot = null }: Omit<AwardsPageProps, "
   return <main className={`${styles.page} ${styles.awards} ${styles.refined}`}>
     <YearNavigation kind="awards" year={2026} />
     <section className={styles.awardsHero} aria-labelledby="awards-title">
-      <img className={styles.heroScene} src="/images/awards-2025-highlights.jpg" alt="Jewel performing at the 2025 Not Alone Awards" fetchPriority="high" width={1280} height={720} />
+      <img className={styles.heroScene} src="/images/wynn-las-vegas.webp" alt="Wynn Las Vegas overlooking its gardens and waterfall" fetchPriority="high" width={1500} height={1125} />
       <div className={styles.heroContent}>
         <p className={styles.heroVenue}>{venue}</p>
         <h1 id="awards-title" className={styles.awardsEdition}>Not Alone<br />Awards <span>2026</span></h1>
@@ -142,7 +142,7 @@ function CurrentAwardsPage({ program, snapshot = null }: Omit<AwardsPageProps, "
         <p className={styles.heroInvitation}>Invitation only</p>
         <div className={styles.awardsActions}><a className={styles.action} href="#awards-program">Explore the evening</a><a className={styles.textAction} href="#highlights">Watch 2025 highlights</a></div>
       </div>
-      <div className={styles.heroFootnote}><p>Powered by<br /><strong>Steven &amp; Alexandra Cohen Foundation</strong></p><p>Jewel at the 2025 Awards</p></div>
+      <div className={styles.heroFootnote}><p>Powered by<br /><strong>Steven &amp; Alexandra Cohen Foundation</strong></p><p>Wynn Las Vegas</p></div>
     </section>
     <nav className={styles.sectionNav} aria-label="Explore the Awards"><a href="#awards-program">The Evening</a><a href="#highlights">2025 Highlights</a><a href="#directory">2026 Talent &amp; Guests</a><a href="#leadership">Co-Chairs</a><a href="#producers">Production</a></nav>
     <section className={`${styles.band} ${styles.awardsIntroduction}`}>

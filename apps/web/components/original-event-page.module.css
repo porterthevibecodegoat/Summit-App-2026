@@ -189,7 +189,7 @@
 .refined.awards .sectionNav { border-color: #343434; color: #dcdcdc; }
 .refined.awards .awardsHero { position: relative; isolation: isolate; min-height: 500px; height: min(660px, calc(100svh - 285px)); padding: 48px max(32px, calc((100% - 1240px) / 2)) 100px; display: flex; align-items: center; text-align: left; background: #090909; overflow: hidden; }
 .refined.awards .awardsHero .heroScene { position: absolute; inset: 0; z-index: -2; width: 100%; max-width: none; height: 100%; margin: 0; object-fit: cover; object-position: center 10%; }
-.refined.awards .awardsHero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: #0005; }
+.refined.awards .awardsHero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, #000b, #0007 45%, #0002 75%), linear-gradient(0deg, #0008, transparent 35%); }
 .heroContent { width: 540px; max-width: 100%; text-shadow: 0 2px 18px #0009; }
 .refined.awards .awardsHero .heroVenue { margin-bottom: 18px; font-size: 15px; color: #fff; }
 .refined.awards .awardsHero .heroInvitation { font-size: 13px; color: #e0dcdf; margin: 8px 0 0; }
@@ -281,7 +281,7 @@
   .refined.awards .eveningProgram { gap: 40px; }
   .awardsEdition { font-size: 64px; }
   .heroContent { width: 440px; }
-  .refined.awards .awardsHero .heroScene { object-position: left center; }
+  .refined.awards .awardsHero .heroScene { object-position: center 25%; }
 }
 @media (max-width: 600px) {
   .heroTitle { top: 12%; left: 8%; font-size: 20px; }
@@ -320,8 +320,8 @@
   .refined.awards .awardsHero { min-height: 490px; height: calc(100svh - 265px); max-height: 620px; padding: 170px 22px 82px; align-items: end; }
   .refined.awards .years { flex-wrap: nowrap; gap: 12px; padding: 10px 12px; }
   .refined.awards .years a { font-size: 12px; white-space: nowrap; }
-  .refined.awards .awardsHero .heroScene { object-position: 49% center; }
-  .refined.awards .awardsHero::after { background: #0006; }
+  .refined.awards .awardsHero .heroScene { object-position: 38% center; }
+  .refined.awards .awardsHero::after { background: linear-gradient(0deg, #000d, #0007 60%, #0002); }
   .refined.awards .awardsHero .heroVenue { font-size: 12px; margin-bottom: 12px; }
   .heroFootnote { bottom: 16px; left: 22px; right: 22px; gap: 16px; }
   .refined.awards .heroFootnote p { font-size: 9px; }
@@ -354,7 +354,7 @@
 }
 @media (max-width: 600px) and (max-height: 700px) {
   .refined.awards .awardsHero { min-height: 350px; height: calc(100svh - 208px); padding: 0 20px 66px; }
-  .refined.awards .awardsHero .heroScene { object-position: 20% center; }
+  .refined.awards .awardsHero .heroScene { object-position: 38% center; }
   .awardsEdition { font-size: 36px; margin-bottom: 12px; }
   .awardsEdition span { font-size: 15px; }
   .refined.awards .awardsHero .heroVenue { font-size: 11px; margin-bottom: 8px; }

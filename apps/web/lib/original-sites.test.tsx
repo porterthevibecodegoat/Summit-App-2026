@@ -10,11 +10,15 @@ import { publishedAwardsProgram } from "@not-alone/domain";
 const escape = (value: string) => value.replaceAll("&", "&amp;").replaceAll("'", "&#x27;").replaceAll('"', "&quot;");
 
 describe("source-faithful, year-separated event pages", () => {
-  it("labels historical hero photography without changing the 2025 archive", () => {
+  it("uses distinct venue and highlights photography without changing the 2025 archive", () => {
     const current = renderToStaticMarkup(<OriginalAwardsPage year={2026} snapshot={event2026Snapshot} />);
+    const hero = current.match(/<section[^>]*aria-labelledby="awards-title"[^>]*>([\s\S]*?)<\/section>/)?.[1];
     expect(current).toContain('aria-labelledby="awards-title"');
-    expect(current).toContain('alt="Jewel performing at the 2025 Not Alone Awards"');
-    expect(current).toContain("Jewel at the 2025 Awards");
+    expect(hero).toContain('src="/images/wynn-las-vegas.webp"');
+    expect(hero).toContain('alt="Wynn Las Vegas overlooking its gardens and waterfall"');
+    expect(hero).not.toContain("/images/awards-2025-highlights.jpg");
+    expect(current).toContain('src="/images/awards-2025-highlights.jpg"');
+    expect(current).not.toContain("Jewel at the 2025 Awards");
     expect(current).toContain('href="#awards-program"');
     expect(current).toContain('href="#highlights"');
     expect(current).toContain("Steven &amp; Alexandra Cohen Foundation");
