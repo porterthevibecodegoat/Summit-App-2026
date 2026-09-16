@@ -130,6 +130,16 @@ try {
 
   await page.goto(`${base}/content`);
   await page.getByLabel("Venue", { exact: true }).fill("Acceptance test venue");
+  await page.getByLabel("Activate reviewed people directory on website and app").check();
+  await page.getByRole("tab", { name: /^Speakers / }).click();
+  const profile = page.locator(".recordEditor").first();
+  await profile.getByLabel("Role approval source").fill("Isolated acceptance-test approval; not real event content");
+  await profile.getByLabel("Producers", { exact: true }).check();
+  await page.getByRole("tab", { name: "Pages & Awards", exact: true }).click();
+  await page.getByRole("button", { name: "Add 2026 Awards program", exact: true }).click();
+  const program = page.locator(".recordEditor").last();
+  await program.getByLabel("Body", { exact: true }).fill("Isolated acceptance Awards program");
+  await program.getByLabel("Visible", { exact: true }).check();
   page.once("dialog", dialog => dialog.accept());
   const [contentPublished] = await Promise.all([
     page.waitForResponse(response => response.url().endsWith("/api/content/publish")),
@@ -139,8 +149,12 @@ try {
   const updated = await (await fetch(`${base}/api/snapshot`)).json();
   assert.equal(updated.revision, 4);
   assert.equal(updated.event.venueName, "Acceptance test venue");
+  assert.equal(updated.event.directoryEnabled, true);
+  assert(updated.speakers[0].directoryCategories.includes("Producers"));
+  assert(updated.speakers[0].roleSource.includes("acceptance-test"));
+  assert(updated.contentPages.some(page => page.slug === "awards-2026-program" && page.published && page.body === "Isolated acceptance Awards program"));
   assert.deepEqual(updated.scheduleItems, restored.scheduleItems);
-  pass("Browser content publication changes venue and preserves schedule");
+  pass("Browser content publication preserves schedule and publishes reviewed roles and Awards program");
   const audit = await db(`/rest/v1/production_audit_entries?event_id=eq.${eventId}&select=action,publication_revision`);
   assert(audit.some(entry => entry.action === "ROLLBACK_EVENT_SNAPSHOT_REVISION"));
   assert(audit.some(entry => entry.publication_revision === 4));

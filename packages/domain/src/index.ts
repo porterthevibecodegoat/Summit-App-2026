@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 import type { EventNotice, EventSnapshot, ScheduleItem } from "@not-alone/validation";
 
 export * from "./live-ops";
+export * from "./published-content";
 
 export type NowAndUpcomingInput = {
   snapshot: EventSnapshot;

@@ -2,10 +2,11 @@
 
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import type { EventNotice, EventSnapshot, Faq, MediaItem, Speaker, Sponsor } from "@not-alone/validation";
+import { directoryCategorySchema } from "@not-alone/validation";
 import { getStaffAuthHeaders } from "../staff-auth-bridge";
 
-type Section = "event" | "speakers" | "faqs" | "sponsors" | "media" | "notices";
-type EditableEvent = Pick<EventSnapshot["event"], "name" | "organizationName" | "dateLabel" | "venueName" | "city" | "positioning" | "presentedBy" | "poweredBy" | "tracks" | "featuredPeople" | "demo">;
+type Section = "event" | "speakers" | "faqs" | "sponsors" | "media" | "notices" | "pages";
+type EditableEvent = Pick<EventSnapshot["event"], "name" | "organizationName" | "dateLabel" | "venueName" | "city" | "positioning" | "presentedBy" | "poweredBy" | "tracks" | "featuredPeople" | "demo" | "directoryEnabled">;
 
 export function ContentStudio({
   initialSnapshot,
@@ -23,7 +24,7 @@ export function ContentStudio({
   const [sponsors, setSponsors] = useState(initialSnapshot.sponsors);
   const [media, setMedia] = useState(initialSnapshot.media);
   const [notices, setNotices] = useState(initialSnapshot.notices);
-  const [contentPages] = useState(initialSnapshot.contentPages);
+  const [contentPages, setContentPages] = useState(initialSnapshot.contentPages);
   const [dirty, setDirty] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [importingGuests, setImportingGuests] = useState(false);
@@ -119,6 +120,7 @@ export function ContentStudio({
         <Tab active={active === "sponsors"} label={`Sponsors ${counts.sponsors}`} onClick={() => setActive("sponsors")} />
         <Tab active={active === "media"} label={`Media ${counts.media}`} onClick={() => setActive("media")} />
         <Tab active={active === "notices"} label={`Live notices ${counts.notices}`} onClick={() => setActive("notices")} />
+        <Tab active={active === "pages"} label="Pages & Awards" onClick={() => setActive("pages")} />
       </div>
 
       {active === "event" ? <EventEditor value={event} onChange={(next) => { setEvent(next); changed(); }} /> : null}
@@ -127,6 +129,7 @@ export function ContentStudio({
       {active === "sponsors" ? <SponsorEditor items={sponsors} onChange={(next) => { setSponsors(next); changed(); }} /> : null}
       {active === "media" ? <MediaEditor items={media} onChange={(next) => { setMedia(next); changed(); }} /> : null}
       {active === "notices" ? <NoticeEditor items={notices} eventId={initialSnapshot.event.id} onChange={(next) => { setNotices(next); changed(); }} /> : null}
+      {active === "pages" ? <PagesEditor items={contentPages} onChange={(next) => { setContentPages(next); changed(); }} /> : null}
     </section>
   );
 }
@@ -141,6 +144,7 @@ function EventEditor({ value, onChange }: { value: EditableEvent; onChange: (val
     <section className="contentEditor">
       <div className="editorHeading"><div><div className="label">Core details</div><h2>Event information</h2></div></div>
       <div className="contentFormGrid">
+        <label className="publishToggle"><input type="checkbox" checked={value.directoryEnabled ?? false} onChange={(e) => onChange({ ...value, directoryEnabled: e.target.checked })} /> Activate reviewed people directory on website and app</label>
         <Field label="Event name" value={value.name} onChange={(v) => field("name", v)} />
         <Field label="Organization" value={value.organizationName} onChange={(v) => field("organizationName", v)} />
         <Field label="Dates" value={value.dateLabel} onChange={(v) => field("dateLabel", v)} />
@@ -160,10 +164,20 @@ function SpeakerEditor({ items, eventId, onChange }: { items: Speaker[]; eventId
     {items.map((item) => <RecordEditor key={item.id} title={item.name} published={item.published} onPublished={(v) => onChange(update(items, item.id, { published: v }))} onRemove={() => onChange(remove(items, item.id))}>
       <Field label="Name" value={item.name} onChange={(v) => onChange(update(items, item.id, { name: v }))} />
       <Field label="Role" value={item.role} onChange={(v) => onChange(update(items, item.id, { role: v }))} />
+      <Field label="Role approval source" value={item.roleSource ?? ""} onChange={(v) => onChange(update(items, item.id, { roleSource: v }))} />
+      <fieldset className="contentField wide"><legend>Approved directory categories</legend>{directoryCategorySchema.options.map(category => <label className="publishToggle" key={category}><input type="checkbox" checked={item.directoryCategories?.includes(category) ?? false} onChange={(e) => onChange(update(items, item.id, { directoryCategories: e.target.checked ? [...(item.directoryCategories ?? []), category] : (item.directoryCategories ?? []).filter(value => value !== category) }))} />{category}</label>)}</fieldset>
       <Field label="Headshot URL" value={item.headshotUrl ?? ""} onChange={(v) => onChange(update(items, item.id, { headshotUrl: v || null }))} />
       <Field area label="Biography" value={item.bio} onChange={(v) => onChange(update(items, item.id, { bio: v }))} />
     </RecordEditor>)}
   </CollectionEditor>;
+}
+
+function PagesEditor({ items, onChange }: { items: EventSnapshot["contentPages"]; onChange: (items: EventSnapshot["contentPages"]) => void }) {
+  const addAwards = () => onChange([...items, { id: uuid(), slug: "awards-2026-program", title: "2026 Awards program", body: "Add the approved 2026 Awards program.", published: false, revision: 1 }]);
+  return <section className="contentEditor"><div className="editorHeading"><h2>Pages & Awards</h2><button className="secondaryButton" type="button" disabled={items.some(page => page.slug === "awards-2026-program")} onClick={addAwards}>Add 2026 Awards program</button></div><div className="recordList">{items.map(item => <RecordEditor key={item.id} title={item.title} published={item.published} onPublished={(published) => onChange(update(items, item.id, { published }))} onRemove={() => onChange(remove(items, item.id))}>
+    <Field label="Title" value={item.title} onChange={title => onChange(update(items, item.id, { title }))} />
+    <Field area label="Body" value={item.body} onChange={body => onChange(update(items, item.id, { body }))} />
+  </RecordEditor>)}</div></section>;
 }
 
 function FaqEditor({ items, onChange }: { items: Faq[]; onChange: (items: Faq[]) => void }) {
@@ -219,12 +233,12 @@ function RecordEditor({ title, published, onPublished, onRemove, children }: { t
 }
 
 function Field({ label, value, onChange, area = false }: { label: string; value: string; onChange: (value: string) => void; area?: boolean }) {
-  return <label className={`contentField ${area ? "wide" : ""}`}><span>{label}</span>{area ? <textarea rows={4} value={value} onChange={(e) => onChange(e.target.value)} /> : <input value={value} onChange={(e) => onChange(e.target.value)} />}</label>;
+  return <label className={`contentField ${area ? "wide" : ""}`}><span>{label}</span>{area ? <textarea aria-label={label} rows={4} value={value} onChange={(e) => onChange(e.target.value)} /> : <input aria-label={label} value={value} onChange={(e) => onChange(e.target.value)} />}</label>;
 }
 
 function pickEvent(snapshot: EventSnapshot): EditableEvent {
   const { name, organizationName, dateLabel, venueName, city, positioning, presentedBy, poweredBy, tracks, featuredPeople, demo } = snapshot.event;
-  return { name, organizationName, dateLabel, venueName, city, positioning, presentedBy, poweredBy, tracks, featuredPeople, demo };
+  return { name, organizationName, dateLabel, venueName, city, positioning, presentedBy, poweredBy, tracks, featuredPeople, demo, directoryEnabled: snapshot.event.directoryEnabled ?? false };
 }
 
 function update<T extends { id: string }>(items: T[], id: string, patch: Partial<T>) { return items.map((item) => item.id === id ? { ...item, ...patch } : item); }

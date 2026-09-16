@@ -50,6 +50,29 @@ async function enterSummit(page: Page) {
   await expect(readyNavigation).toBeVisible();
 }
 
+test("reviewed people and Awards follow published revisions without restoring removed names", async ({ page, request }, testInfo) => {
+  test.skip(!["iphone-8-se-portrait", "tablet", "desktop"].includes(testInfo.project.name), "Content flow covered at phone, tablet, and desktop sizes.");
+  const snapshot = await (await request.get("http://127.0.0.1:3010/api/snapshot")).json();
+  snapshot.revision += 100;
+  snapshot.event.directoryEnabled = true;
+  snapshot.speakers = [{ id: "83000000-0000-4000-8000-000000000001", eventId: snapshot.event.id, name: "Reviewed directory person", role: "Approved producer", bio: "Approved biography", headshotUrl: null, published: true, directoryCategories: ["Producers"], roleSource: "Test approval" }];
+  snapshot.contentPages.push({ id: "83000000-0000-4000-8000-000000000002", slug: "awards-2026-program", title: "Reviewed Awards program", body: "Approved program details", published: true, revision: snapshot.revision });
+  await page.route("**/api/snapshot", route => route.fulfill({ json: { ...snapshot, serverTimeUtc: new Date().toISOString() } }));
+  await page.goto("/people");
+  await enterSummit(page);
+  await expect(page.getByText("Reviewed directory person", { exact: true })).toBeVisible();
+  await expect(page.getByText("Approved producer", { exact: true })).toBeVisible();
+  await page.getByRole("tab", { name: "Awards", exact: true }).click();
+  await expect(page.getByText("Approved program details", { exact: true })).toBeVisible();
+  snapshot.revision += 1;
+  snapshot.speakers = [];
+  await page.goto("/people");
+  await enterSummit(page);
+  await expect(page.getByText("Confirmed guests will appear here after event-team approval.", { exact: true })).toBeVisible();
+  await expect(page.getByText("Reviewed directory person", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Jewel Murray", { exact: true })).toHaveCount(0);
+});
+
 function captureRuntimeErrors(page: Page) {
   const errors: string[] = [];
 

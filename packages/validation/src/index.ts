@@ -13,6 +13,8 @@ export const featuredPersonSchema = z.object({
   group: z.string().min(1)
 });
 
+export const directoryCategorySchema = z.enum(["Co-Chairs", "Hosts", "Founders", "Mental Health Nonprofit Founding Partners", "Musicians", "Entertainers & Athletes", "Experts", "Business Leaders & Philanthropists", "Sponsors", "Executive Producers", "Producers", "Attendees"]);
+
 export const speakerSchema = z.object({
   id: z.string().uuid(),
   eventId: z.string().min(1),
@@ -20,7 +22,9 @@ export const speakerSchema = z.object({
   role: z.string().min(1),
   bio: z.string(),
   headshotUrl: z.string().url().nullable(),
-  published: z.boolean()
+  published: z.boolean(),
+  directoryCategories: z.array(directoryCategorySchema).max(12).optional(),
+  roleSource: z.string().trim().max(1000).optional()
 });
 
 export const faqSchema = z.object({
@@ -100,7 +104,8 @@ export const eventSnapshotSchema = z.object({
     poweredBy: z.string().min(1),
     tracks: z.array(z.string().min(1)),
     featuredPeople: z.array(featuredPersonSchema),
-    demo: z.boolean()
+    demo: z.boolean(),
+    directoryEnabled: z.boolean().optional()
   }),
   revision: z.number().int().positive(),
   serverTimeUtc: z.string().datetime(),

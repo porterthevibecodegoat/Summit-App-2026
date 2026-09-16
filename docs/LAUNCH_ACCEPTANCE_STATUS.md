@@ -2,6 +2,18 @@
 
 This is an evidence report, not a claim that the entire product is launch-approved.
 
+## Follow-Up: Reviewed Directory And Awards
+
+- Added optional staff-reviewed people publication shared by website and mobile, using the existing snapshot/speaker records rather than a second roster. Activation is explicit and has not been enabled on the public event.
+- Staff can assign directory categories, record the role approval source, edit profiles, and publish visibility changes. Attendance confirmation is not treated as role approval. The API rejects categorized published people without a recorded source when the reviewed directory is activated.
+- Added a Pages & Awards editor and connected the published `awards-2026-program` title/body to the website and mobile. This is a plain-text program editor, not a complete structured honoree/category CMS. The 2025 archive remains unchanged.
+- Removed stale website concierge claims about attendee messaging forms. Directory category jump buttons now correspond to visible sections.
+- Latest unit suite: 111 passed. Latest responsive suite: 439 passed, 54 intentionally skipped duplicated content/recovery cases across 29 viewport configurations. Reviewed-content rendering/removal runs at phone, tablet, and desktop sizes.
+- Updated real-Supabase staff acceptance passed all 19 checks, now including directory activation, role-source metadata, and Awards content. Test records were deleted; public revision and schedule were unchanged. An earlier attempt collided with a rebuild during server startup; a second caught an unstable textarea accessible name, which was fixed before the passing run.
+- Website production build and the 12-route/66-link browser acceptance passed. A separate isolated browser test verifies reviewed profile links, Awards publication, withdrawal, backend failure, and truthful messaging status. No live event content is modified by these tests.
+- The follow-up native Release build succeeded, passed 18 bundle checks, and was installed in the simulator. The nonactivated People screen was visually inspected; native cache comparison passed 6/6 at revision 8. The newly activated content path was exercised through Expo web, not by activating the real event on a physical iPhone.
+- See `DIRECTORY_CONTENT_WORKFLOW.md` for producer-list provenance, activation instructions, and compatibility limits. Until staff activates reviewed publication, the existing bundled directory remains in use; its producer assignments have not thereby become verified.
+
 ## Verified In This Pass
 
 - `pnpm lint` and `pnpm typecheck` passed.
@@ -49,7 +61,7 @@ This is an evidence report, not a claim that the entire product is launch-approv
 5. Restore OpenAI access/billing and run live-model grounding/safety evaluation when authorized. Deterministic fallback coverage is not proof of live-model behavior.
 6. Obtain event-owner approval of final 2026 schedule, confirmations, venue/map, sponsor/speaker content, media rights, privacy/support text, and design. Automated checks cannot supply those approvals.
 7. Run physical-device accessibility and release acceptance, then TestFlight/App Store submission. Neither submission nor Apple review occurred in this pass.
-8. Finish canonical content integration for the mobile People and Awards tabs. People currently derives names from bundled confirmed-guest configuration and local candidate profiles; Awards uses local category/archive lists. Staff snapshot publication does not dynamically update those lists. The passing schedule/content tests must not be interpreted as proof that every visible app page is staff-editable.
+8. Review and activate the new published people directory after approving the complete roster, role sources, and imagery. Deliver the updated mobile binary before relying on that path on installed phones. Approve/publish the 2026 Awards program; structured category/honoree editing and historical archive editing remain outside the new plain-text program editor. Not every visible marketing or archive field is staff-editable.
 
 ## Deferred By Owner
 

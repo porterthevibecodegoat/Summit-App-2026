@@ -1,4 +1,6 @@
 import { confirmedSummitGuests2026 } from "@not-alone/config";
+import { publishedDirectory } from "@not-alone/domain";
+import type { EventSnapshot } from "@not-alone/validation";
 
 export type PersonCategory = "Co-Chairs" | "Hosts" | "Founders" | "Mental Health Nonprofit Founding Partners" | "Musicians" | "Entertainers & Athletes" | "Experts" | "Business Leaders & Philanthropists" | "Sponsors" | "Executive Producers" | "Producers" | "Attendees";
 
@@ -100,4 +102,16 @@ export const categories: PersonCategory[] = ["Co-Chairs", "Hosts", "Founders", "
 
 export function findPerson(slug: string) {
   return [...people2026, ...people2025].find((person) => person.slug === slug);
+}
+
+export function directoryPeople(snapshot: EventSnapshot | null): SummitPerson[] {
+  // An unavailable backend is not permission to restore a withdrawn profile.
+  if (!snapshot) return [];
+  const reviewed = publishedDirectory(snapshot);
+  if (reviewed === null) return people2026;
+  return reviewed.map(person => ({
+    name: person.name, slug: person.id, role: person.role, bio: person.bio, year: 2026,
+    categories: person.directoryCategories?.length ? person.directoryCategories : ["Attendees"],
+    ...(person.headshotUrl ? { image: person.headshotUrl } : {})
+  }));
 }

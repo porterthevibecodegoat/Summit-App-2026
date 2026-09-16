@@ -23,6 +23,19 @@ const session: StaffDraftSession = {
 };
 
 describe("live operations input safety", () => {
+  it("requires role provenance before publishing categorized people", () => {
+    const content = { ...demoSnapshot, event: { ...demoSnapshot.event, directoryEnabled: true }, speakers: [{ ...demoSnapshot.speakers[0]!, published: true, directoryCategories: ["Producers"] }] };
+    const { event, speakers, faqs, sponsors, media, notices, contentPages } = content;
+    const payload = { event, speakers, faqs, sponsors, media, notices, contentPages };
+    expect(staffContentSchema.safeParse(payload).success).toBe(false);
+    expect(staffContentSchema.safeParse({ ...payload, speakers: [{ ...speakers[0], roleSource: "Event team approval, September 16" }] }).success).toBe(true);
+  });
+
+  it("rejects ambiguous duplicate program pages", () => {
+    const { event, speakers, faqs, sponsors, media, notices, contentPages } = demoSnapshot;
+    expect(staffContentSchema.safeParse({ event, speakers, faqs, sponsors, media, notices, contentPages: [contentPages[0], contentPages[0]] }).success).toBe(false);
+  });
+
   it("rejects malformed staff draft payloads", () => {
     const result = staffDraftSessionsSchema.safeParse([{ ...session, status: "Published", unexpected: true }]);
 

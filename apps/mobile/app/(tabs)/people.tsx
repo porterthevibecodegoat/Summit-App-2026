@@ -3,6 +3,9 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-nati
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
 import { confirmedSummitGuests2026 } from "@not-alone/config";
+import { publishedDirectory } from "@not-alone/domain";
+import { useSummit } from "../../components/summit-context";
+import { PublishedPeople } from "../../components/published-people";
 
 type Category = "Co-Chairs" | "Hosts" | "Founders" | "Mental Health Nonprofit Founding Partners" | "Musicians" | "Entertainers & Athletes" | "Experts" | "Business Leaders & Philanthropists" | "Sponsors" | "Producers" | "Attendees";
 type Person = { name: string; role: string; category: Category; secondaryCategory?: Category; image?: string };
@@ -59,8 +62,11 @@ const people: Person[] = confirmedSummitGuests2026.map((name) =>
 const categories: Category[] = ["Co-Chairs", "Hosts", "Founders", "Mental Health Nonprofit Founding Partners", "Musicians", "Entertainers & Athletes", "Experts", "Business Leaders & Philanthropists", "Sponsors", "Producers", "Attendees"];
 
 export default function PeopleScreen() {
+  const { snapshot } = useSummit();
   const [category, setCategory] = useState<Category>("Co-Chairs");
   const visible = useMemo(() => people.filter((person) => person.category === category || person.secondaryCategory === category), [category]);
+  const reviewed = publishedDirectory(snapshot);
+  if (reviewed !== null) return <PublishedPeople people={reviewed} />;
   return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={styles.content}>
     <Text style={styles.eyebrow}>2026 Summit</Text><Text style={styles.title}>Featuring</Text><Text style={styles.intro}>Meet the people advancing emotional and mental health through science, lived experience, storytelling, music, and innovation.</Text>
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabs}>{categories.map((item) => <Pressable key={item} accessibilityRole="tab" accessibilityState={{ selected: item === category }} aria-selected={item === category} onPress={() => setCategory(item)} style={[styles.tab, item === category && styles.activeTab]}><Text style={[styles.tabText, item === category && styles.activeTabText]}>{item}</Text></Pressable>)}</ScrollView>

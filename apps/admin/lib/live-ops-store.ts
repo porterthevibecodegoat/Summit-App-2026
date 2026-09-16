@@ -10,6 +10,7 @@ import {
 } from "@not-alone/domain";
 import {
   eventSnapshotSchema,
+  directoryCategorySchema,
   type AttendeeDeviceRegistration,
   type ChangeSource,
   type DocumentImportJob,
@@ -49,7 +50,8 @@ export const staffContentSchema = z.object({
       role: z.string().trim().min(1).max(200),
       group: z.string().trim().min(1).max(120)
     })).max(100),
-    demo: z.boolean()
+    demo: z.boolean(),
+    directoryEnabled: z.boolean().optional()
   }),
   speakers: z.array(z.object({
     id: z.string().uuid(),
@@ -58,7 +60,9 @@ export const staffContentSchema = z.object({
     role: z.string().trim().min(1).max(200),
     bio: z.string().trim().max(2000),
     headshotUrl: z.string().url().nullable(),
-    published: z.boolean()
+    published: z.boolean(),
+    directoryCategories: z.array(directoryCategorySchema).max(12).optional(),
+    roleSource: z.string().trim().max(1000).optional()
   })).max(250),
   faqs: z.array(z.object({
     id: z.string().uuid(),
@@ -101,7 +105,17 @@ export const staffContentSchema = z.object({
     published: z.boolean(),
     revision: z.number().int().positive()
   })).max(250)
-}).strict();
+}).strict().superRefine((content, ctx) => {
+  if (content.event.directoryEnabled) {
+    content.speakers.forEach((person, index) => {
+      if (person.published && person.directoryCategories?.some(category => category !== "Attendees") && !person.roleSource?.trim()) {
+        ctx.addIssue({ code: "custom", path: ["speakers", index, "roleSource"], message: `Record the approved role source for ${person.name}; attendance confirmation alone is not role approval.` });
+      }
+    });
+  }
+  const slugs = content.contentPages.map(page => page.slug);
+  if (new Set(slugs).size !== slugs.length) ctx.addIssue({ code: "custom", path: ["contentPages"], message: "Content page slugs must be unique." });
+});
 
 export type StaffDraftSession = z.infer<typeof staffDraftSessionSchema>;
 export type StaffContent = z.infer<typeof staffContentSchema>;

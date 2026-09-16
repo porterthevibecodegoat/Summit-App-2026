@@ -4,6 +4,14 @@ import type { EventSnapshot, ScheduleItem } from "@not-alone/validation";
 
 const defaultApiBaseUrl = "https://summit-app-2026-admin.vercel.app";
 
+export async function getReviewedContentSnapshot(): Promise<EventSnapshot | null> {
+  try {
+    return await fetchPublishedSnapshot(process.env.PUBLIC_API_BASE_URL ?? defaultApiBaseUrl, { timeoutMs: 5000 });
+  } catch {
+    return null;
+  }
+}
+
 export async function getPublicSnapshot(): Promise<EventSnapshot> {
   try {
     return await fetchPublishedSnapshot(process.env.PUBLIC_API_BASE_URL ?? defaultApiBaseUrl, { timeoutMs: 5000 });
