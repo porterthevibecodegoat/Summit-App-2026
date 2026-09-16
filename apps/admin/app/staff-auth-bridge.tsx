@@ -54,7 +54,10 @@ export function StaffAuthBridge({ children }: { children: ReactNode }) {
             return;
           }
           clearLegacySession();
-          router.refresh();
+          // Reload protected server content with the new cookie and a clean URL.
+          // A router refresh can restore the original credential fragment.
+          window.location.replace(`${window.location.pathname}${window.location.search}`);
+          return;
         }
 
         if (active) {

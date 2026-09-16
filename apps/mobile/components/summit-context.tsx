@@ -148,27 +148,6 @@ export function SummitProvider({ children }: PropsWithChildren) {
   }, []);
 
   useEffect(() => {
-    if (Platform.OS === "web") {
-      return;
-    }
-
-    let active = true;
-    let removeListener: (() => void) | undefined;
-    void import("expo-notifications").then((Notifications) => {
-      if (!active) return;
-      const subscription = Notifications.addNotificationResponseReceivedListener(() => {
-        void syncPublishedSnapshot();
-      });
-      removeListener = () => subscription.remove();
-    });
-
-    return () => {
-      active = false;
-      removeListener?.();
-    };
-  }, [syncPublishedSnapshot]);
-
-  useEffect(() => {
     void AsyncStorage.removeItem("not-alone.saved-session-ids.v1").catch(() => undefined);
   }, []);
 

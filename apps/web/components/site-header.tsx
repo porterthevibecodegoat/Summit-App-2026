@@ -7,9 +7,9 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   return (
     <><a className="challengeBar" href="https://www.inspiringchildren.org/notalone" target="_blank">Join the #NotAloneChallenge!</a><header className="siteHeader">
-      <Link href="/" className="wordmark"><img src="https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6837c3d311d156080f9dcca9/1748485075411/Summit+heart+hands+wht+gradient+text.png" alt="Not Alone Summit" /></Link>
-      <button className="menuButton" onClick={() => setOpen(!open)} aria-expanded={open}>Menu</button>
-      <nav className={open ? "mainNav open" : "mainNav"} aria-label="Main navigation">
+      <Link href="/" className="wordmark"><img src="/images/summit-logo.png" alt="Not Alone Summit" /></Link>
+      <button className="menuButton" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="main-navigation">Menu</button>
+      <nav id="main-navigation" className={open ? "mainNav open" : "mainNav"} aria-label="Main navigation" onClick={(event) => { if ((event.target as HTMLElement).closest("a")) setOpen(false); }}>
         <Link href="/#directory">Directory</Link>
         <Link href="/schedule">Schedule</Link>
         <Link href="/map">Map</Link>

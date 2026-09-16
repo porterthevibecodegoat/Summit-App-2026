@@ -3,6 +3,42 @@ import { expect, test, type Page } from "@playwright/test";
 const routes = ["/", "/schedule", "/help", "/map", "/info"] as const;
 const forbiddenAttendeeResidue = /prototype|demo mode|room-level map coming soon|replace this with approved|published staff-controlled|published from the staff|my schedule/i;
 
+test("published data survives API outage and reconnect without accepting stale revisions", async ({ page, request }, testInfo) => {
+  test.skip(testInfo.project.name !== "iphone-8-se-portrait", "Recovery uses one representative browser; layout is covered separately.");
+  const response = await request.get("http://127.0.0.1:3010/api/snapshot");
+  expect(response.ok()).toBeTruthy();
+  const snapshot = await response.json();
+  snapshot.revision += 100;
+  const item = snapshot.scheduleItems.find((entry: { title: string }) => entry.title.includes("Registration, Gifting Suite"));
+  expect(item).toBeTruthy();
+  item.title = "Acceptance recovery session";
+  let offline = false;
+  await page.route("**/api/snapshot", route => offline
+    ? route.abort("internetdisconnected")
+    : route.fulfill({ json: { ...snapshot, serverTimeUtc: new Date().toISOString() } }));
+  await page.goto("/schedule");
+  await enterSummit(page);
+  await expect(page.getByText(item.title, { exact: true })).toBeVisible();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem("not-alone.published-snapshot-cache.v1"))).toContain(item.title);
+  offline = true;
+  await page.reload();
+  await enterSummit(page);
+  await expect(page.getByText(item.title, { exact: true })).toBeVisible();
+  offline = false;
+  snapshot.revision += 1;
+  item.title = "Acceptance reconnected session";
+  await page.reload();
+  await enterSummit(page);
+  await expect(page.getByText(item.title, { exact: true })).toBeVisible();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem("not-alone.published-snapshot-cache.v1"))).toContain(item.title);
+  snapshot.revision -= 2;
+  item.title = "Stale session must not replace cache";
+  await page.reload();
+  await enterSummit(page);
+  await expect(page.getByText("Acceptance reconnected session", { exact: true })).toBeVisible();
+  await expect(page.getByText(item.title, { exact: true })).toHaveCount(0);
+});
+
 async function enterSummit(page: Page) {
   const enter = page.getByRole("button", { name: "Enter Not Alone Summit" });
   const readyNavigation = page.getByRole("tab", { exact: true, name: "Home" });

@@ -6,14 +6,13 @@ import "./styles.css";
 import "./enhancements.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://notalonesummit.org"),
-  applicationName: "notalonesummit.org",
-  title: { default: "notalonesummit.org", template: "%s | notalonesummit.org" },
+  metadataBase: new URL(process.env.SITE_URL ?? "https://not-alone-summit-web-rose.vercel.app"),
+  applicationName: "Not Alone Summit",
+  title: { default: "Not Alone Summit", template: "%s | Not Alone Summit" },
   description: "The Not Alone Summit attendee website and connection directory.",
   manifest: "/manifest.webmanifest",
-  alternates: { canonical: "/" },
   icons: { icon: [{ url: "/challenge-logo.png", sizes: "2424x2699", type: "image/png" }], apple: "/challenge-logo.png" },
-  appleWebApp: { capable: true, title: "notalonesummit.org", statusBarStyle: "black-translucent" }
+  appleWebApp: { capable: true, title: "Not Alone Summit", statusBarStyle: "black-translucent" }
 };
 export const viewport: Viewport = { themeColor: "#8177c9" };
 

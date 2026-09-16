@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 import { colors, typography } from "@not-alone/design-tokens";
 import { SummitProvider } from "../components/summit-context";
+import { NotificationNavigation } from "../components/notification-navigation";
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -57,6 +58,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="session/[id]" options={{ title: "Session" }} />
         </Stack>
+        <NotificationNavigation />
       </SummitProvider>
     </QueryClientProvider>
   );

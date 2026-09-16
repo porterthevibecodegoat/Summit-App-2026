@@ -33,6 +33,8 @@ ENABLE_NOTIFICATION_DISPATCH=false
 
 Cancel or supersede unsent jobs, preserve delivery attempts, and reconcile accepted Expo tickets before deciding whether a correction is needed. Schedule sync continues without push.
 
+An accepted ticket or successful provider receipt is not proof that a phone displayed the message or that an attendee read it. A timeout after sending can have an uncertain delivery outcome; retries can duplicate a notification. If a worker stops while a job is `processing`, do not blindly reschedule it. Reconcile provider tickets and stored delivery attempts first. Automatic recovery of interrupted processing jobs is not yet proven.
+
 ## AI Incident
 
 Set `ENABLE_AI=false`. Deterministic attendee and staff fallback answers remain available. Review server logs for prompt, grounding revision, schema validation, and provider response without exposing sensitive content.
@@ -43,7 +45,7 @@ Disable or delete the Supabase Auth identity, remove its `staff_profiles` record
 
 ## Backend Or Hosting Outage
 
-The attendee app should continue using its last valid SQLite snapshot. Restore Vercel/Supabase service, verify `/api/health` and `/api/snapshot`, then foreground a test device and confirm recovery before resuming staff changes.
+The attendee app should continue using its last valid persisted snapshot (AsyncStorage in the current app). Restore Vercel/Supabase service, verify `/api/health` and `/api/snapshot`, then foreground a test device and confirm recovery before resuming staff changes.
 
 ## Closure
 

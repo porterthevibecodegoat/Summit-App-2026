@@ -166,7 +166,7 @@ export async function dispatchDuePushNotifications(snapshot: EventSnapshot): Pro
   }
 
   if (deliveryRows.length > 0) {
-    await backendFetch("/rest/v1/notification_delivery_attempts", {
+    await backendFetch("/rest/v1/notification_delivery_attempts?on_conflict=notification_job_id,device_registration_id", {
       method: "POST",
       body: deliveryRows,
       expectedStatus: 201,
@@ -222,7 +222,8 @@ export async function checkExpoPushReceipts() {
     method: "POST",
     headers,
     body: JSON.stringify({ ids: attempts.map((attempt) => attempt.expo_ticket_id) }),
-    cache: "no-store"
+    cache: "no-store",
+    signal: AbortSignal.timeout(10000)
   });
   if (!response.ok) {
     throw new Error(`Expo receipt service returned ${response.status}.`);
@@ -351,8 +352,12 @@ async function sendExpoBatch(messages: ExpoPushMessage[]) {
     method: "POST",
     headers,
     body: JSON.stringify(messages),
-    cache: "no-store"
-  });
+    cache: "no-store",
+    signal: AbortSignal.timeout(10000)
+  }).catch(() => null);
+  if (!response) {
+    return messages.map(() => ({ status: "error" as const, message: "Expo push service did not respond." }));
+  }
   if (!response.ok) {
     const detail = (await response.text()).slice(0, 240);
     return messages.map(() => ({
@@ -361,7 +366,7 @@ async function sendExpoBatch(messages: ExpoPushMessage[]) {
     }));
   }
 
-  const result = (await response.json()) as { data?: ExpoPushTicket[] };
+  const result = (await response.json().catch(() => ({}))) as { data?: ExpoPushTicket[] };
   return Array.isArray(result.data) ? result.data : [];
 }
 

@@ -53,7 +53,7 @@ export default async function NotificationsPage() {
             <div className="value">{state.notificationDelivery.accepted}</div>
           </div>
           <div className="metric">
-            <div className="label">Delivered</div>
+            <div className="label">Provider receipts</div>
             <div className="value">{state.notificationDelivery.delivered}</div>
           </div>
           <div className="metric">

@@ -17,6 +17,8 @@
     "mobile:sync-verify": "node scripts/verify-mobile-sync-cache.mjs",
     "mobile:release-verify": "node scripts/verify-ios-release-bundle.mjs",
     "test:responsive": "node scripts/run-responsive-tests.mjs",
+    "test:staff-acceptance": "node scripts/verify-staff-acceptance.mjs",
+    "test:website-acceptance": "node scripts/verify-website-acceptance.mjs",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
