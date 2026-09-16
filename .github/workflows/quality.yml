@@ -32,4 +32,5 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm --filter @not-alone/admin build
+      - run: pnpm --filter @not-alone/web build
       - run: pnpm release:preflight -- --offline

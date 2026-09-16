@@ -43,8 +43,12 @@ describe("year-specific public content", () => {
       "Founders",
       "Musicians",
       "Entertainers & Athletes",
-      "Experts"
+      "Experts",
+      "Business Leaders & Philanthropists"
     ]);
+    expect(summit2025Directory.find(group => group.title === "Experts")?.people).toHaveLength(10);
+    expect(summit2025Directory.find(group => group.title === "Business Leaders & Philanthropists")?.people).toHaveLength(7);
+    expect(awards2025Directory.find(group => group.title === "Business Leaders & Philanthropists")?.people).toHaveLength(13);
     expect(summit2025Highlights).toHaveLength(14);
   });
 });

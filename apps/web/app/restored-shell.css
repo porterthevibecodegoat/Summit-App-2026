@@ -1,0 +1,11 @@
+@font-face { font-family: "Original Poppins"; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/poppins-regular.woff2') format('woff2'); }
+@font-face { font-family: "Original Poppins"; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/poppins-bold.woff2') format('woff2'); }
+.siteHeader { background: #34264c; min-height: 98px; padding: 10px 28px; backdrop-filter: none; font-family: "Original Poppins", sans-serif; }
+.wordmark { width: 100px; height: 78px; }
+.wordmark img { max-height: 76px; }
+.mainNav { gap: 18px; font-size: 14px; }
+.navCta { background: #d8e6f4; color: #1e2440; border-radius: 4px; }
+.awardsHeader, .awardsHeader .mainNav.open { background: #050505; }
+.challengeBar { background: white; color: #181818; padding: 12px 20px; font-size: 14px; letter-spacing: 0; }
+@media(max-width:1100px) { .menuButton { display: block; } .mainNav { display: none; } .mainNav.open { display: flex; position: absolute; left: 0; right: 0; top: 98px; background: #34264c; padding: 24px; flex-wrap: wrap; gap: 24px; z-index: 90; } }
+@media(max-width:600px) { .siteHeader { min-height: 80px; padding: 8px 20px; } .wordmark { height: 64px; width: 82px; } .mainNav.open { top: 80px; } }

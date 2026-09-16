@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
-const routes = ["/", "/schedule", "/people", "/awards", "/help", "/map", "/info"] as const;
+const routes = ["/", "/schedule", "/help", "/map", "/info"] as const;
 const forbiddenAttendeeResidue = /prototype|demo mode|room-level map coming soon|replace this with approved|published staff-controlled|published from the staff|my schedule/i;
 
 test("published data survives API outage and reconnect without accepting stale revisions", async ({ page, request }, testInfo) => {
@@ -50,27 +50,11 @@ async function enterSummit(page: Page) {
   await expect(readyNavigation).toBeVisible();
 }
 
-test("reviewed people and Awards follow published revisions without restoring removed names", async ({ page, request }, testInfo) => {
-  test.skip(!["iphone-8-se-portrait", "tablet", "desktop"].includes(testInfo.project.name), "Content flow covered at phone, tablet, and desktop sizes.");
-  const snapshot = await (await request.get("http://127.0.0.1:3010/api/snapshot")).json();
-  snapshot.revision += 100;
-  snapshot.event.directoryEnabled = true;
-  snapshot.speakers = [{ id: "83000000-0000-4000-8000-000000000001", eventId: snapshot.event.id, name: "Reviewed directory person", role: "Approved producer", bio: "Approved biography", headshotUrl: null, published: true, directoryCategories: ["Producers"], roleSource: "Test approval" }];
-  snapshot.contentPages = [...snapshot.contentPages.filter((page: { slug: string }) => page.slug !== "awards-2026-program"), { id: "83000000-0000-4000-8000-000000000002", slug: "awards-2026-program", title: "Reviewed Awards program", body: "Approved program details", published: true, revision: snapshot.revision }];
-  await page.route("**/api/snapshot", route => route.fulfill({ json: { ...snapshot, serverTimeUtc: new Date().toISOString() } }));
-  await page.goto("/people");
+test("the original five-tab app does not expose collaborator-added destinations", async ({ page }) => {
+  await page.goto("/");
   await enterSummit(page);
-  await expect(page.getByText("Reviewed directory person", { exact: true })).toBeVisible();
-  await expect(page.getByText("Approved producer", { exact: true })).toBeVisible();
-  await page.getByRole("tab", { name: "Awards", exact: true }).click();
-  await expect(page.getByText("Approved program details", { exact: true })).toBeVisible();
-  snapshot.revision += 1;
-  snapshot.speakers = [];
-  await page.goto("/people");
-  await enterSummit(page);
-  await expect(page.getByText("Confirmed guests will appear here after event-team approval.", { exact: true })).toBeVisible();
-  await expect(page.getByText("Reviewed directory person", { exact: true })).toHaveCount(0);
-  await expect(page.getByText("Jewel Murray", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("tablist").last().getByRole("tab")).toHaveCount(5);
+  await expect(page.getByRole("tab", { name: /^(People|Awards)$/ })).toHaveCount(0);
 });
 
 function captureRuntimeErrors(page: Page) {
@@ -96,7 +80,7 @@ for (const route of routes) {
     }));
 
     expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth + 1);
-    for (const label of ["Home", "Schedule", "People", "Awards", "Ask AI", "Map", "Info"]) {
+    for (const label of ["Home", "Schedule", "Ask AI", "Map", "Info"]) {
       await expect(page.getByRole("tab", { exact: true, name: label })).toBeVisible();
     }
 
@@ -183,18 +167,6 @@ test("session detail is concise and contains no editorial placeholders", async (
   await expect(page.getByText("Event Context", { exact: true })).toHaveCount(0);
   await expect(page.locator("body")).not.toContainText(forbiddenAttendeeResidue);
   expect(runtimeErrors).toEqual([]);
-});
-
-test("people categories respond without advertising unavailable profile actions", async ({ page }) => {
-  await page.goto("/people");
-  await enterSummit(page);
-  await expect(page.getByText("View bio", { exact: false })).toHaveCount(0);
-  const category = page.getByRole("tab", { name: "Producers", exact: true });
-  await category.click();
-  await expect(category).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByText("Trent Alenik", { exact: true })).toBeVisible();
-  await expect(page.getByText("Aphrah Brokaw", { exact: true })).toBeVisible();
-  await expect(page.getByText("Mike Tyson", { exact: true })).toHaveCount(0);
 });
 
 test("concierge disables empty submission and answers a direct schedule question", async ({ page }) => {

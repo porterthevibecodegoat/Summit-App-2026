@@ -1,0 +1,2375 @@
+{
+  "summit": {
+    "source": "https://www.inspiringchildren.org/summit",
+    "capturedAt": "2026-09-16",
+    "sourceSha256": "bca0159899f3fb12138c4b577223491cda1b736504d55acaaec14e20a423d453",
+    "sections": [
+      {
+        "id": "68f838d2f4ff4f09f26b13cc",
+        "title": "",
+        "blocks": [],
+        "images": [
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/d200bd43-f4ae-426e-9a0e-419e3c41c23d/Summit+desktop+fallback+image.jpg",
+            "alt": "Summit desktop fallback image.jpg"
+          }
+        ],
+        "people": []
+      },
+      {
+        "id": "68f838d2f4ff4f09f26b13d2",
+        "title": "“The Davos of Human Development ” - Jewel",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "“The Davos of Human Development ” - Jewel"
+          },
+          {
+            "tag": "p",
+            "text": "Building on the success of NotAloneChallenge.org , the Inspiring Children Foundation is launching the Not Alone Summit , presented by Villa Bibbiani and powered by the Steven & Alexandra Cohen Foundation , hosted at Wynn Las Vegas. The Not Alone Summit is a premier national convening designed to bring together leading CEOs, artists, athletes, philanthropists, clinicians, researchers, and youth ambassadors to advance emotional and mental health."
+          },
+          {
+            "tag": "p",
+            "text": "Through meaningful dialogue, collaboration, storytelling, music, and a first-of-its-kind awards show, the Summit unites science, lived experience, and innovation to inspire collective action, normalize mental health conversations, and build a more compassionate and connected system of care for all."
+          }
+        ],
+        "images": [
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/145cb4db-5f80-40a8-9c05-81f795de7fcb/Steven+Alexandra+Cohen+Foundation+logo.jpg",
+            "alt": ""
+          }
+        ],
+        "people": []
+      },
+      {
+        "id": "68f838d2f4ff4f09f26b13d5",
+        "title": "",
+        "blocks": [
+          {
+            "tag": "p",
+            "text": "The Not Alone Program, which includes the Challenge, Summit, and Awards Show, is produced by the Inspiring Children Foundation (ICF) — a 501(c)(3) nonprofit that has spent the last 25 years helping at-risk youth facing financial hardship, anxiety, depression, and suicidal ideation, achieving tremendous outcomes."
+          },
+          {
+            "tag": "p",
+            "text": "The Foundation’s 10 pillars of healing, growth, and high-performance living serve as a framework to help children discover and pursue their passions through sports, academics, entrepreneurship, music, art, and project-based learning. By engaging youth in these areas, ICF inspires curiosity about their physical, social, emotional, and mental health — empowering them to heal, grow, and perform at the highest level in all areas of life."
+          },
+          {
+            "tag": "p",
+            "text": "ICF’s best-in-class program operates daily from 8 a.m. to 6 p.m., 365 days a year, with a showcase program in inner-city Las Vegas, Nevada. The Not Alone Program was created to scale the Foundation’s extraordinary work and bring its proven model of transformation to a wider audience through the Challenge, Summit, and Awards Show."
+          }
+        ],
+        "images": [
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/18bdf88e-059d-457f-947c-37f787f35fa3/New+ICF+logo+higher+res.png",
+            "alt": ""
+          }
+        ],
+        "people": []
+      },
+      {
+        "id": "69029e142926a85be9ca1bb7",
+        "title": "Sponsored By",
+        "blocks": [
+          {
+            "tag": "h3",
+            "text": "Sponsored By"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/b3559b50-e865-4a74-ae1e-6bab41e1b441/wynn_resorts-BROWN+%282020%29.jpg",
+            "alt": ""
+          }
+        ],
+        "people": []
+      },
+      {
+        "id": "68f872a910442d0f530ae214",
+        "title": "Co-Chairs",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "Co-Chairs"
+          },
+          {
+            "tag": "h4",
+            "text": "Steve Wozniak"
+          },
+          {
+            "tag": "p",
+            "text": "Co-Founder of Apple & Mental Health Advocate"
+          },
+          {
+            "tag": "h4",
+            "text": "Jewel"
+          },
+          {
+            "tag": "p",
+            "text": "4-Time Grammy Nominated Singer-Songwriter and Mental Health Pioneer"
+          },
+          {
+            "tag": "h4",
+            "text": "Cherrial Odell"
+          },
+          {
+            "tag": "p",
+            "text": "Inspiring Children Alumna"
+          },
+          {
+            "tag": "h2",
+            "text": "Summit Host"
+          },
+          {
+            "tag": "h4",
+            "text": "Jason Kennedy"
+          },
+          {
+            "tag": "p",
+            "text": "Entertainment Journalist"
+          },
+          {
+            "tag": "h2",
+            "text": "Awards Host"
+          },
+          {
+            "tag": "h4",
+            "text": "Loni Love"
+          },
+          {
+            "tag": "p",
+            "text": "Comedian & TV Host"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/d9c41895-5978-4e36-aafb-47a78fb83639/Woz+headshot+smiling+no+bkgd+crop-min.png",
+            "alt": ""
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/5d45b483-c59e-4ba1-a5f7-58f5f2f66cbc/Jewel+headshot+TWE+no+bkgd+crop-min.png",
+            "alt": ""
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/ff79bc74-c00c-4234-9e17-fa9bd1a91319/Cherrial+head+shoulders+no+bkgd+2.png",
+            "alt": ""
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/68fbffca-698d-4572-8a32-8c9104f0c33c/Jason+Kennedy+headshot+no+bkgd.png",
+            "alt": ""
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/8f3cca75-89d9-4644-9a82-aa34a4196e74/Loni+Love+Alex+Hill+no+bkgd+sq+sm.png",
+            "alt": ""
+          }
+        ],
+        "people": []
+      },
+      {
+        "id": "68f838d2f4ff4f09f26b13d8",
+        "title": "Panels",
+        "blocks": [
+          {
+            "tag": "li",
+            "text": "Panels"
+          },
+          {
+            "tag": "h3",
+            "text": "Panels"
+          },
+          {
+            "tag": "li",
+            "text": "Pitches"
+          },
+          {
+            "tag": "h3",
+            "text": "Pitches"
+          },
+          {
+            "tag": "li",
+            "text": "Awards"
+          },
+          {
+            "tag": "h3",
+            "text": "Awards"
+          },
+          {
+            "tag": "li",
+            "text": "Debates"
+          },
+          {
+            "tag": "h3",
+            "text": "Debates"
+          },
+          {
+            "tag": "li",
+            "text": "Concerts"
+          },
+          {
+            "tag": "h3",
+            "text": "Concerts"
+          },
+          {
+            "tag": "li",
+            "text": "Seminars"
+          },
+          {
+            "tag": "h3",
+            "text": "Seminars"
+          },
+          {
+            "tag": "li",
+            "text": "Meditation"
+          },
+          {
+            "tag": "h3",
+            "text": "Meditation"
+          },
+          {
+            "tag": "li",
+            "text": "Workshops"
+          },
+          {
+            "tag": "h3",
+            "text": "Workshops"
+          },
+          {
+            "tag": "li",
+            "text": "VIP Dinners"
+          },
+          {
+            "tag": "h3",
+            "text": "VIP Dinners"
+          },
+          {
+            "tag": "li",
+            "text": "Philanthropy"
+          },
+          {
+            "tag": "h3",
+            "text": "Philanthropy"
+          },
+          {
+            "tag": "li",
+            "text": "Fitness & Yoga"
+          },
+          {
+            "tag": "h3",
+            "text": "Fitness & Yoga"
+          },
+          {
+            "tag": "li",
+            "text": "Product Launches"
+          },
+          {
+            "tag": "h3",
+            "text": "Product Launches"
+          },
+          {
+            "tag": "li",
+            "text": "Group Discussions"
+          },
+          {
+            "tag": "h3",
+            "text": "Group Discussions"
+          },
+          {
+            "tag": "li",
+            "text": "Exclusive VIP Experiences"
+          },
+          {
+            "tag": "h3",
+            "text": "Exclusive VIP Experiences"
+          },
+          {
+            "tag": "h2",
+            "text": "Featuring:"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/8b90c68c-6294-42ba-98a7-993f0d2e15f3/Jewel+speaking+TWE+1+higher+res+edit.jpg",
+            "alt": ""
+          }
+        ],
+        "people": []
+      },
+      {
+        "id": "68f838d2f4ff4f09f26b13db",
+        "title": "Located at Wynn Las Vegas",
+        "blocks": [
+          {
+            "tag": "h3",
+            "text": "Located at Wynn Las Vegas"
+          },
+          {
+            "tag": "p",
+            "text": "November 2 - 4, 2026"
+          },
+          {
+            "tag": "p",
+            "text": "Exclusive convening of the nation’s top mental health advocates, including:"
+          },
+          {
+            "tag": "li",
+            "text": "Experts"
+          },
+          {
+            "tag": "p",
+            "text": "Experts"
+          },
+          {
+            "tag": "li",
+            "text": "Celebrities"
+          },
+          {
+            "tag": "p",
+            "text": "Celebrities"
+          },
+          {
+            "tag": "li",
+            "text": "Athletes"
+          },
+          {
+            "tag": "p",
+            "text": "Athletes"
+          },
+          {
+            "tag": "li",
+            "text": "Business Leaders"
+          },
+          {
+            "tag": "p",
+            "text": "Business Leaders"
+          },
+          {
+            "tag": "li",
+            "text": "#NotAlone Supporters"
+          },
+          {
+            "tag": "p",
+            "text": "#NotAlone Supporters"
+          },
+          {
+            "tag": "li",
+            "text": "Philanthropists"
+          },
+          {
+            "tag": "p",
+            "text": "Philanthropists"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/41bcc9b8-6c64-4002-915f-d017a88a8041/Exterior+Wynn+Las+Vegas.jpg",
+            "alt": ""
+          }
+        ],
+        "people": []
+      },
+      {
+        "id": "68f838d2f4ff4f09f26b13e1",
+        "title": "Founders",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "Founders"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee98559c9af3ebb934824/1759439247206/Jeneva+Bell.png?format=500w",
+            "alt": "Jeneva Bell"
+          },
+          {
+            "src": "  https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/60f7626c-b451-4a5f-9a3a-f9b2a1de4fa8/sorina.jpg?format=500w",
+            "alt": "Sorina Buri"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee94945388537d1d52e61/1759439179764/Cohens.png?format=500w",
+            "alt": "Steven & Alexandra Cohen"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee9d07150ab7c971841a6/1759439314207/John+Couch.png?format=500w",
+            "alt": "John Couch"
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/5531e8d9-8dcf-4625-bcfc-ed4ad0fc0b22/unnamed+%281%29.jpg?format=500w",
+            "alt": "Jennifer Donnelly"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690a910285bcb85d65451cba/1762300162616/Pam+and+Duncan+crop+smaller.jpg\n?format=500w",
+            "alt": "Pam & Duncan Goldie-Morrison"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee9bd513de8744239c5cd/1759439295196/Jewel+hat.png?format=500w",
+            "alt": "Jewel"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690722ff433d8d7594f3a39f/1762075392189/Ellie+Kanner.jpg?format=500w",
+            "alt": "Ellie Kanner"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e609ca36e8ea273aba67ca/1759906250781/Winston+and+Cameron+sq.jpg?format=500w",
+            "alt": "Winston & Cameron Kelly"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68f66270f00ba52aaa6d27d3/1760977520763/Nick+Kislinger+sq.jpg?format=500w",
+            "alt": "Nick Kislinger"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e60918b45cb11cb649344b/1759906072672/Melony+and+Adam+Lewis+sq.jpg?format=500w",
+            "alt": "Melony & Adam Lewis"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69125a1ef93c0c243af09d39/1762810398530/Rachel+Platten+headshot+2.jpeg?format=800w",
+            "alt": "Rachel Platten"
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/64cdaea1-1fbe-48c7-b454-c5e7a3e174e0/Dr.+George+Rapier+III+headshot+2025.jpg?format=500w",
+            "alt": "Dr. George Rapier III"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee9a6bb355f4c422fe846/1759439271815/Jennifer+Smorgon.png?format=500w",
+            "alt": "Jennifer Smorgon"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e608dae41c2a631ab23a46/1759906010289/Noah+Melinda+Springer+sq.jpg?format=500w",
+            "alt": "Melinda & Noah Springer"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68ec816324c71e7e79e9ab69/1760330084112/Christopher-Teas-scaled+sq.jpg?format=500w",
+            "alt": "Christopher Teas"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68deea089f218c06d0f2c745/1759439376104/John+Tyson.png?format=500w",
+            "alt": "John Tyson"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/67f862c0eb0ed869a305752d/1744331456513/Ryan+Wolfington+headshot.jpeg?format=500w",
+            "alt": "Ryan Wolfington"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68ec81cca6ad7d1cf09d23d5/1760330189118/Sean+and+Ana+Wolfington+sq.jpg?format=500w",
+            "alt": "Sean & Ana Wolfington"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68ec81e77594567546cc159d/1760330215338/Steve+and+Janet+Wozniak+sq.jpg?format=500w",
+            "alt": "Janet & Steve Wozniak"
+          }
+        ],
+        "people": [
+          {
+            "name": "Jeneva Bell",
+            "role": "Ruggable",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee98559c9af3ebb934824/1759439247206/Jeneva+Bell.png?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-jeneva-bell"
+          },
+          {
+            "name": "Sorina Buri",
+            "role": "CAD Therapeutics",
+            "image": "  https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/60f7626c-b451-4a5f-9a3a-f9b2a1de4fa8/sorina.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-sorina-buri"
+          },
+          {
+            "name": "Steven & Alexandra Cohen",
+            "role": "Philanthropists",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee94945388537d1d52e61/1759439179764/Cohens.png?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-steven-and-alexandra-cohen"
+          },
+          {
+            "name": "John Couch",
+            "role": "Apple Computers",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee9d07150ab7c971841a6/1759439314207/John+Couch.png?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-john-couch"
+          },
+          {
+            "name": "Jennifer Donnelly",
+            "role": "The Ultimate Matchmaker",
+            "image": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/5531e8d9-8dcf-4625-bcfc-ed4ad0fc0b22/unnamed+%281%29.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-jennifer-donnelly"
+          },
+          {
+            "name": "Pam & Duncan Goldie-Morrison",
+            "role": "Philanthropists",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690a910285bcb85d65451cba/1762300162616/Pam+and+Duncan+crop+smaller.jpg\n?format=500w",
+            "href": "https://www.inspiringchildren.org/summit#"
+          },
+          {
+            "name": "Jewel",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee9bd513de8744239c5cd/1759439295196/Jewel+hat.png?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-jewel"
+          },
+          {
+            "name": "Ellie Kanner",
+            "role": "Friends (TV Show)",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690722ff433d8d7594f3a39f/1762075392189/Ellie+Kanner.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-ellie-kanner"
+          },
+          {
+            "name": "Winston & Cameron Kelly",
+            "role": "Philanthropists",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e609ca36e8ea273aba67ca/1759906250781/Winston+and+Cameron+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit#"
+          },
+          {
+            "name": "Nick Kislinger",
+            "role": "Flourish Trust",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68f66270f00ba52aaa6d27d3/1760977520763/Nick+Kislinger+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-nick-kislinger"
+          },
+          {
+            "name": "Melony & Adam Lewis",
+            "role": "BAMM Ventures",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e60918b45cb11cb649344b/1759906072672/Melony+and+Adam+Lewis+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-melony-and-adam-lewis"
+          },
+          {
+            "name": "Rachel Platten",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69125a1ef93c0c243af09d39/1762810398530/Rachel+Platten+headshot+2.jpeg?format=800w",
+            "href": "https://www.inspiringchildren.org/summit-rachel-platten"
+          },
+          {
+            "name": "Dr. George Rapier III",
+            "role": "WellMed",
+            "image": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/64cdaea1-1fbe-48c7-b454-c5e7a3e174e0/Dr.+George+Rapier+III+headshot+2025.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-dr-george-rapier-iii"
+          },
+          {
+            "name": "Jennifer Smorgon",
+            "role": "Smorgon Family Foundation",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee9a6bb355f4c422fe846/1759439271815/Jennifer+Smorgon.png?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-jennifer-smorgon"
+          },
+          {
+            "name": "Melinda & Noah Springer",
+            "role": "Pickle Pro Labs",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e608dae41c2a631ab23a46/1759906010289/Noah+Melinda+Springer+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit#"
+          },
+          {
+            "name": "Christopher Teas",
+            "role": "CAD Therapeutics",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68ec816324c71e7e79e9ab69/1760330084112/Christopher-Teas-scaled+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-christopher-teas"
+          },
+          {
+            "name": "John Tyson",
+            "role": "Tyson Foods",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68deea089f218c06d0f2c745/1759439376104/John+Tyson.png?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-john-tyson"
+          },
+          {
+            "name": "Ryan Wolfington",
+            "role": "Inspiring Children Foundation",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/67f862c0eb0ed869a305752d/1744331456513/Ryan+Wolfington+headshot.jpeg?format=500w",
+            "href": "https://www.inspiringchildren.org/ryan-wolfington"
+          },
+          {
+            "name": "Sean & Ana Wolfington",
+            "role": "Entrepreneurs",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68ec81cca6ad7d1cf09d23d5/1760330189118/Sean+and+Ana+Wolfington+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-sean-and-ana-wolfington"
+          },
+          {
+            "name": "Janet & Steve Wozniak",
+            "role": "Apple Computers",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68ec81e77594567546cc159d/1760330215338/Steve+and+Janet+Wozniak+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-janet-and-steve-wozniak"
+          }
+        ]
+      },
+      {
+        "id": "68f838d2f4ff4f09f26b13e7",
+        "title": "Musicians",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "Musicians"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b72b267b4c903f125e/1762071226929/Alec+Benjamin.jpg",
+            "alt": "Alec Benjamin"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b790ce573d32a47823/1762071226902/BLU+EYES+smaller.jpg",
+            "alt": "BLÜ EYES"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f28dc9597d931de866/1762071538890/Jon+Foreman.jpg",
+            "alt": "Jon Foreman"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e610f319c52c0243c80baf/1759908084313/Harry+Hudson+headshot+sq+crop.jpg?format=500w",
+            "alt": "Harry Hudson"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def7356a61d60fc9b1373a/1759442750985/Jewel+hat.png?format=500w",
+            "alt": "Jewel"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690715cb290260526296eba4/1762072014234/Silas+Luke+Jones.jpg",
+            "alt": "Silas Luke Jones"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156fc97dfb3b1eb9d09a/1762071920648/Run+DMC.jpg",
+            "alt": "Darryl McDaniels"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714936b5e3a49eba8d68e/1762071700814/Jonah+Marais.jpg",
+            "alt": "Jonah Marais"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e61108bef8e030e759ca4c/1759908104594/Nicholas+Petricca+headshot+sq+crop.jpg?format=500w",
+            "alt": "Nicholas Petricca"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69071383ca6fda39e7f7ac16/1762071428142/Cassadee+Pope.jpg",
+            "alt": "Cassadee Pope"
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/7920758b-386f-44a6-b92c-168f8f21ba13/s-blob-v1-IMAGE-zPpC6wxp-Oc.jpg",
+            "alt": "Taylor Van Ginkel"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690715cbfd428757ebdaf52e/1762072014325/Zia+Victoria.jpg",
+            "alt": "Zia Victoria"
+          }
+        ],
+        "people": [
+          {
+            "name": "Alec Benjamin",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b72b267b4c903f125e/1762071226929/Alec+Benjamin.jpg",
+            "href": "https://www.inspiringchildren.org/summit-alec-benjamin"
+          },
+          {
+            "name": "BLÜ EYES",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b790ce573d32a47823/1762071226902/BLU+EYES+smaller.jpg",
+            "href": "https://www.inspiringchildren.org/summit-blu-eyes"
+          },
+          {
+            "name": "Jon Foreman",
+            "role": "Switchfoot",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f28dc9597d931de866/1762071538890/Jon+Foreman.jpg",
+            "href": "https://www.inspiringchildren.org/summit-jon-foreman"
+          },
+          {
+            "name": "Harry Hudson",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e610f319c52c0243c80baf/1759908084313/Harry+Hudson+headshot+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-harry-hudson"
+          },
+          {
+            "name": "Jewel",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def7356a61d60fc9b1373a/1759442750985/Jewel+hat.png?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-jewel"
+          },
+          {
+            "name": "Silas Luke Jones",
+            "role": "Musician",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690715cb290260526296eba4/1762072014234/Silas+Luke+Jones.jpg",
+            "href": "https://www.inspiringchildren.org/summit-silas-luke-jones"
+          },
+          {
+            "name": "Darryl McDaniels",
+            "role": "Run DMC",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156fc97dfb3b1eb9d09a/1762071920648/Run+DMC.jpg",
+            "href": "https://www.inspiringchildren.org/summit-darryl-mcdaniels"
+          },
+          {
+            "name": "Jonah Marais",
+            "role": "Singer",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714936b5e3a49eba8d68e/1762071700814/Jonah+Marais.jpg",
+            "href": "https://www.inspiringchildren.org/summit-jonah-marais"
+          },
+          {
+            "name": "Nicholas Petricca",
+            "role": "Walk The Moon",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e61108bef8e030e759ca4c/1759908104594/Nicholas+Petricca+headshot+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-nicholas-petricca"
+          },
+          {
+            "name": "Cassadee Pope",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69071383ca6fda39e7f7ac16/1762071428142/Cassadee+Pope.jpg",
+            "href": "https://www.inspiringchildren.org/summit-cassadee-pope"
+          },
+          {
+            "name": "Taylor Van Ginkel",
+            "role": "Guitarist / Solo Artist",
+            "image": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/7920758b-386f-44a6-b92c-168f8f21ba13/s-blob-v1-IMAGE-zPpC6wxp-Oc.jpg",
+            "href": "https://www.inspiringchildren.org/summit-taylor-van-ginkel"
+          },
+          {
+            "name": "Zia Victoria",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690715cbfd428757ebdaf52e/1762072014325/Zia+Victoria.jpg",
+            "href": "https://www.inspiringchildren.org/summit-zia-victoria"
+          }
+        ]
+      },
+      {
+        "id": "68f838d2f4ff4f09f26b13ea",
+        "title": "Entertainers & Athletes",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "Entertainers & Athletes"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b7abf5ac2a945b0c2a/1762071227002/Bethel+Wilson.jpg",
+            "alt": "Wilson Bethel"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def9f2cec59767ba07845d/1759443448305/Bob+Mike+Bryan.png?format=500w",
+            "alt": "Bob & Mike Bryan"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714934013d81a43a4cfd0/1762071700407/Jordan+Doww.jpg",
+            "alt": "Jordan Doww"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156febaab802f2292b32/1762071920955/Perez+Hilton.jpg",
+            "alt": "Perez Hilton"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f2b377df6a4c77fdde/1762071540470/Jason+Kennedy.jpg",
+            "alt": "Jason Kennedy"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156f6f1b4111d77a8bc8/1762071920597/Loni+Love+Alex+Hill+sq+copy.jpg",
+            "alt": "Loni Love"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f2f04e05756b404e43/1762071540808/Jada+Pinkett+Smith.jpg",
+            "alt": "Jada Pinkett Smith"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713aa7d40fa1f7ff2bfe6/1762071467585/Estefania+Saavedra.jpg",
+            "alt": "Estefania Saavedra"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defa33953b9e372025a611/1759443511669/Mike+Tyson.png?format=500w",
+            "alt": "Mike Tyson"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69071df87e00bd67a74188c1/1762074105564/Tallulah+Willis.jpg",
+            "alt": "Tallulah Willis"
+          }
+        ],
+        "people": [
+          {
+            "name": "Wilson Bethel",
+            "role": "Actor",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b7abf5ac2a945b0c2a/1762071227002/Bethel+Wilson.jpg",
+            "href": "https://www.inspiringchildren.org/summit#"
+          },
+          {
+            "name": "Bob & Mike Bryan",
+            "role": "Hall of Fame Tennis Players",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def9f2cec59767ba07845d/1759443448305/Bob+Mike+Bryan.png?format=500w",
+            "href": "https://www.inspiringchildren.org/summit#"
+          },
+          {
+            "name": "Jordan Doww",
+            "role": "Actor",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714934013d81a43a4cfd0/1762071700407/Jordan+Doww.jpg",
+            "href": "https://www.inspiringchildren.org/summit#"
+          },
+          {
+            "name": "Perez Hilton",
+            "role": "Media Personality",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156febaab802f2292b32/1762071920955/Perez+Hilton.jpg",
+            "href": "https://www.inspiringchildren.org/summit#"
+          },
+          {
+            "name": "Jason Kennedy",
+            "role": "Entertainment Journalist",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f2b377df6a4c77fdde/1762071540470/Jason+Kennedy.jpg",
+            "href": "https://www.inspiringchildren.org/summit#"
+          },
+          {
+            "name": "Loni Love",
+            "role": "Comedian & TV Host",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156f6f1b4111d77a8bc8/1762071920597/Loni+Love+Alex+Hill+sq+copy.jpg",
+            "href": "https://www.inspiringchildren.org/summit#"
+          },
+          {
+            "name": "Jada Pinkett Smith",
+            "role": "Actress & Businesswoman",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f2f04e05756b404e43/1762071540808/Jada+Pinkett+Smith.jpg",
+            "href": "https://www.inspiringchildren.org/summit#"
+          },
+          {
+            "name": "Estefania Saavedra",
+            "role": "Content Creator",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713aa7d40fa1f7ff2bfe6/1762071467585/Estefania+Saavedra.jpg",
+            "href": "https://www.inspiringchildren.org/summit#"
+          },
+          {
+            "name": "Mike Tyson",
+            "role": "Hall of Fame Boxer",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defa33953b9e372025a611/1759443511669/Mike+Tyson.png?format=500w",
+            "href": "https://www.inspiringchildren.org/summit#"
+          },
+          {
+            "name": "Tallulah Willis",
+            "role": "Actress & Advocate",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69071df87e00bd67a74188c1/1762074105564/Tallulah+Willis.jpg",
+            "href": "https://www.inspiringchildren.org/summit#"
+          }
+        ]
+      },
+      {
+        "id": "68f838d2f4ff4f09f26b13ed",
+        "title": "Experts",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "Experts"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b73bc7667f88f7da51/1762071224894/Blaise+Aguirre+red+tie+copy.jpg?format=500w",
+            "alt": "Blaise Aguirre, MD"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68f87d4e17cf4278e04d1465/1761115470147/Paul+Dalio+headshot+sq.jpg?format=500w",
+            "alt": "Paul Dalio"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713aa32f0d432b696a34f/1762071467583/David+Eagleman.jpg?format=500w",
+            "alt": "David Eagleman"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f2f04e05756b404e42/1762071540550/Jon+Hershfield.jpg?format=500w",
+            "alt": "Jon Hershfield, MFT"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907149203ec5f69660b9b68/1762071701181/Kelsey+Patel.jpg?format=500w",
+            "alt": "Kelsey J. Patel"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69081044874f244de1ba94c2/1762136132614/Casey+Mock+correct+2+sq.jpg?format=500w",
+            "alt": "Casey Mock"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defbcbe7895535d9f25b83/1759443920967/Lyn+Morris.png?format=500w",
+            "alt": "Lyn Morris"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defb60149f631b092d5c61/1759443841633/Bennett+Nemser.png?format=500w",
+            "alt": "Bennett Nemser"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e1be3b7346ab6eae77dc41/1759624763256/Dr.+Tasha+Rasolkhani-Kalhorn+headshot.jpg?format=500w",
+            "alt": "Tasha Rasolkhani-Kalhorn, PhD"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713aad7ad885cec973e45/1762071466720/Crystal+Romero.jpg?format=500w",
+            "alt": "Crystal Romero"
+          }
+        ],
+        "people": [
+          {
+            "name": "Blaise Aguirre, MD",
+            "role": "McLean Psych Hospital",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b73bc7667f88f7da51/1762071224894/Blaise+Aguirre+red+tie+copy.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-blaise-aguirre-md"
+          },
+          {
+            "name": "Paul Dalio",
+            "role": "Filmmaker, Author, Musician",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68f87d4e17cf4278e04d1465/1761115470147/Paul+Dalio+headshot+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-paul-dalio"
+          },
+          {
+            "name": "David Eagleman, PhD",
+            "role": "Neuroscientist & Inventor",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713aa32f0d432b696a34f/1762071467583/David+Eagleman.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-david-eagleman"
+          },
+          {
+            "name": "Jon Hershfield, MFT",
+            "role": "OCD Specialist",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f2f04e05756b404e42/1762071540550/Jon+Hershfield.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-jon-hershfield"
+          },
+          {
+            "name": "Kelsey J. Patel",
+            "role": "Wellness Expert",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907149203ec5f69660b9b68/1762071701181/Kelsey+Patel.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-kelsey-j-patel"
+          },
+          {
+            "name": "Casey Mock",
+            "role": "Technology Policy Advocate & Writer",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69081044874f244de1ba94c2/1762136132614/Casey+Mock+correct+2+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit"
+          },
+          {
+            "name": "Lyn Morris, LMFT",
+            "role": "Didi Hirsch",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defbcbe7895535d9f25b83/1759443920967/Lyn+Morris.png?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-lyn-morris"
+          },
+          {
+            "name": "Bennett Nemser, PhD",
+            "role": "Steven & Alexandra Cohen Foundation",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defb60149f631b092d5c61/1759443841633/Bennett+Nemser.png?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-bennett-nemser"
+          },
+          {
+            "name": "Tasha Rasolkhani-Kalhorn, PhD",
+            "role": "Family Care Center",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e1be3b7346ab6eae77dc41/1759624763256/Dr.+Tasha+Rasolkhani-Kalhorn+headshot.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-tasha-rasolkhani-kalhorn"
+          },
+          {
+            "name": "Crystal Romero",
+            "role": "Army National Guard",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713aad7ad885cec973e45/1762071466720/Crystal+Romero.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-crystal-romero"
+          }
+        ]
+      },
+      {
+        "id": "68f838d2f4ff4f09f26b13f0",
+        "title": "Business Leaders & Philanthropists",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "Business Leaders & Philanthropists"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e61724e6ab386252d349b5/1759909668780/Ron+Biscardi+sq+crop.jpg?format=500w",
+            "alt": "Ron Biscardi"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714939732490b0a1a84d9/1762071701242/Karena+Dawn.jpg?format=500w",
+            "alt": "Karena Dawn"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68df05be51ffdc49d2fd5eb4/1759446469313/Sophie+Gregoire.png?format=500w",
+            "alt": "Sophie Grégoire"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714932b267b4c903f2dd2/1762071700304/Kevin+Hines.jpg?format=500w",
+            "alt": "Kevin Hines"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defeb0bb355f4c4234a5ba/1759444685455/David+Hirsch.png?format=500w",
+            "alt": "David Hirsch"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b70724d264b37562f6/1762071227103/Blake+Mycoskie.jpg?format=500w",
+            "alt": "Blake Mycoskie"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e613da6ac58e647b71bc67/1759908827013/Bozoma+Saint+John+sq+crop.jpg?format=500w",
+            "alt": "Bozoma Saint John"
+          }
+        ],
+        "people": [
+          {
+            "name": "Ron Biscardi",
+            "role": "iConnections",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e61724e6ab386252d349b5/1759909668780/Ron+Biscardi+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-ron-biscardi"
+          },
+          {
+            "name": "Karena Dawn",
+            "role": "Tone It Up",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714939732490b0a1a84d9/1762071701242/Karena+Dawn.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-karena-dawn"
+          },
+          {
+            "name": "Sophie Grégoire Trudeau",
+            "role": "Best-Selling Author",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68df05be51ffdc49d2fd5eb4/1759446469313/Sophie+Gregoire.png?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-sophie-gregoire"
+          },
+          {
+            "name": "Kevin Hines",
+            "role": "Suicide Prevention Speaker",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714932b267b4c903f2dd2/1762071700304/Kevin+Hines.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-kevin-hines"
+          },
+          {
+            "name": "David Hirsch",
+            "role": "Philanthropist",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defeb0bb355f4c4234a5ba/1759444685455/David+Hirsch.png?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-david-hirsch"
+          },
+          {
+            "name": "Blake Mycoskie",
+            "role": "TOMS",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b70724d264b37562f6/1762071227103/Blake+Mycoskie.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-blake-mycoskie"
+          },
+          {
+            "name": "Bozoma Saint John",
+            "role": "Hall of Fame CMO",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e613da6ac58e647b71bc67/1759908827013/Bozoma+Saint+John+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/summit-bozoma-saint-john"
+          }
+        ]
+      },
+      {
+        "id": "69152b5c356092302ff62482",
+        "title": "ICF Alumni",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "ICF Alumni"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/3c79e091-8cf9-4124-b6d3-21a824edd26e/IMG_3350+Sara+Alajbegovic.jpg",
+            "alt": "Sara Alajbegovic"
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/a86315f5-1a71-4c3b-9942-5515b08b7999/005-QupJeGGOAIo+Cole+Brashear.jpg",
+            "alt": "Cole Brashear"
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/cb8ef62a-d9a0-4318-bb7c-939e2e464132/headshot+2+Katrina+Sta+Cruz.jpg",
+            "alt": "Katrina Sta Cruz"
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/baa44c2e-0a8c-416e-8852-2e327d78f655/IMG_0006+Miles+Jackson.jpg",
+            "alt": "Miles Jackson"
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/fcd572ce-03ba-4956-8e4f-85586c35d8fe/1a14f610-b97c-4f68-af8e-f90a526af122_1_201_a+Mario+Aguayo.jpg",
+            "alt": "Mario Aguayo Oropeza"
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/eaadde8e-b364-4d17-9996-b0f0d95d0469/IMG_0285+Natasha.jpg",
+            "alt": "Natasha Scott"
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/3ac9b5b0-cd66-4f9c-bf20-b3996dcd2c6a/Selena-headshot+Selena+Williams.jpg",
+            "alt": "Selena Williams"
+          }
+        ],
+        "people": [
+          {
+            "name": "Sara Alajbegovic",
+            "role": "ICF Alum",
+            "image": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/3c79e091-8cf9-4124-b6d3-21a824edd26e/IMG_3350+Sara+Alajbegovic.jpg",
+            "href": "https://www.inspiringchildren.org/summit-sara-alajbegovic"
+          },
+          {
+            "name": "Cole Brashear",
+            "role": "ICF Alum",
+            "image": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/a86315f5-1a71-4c3b-9942-5515b08b7999/005-QupJeGGOAIo+Cole+Brashear.jpg",
+            "href": "https://www.inspiringchildren.org/summit-cole-brashear"
+          },
+          {
+            "name": "Katrina Sta Cruz",
+            "role": "ICF Alum",
+            "image": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/cb8ef62a-d9a0-4318-bb7c-939e2e464132/headshot+2+Katrina+Sta+Cruz.jpg",
+            "href": "https://www.inspiringchildren.org/summit-katrina-sta-cruz"
+          },
+          {
+            "name": "Miles Jackson",
+            "role": "ICF Alum",
+            "image": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/baa44c2e-0a8c-416e-8852-2e327d78f655/IMG_0006+Miles+Jackson.jpg",
+            "href": "https://www.inspiringchildren.org/summit-miles-jackson"
+          },
+          {
+            "name": "Mario Aguayo Oropeza",
+            "role": "ICF Alum",
+            "image": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/fcd572ce-03ba-4956-8e4f-85586c35d8fe/1a14f610-b97c-4f68-af8e-f90a526af122_1_201_a+Mario+Aguayo.jpg",
+            "href": "https://www.inspiringchildren.org/summit-mario-aguayo-oropeza"
+          },
+          {
+            "name": "Natasha Scott",
+            "role": "ICF Alum",
+            "image": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/eaadde8e-b364-4d17-9996-b0f0d95d0469/IMG_0285+Natasha.jpg",
+            "href": "https://www.inspiringchildren.org/summit-natasha-scott"
+          },
+          {
+            "name": "Selena Williams",
+            "role": "ICF Alum",
+            "image": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/3ac9b5b0-cd66-4f9c-bf20-b3996dcd2c6a/Selena-headshot+Selena+Williams.jpg",
+            "href": "https://www.inspiringchildren.org/summit-selena-williams"
+          }
+        ]
+      },
+      {
+        "id": "68f8432e8b384220170c668b",
+        "title": "Executive Producers",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "Executive Producers"
+          },
+          {
+            "tag": "h4",
+            "text": "Jewel"
+          },
+          {
+            "tag": "p",
+            "text": "Grammy Nominated Singer-Songwriter"
+          },
+          {
+            "tag": "h4",
+            "text": "Ryan Wolfington"
+          },
+          {
+            "tag": "p",
+            "text": "Founder, Inspiring Children Foundation"
+          },
+          {
+            "tag": "h4",
+            "text": "Trevor Short"
+          },
+          {
+            "tag": "p",
+            "text": "Founder, Inspiring Dreams"
+          },
+          {
+            "tag": "h4",
+            "text": "Dr. George Rapier III"
+          },
+          {
+            "tag": "p",
+            "text": "Founder of WellMed & The Not Alone Dinner Series"
+          },
+          {
+            "tag": "h2",
+            "text": "Producers"
+          },
+          {
+            "tag": "h4",
+            "text": "Trent Alenik"
+          },
+          {
+            "tag": "p",
+            "text": "CEO, Inspiring Children Foundation"
+          },
+          {
+            "tag": "h4",
+            "text": "Aphrah Brokaw"
+          },
+          {
+            "tag": "p",
+            "text": "Music Manager, Jewel Inc."
+          }
+        ],
+        "images": [
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/e0e8b046-ab95-4de0-832d-66c70bcf863d/Jewel+headshot+no+bkgd+lightened.png",
+            "alt": ""
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/1f853785-6d97-4d83-93d7-08a49ab24cef/Ryan%2Bheadshot%2Bno%2Bbkgd-min+glowy-min.png",
+            "alt": ""
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/5c1ebc03-a576-4783-90ef-89050b3398fb/Trevor+Short+no+bkgd+edit+2.png",
+            "alt": ""
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/28703834-9cb7-45bb-8032-db27d9d9a20b/Dr.+George+Rapier+III+headshot+2025+expanded+no+bkgd+3.png",
+            "alt": ""
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/602428ec-0426-483f-98e9-0a98cdebbaa4/Trent+headshot+2023+edit+sq+straightened+no+bkgd.png",
+            "alt": ""
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/e3c4ebc4-a9b8-49d3-9b44-2da64f9a9090/Aphrah+Brokaw+no+bkgd+sq+edit.png",
+            "alt": ""
+          }
+        ],
+        "people": []
+      },
+      {
+        "id": "68f838d2f4ff4f09f26b13f3",
+        "title": "Thank you for your interest! Please click to inquire about attendance.",
+        "blocks": [
+          {
+            "tag": "h4",
+            "text": "Thank you for your interest! Please click to inquire about attendance."
+          }
+        ],
+        "images": [
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/23eb4611-bf98-40b9-ad31-0ca68772e32c/ChatGPT+Summit+gradient+pastels+2.jpg",
+            "alt": ""
+          },
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/406eb82c-e235-4f08-892e-42d02a576b99/Summit+heart+hands+graphic.png",
+            "alt": ""
+          }
+        ],
+        "people": []
+      }
+    ],
+    "footer": [
+      "Partner with us.",
+      "We are a non-profit IRS 501(c)(3) charitable organization. Our EIN is 20-1638145.",
+      "For over 25 years, the Inspiring Children Foundation (ICF) has been transforming the lives of at-risk youth in Las Vegas through a whole human approach to physical, emotional and mental health. ICF serves hundreds of youth in-person and millions online. 95% of students in their Leadership Program have earned college scholarships for academics & athletics (tennis) to some of the best colleges in the US. Parts of the program are now being duplicated in 22 cities by other non profits. Click here to learn more.",
+      "Contact Inspiring Children Foundation",
+      "Our programs, along with the contents of our website, are for informational purposes only. This website is not for emergency or crisis help. If you or someone you know is in crisis right now, please call the Suicide Prevention Lifeline at 988 . If you require emergency help, please call 911 or go to your local hospital emergency room. Click here for our full disclaimer.",
+      "We are an equal opportunity employer and all qualified applicants will receive consideration for employment without regard to race, color, religion, sex, sexual orientation, gender identity or expression, pregnancy, age, national origin, disability status, genetic information, protected veteran status, or any other characteristic protected by law."
+    ]
+  },
+  "awards": {
+    "source": "https://www.inspiringchildren.org/awards",
+    "capturedAt": "2026-09-16",
+    "sourceSha256": "b1af4448e1e0035981e816ae1541dcbdc3a0497fd358443a727e23c270913167",
+    "sections": [
+      {
+        "id": "68d474d6a152ec62f26a3084",
+        "title": "",
+        "blocks": [
+          {
+            "tag": "p",
+            "text": "INVITATION ONLY | NOV 2, 2026"
+          },
+          {
+            "tag": "p",
+            "text": "WYNN LAS VEGAS"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://images.squarespace-cdn.com/content/v1/628691b65c3a24383d0eac0a/2b954d43-2b57-41c6-a773-3caad484de09/NA+Awards+Cohen+wht.png",
+            "alt": ""
+          }
+        ],
+        "people": []
+      },
+      {
+        "id": "68d474d6a152ec62f26a308a",
+        "title": "",
+        "blocks": [
+          {
+            "tag": "p",
+            "text": "Presenting the Not Alone Awards Show, powered by the Steven & Alexandra Cohen Foundation , broadcast live on iHeartRadio , and hosted by Wynn Resorts ."
+          },
+          {
+            "tag": "p",
+            "text": "The award show was created to celebrate the pioneers of human development and mental health, the visionaries, healers, and innovators who have courageously broken barriers, challenged stigma, and illuminated the path toward healing, growth, and connection."
+          },
+          {
+            "tag": "p",
+            "text": "These awards honor those who have dedicated their lives to advancing the emotional, social, and mental well-being of humanity through research, clinical innovation, technology, advocacy, philanthropy, and art."
+          },
+          {
+            "tag": "p",
+            "text": "In a time when conversations about mental health were often dismissed or misunderstood, these extraordinary leaders chose to speak up, to care, and to act. They built bridges between science and soul, creating tools, therapies, and technologies that have transformed lives, especially for those who were once left behind, alienated, or forgotten."
+          },
+          {
+            "tag": "p",
+            "text": "Their courage has turned pain into purpose, and isolation into connection. Because of their vision, countless people have discovered that their greatest struggles can become their most profound strengths."
+          },
+          {
+            "tag": "p",
+            "text": "We are forever grateful to these champions, to the founders of the Not Alone Summit, and to all the inspiring co-sponsors who have made this celebration possible. Together, we honor those who invest in humanity and elevate the importance of the human being."
+          }
+        ],
+        "images": [],
+        "people": []
+      },
+      {
+        "id": "6909aab9d6dc4a6e8cb8147a",
+        "title": "No Solicitation, Only Connection. We have a very strict No Pitch, No Solicitation Policy.",
+        "blocks": [
+          {
+            "tag": "h4",
+            "text": "No Solicitation, Only Connection. We have a very strict No Pitch, No Solicitation Policy."
+          },
+          {
+            "tag": "p",
+            "text": "This is a collection of highly successful, purpose-driven individuals who come to heal, grow, and celebrate mental health. Our time is devoted to authenticity, presence, and meaningful human connection. We request that all guests honor this intention by refraining from pitching, selling, or networking. Thank you."
+          }
+        ],
+        "images": [],
+        "people": []
+      },
+      {
+        "id": "6909aab79759145432cbe58e",
+        "title": "Host",
+        "blocks": [
+          {
+            "tag": "h3",
+            "text": "Host"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e696805e4c594844fe7e72/1759942272957/Loni+Love+sq+crop.jpg?format=500w",
+            "alt": "Loni Love"
+          }
+        ],
+        "people": [
+          {
+            "name": "Loni Love",
+            "role": "Comedian & TV Host",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e696805e4c594844fe7e72/1759942272957/Loni+Love+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          }
+        ]
+      },
+      {
+        "id": "690998fb52844b0230e635f5",
+        "title": "When: Monday, November 2nd",
+        "blocks": [
+          {
+            "tag": "h4",
+            "text": "When: Monday, November 2nd"
+          },
+          {
+            "tag": "h4",
+            "text": "Where: Wynn Las Vegas"
+          },
+          {
+            "tag": "h4",
+            "text": "RSVP Below ⬇️"
+          }
+        ],
+        "images": [],
+        "people": []
+      },
+      {
+        "id": "6909b077c0de8d4717ca876b",
+        "title": "Founders",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "Founders"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee98559c9af3ebb934824/1759439247206/Jeneva+Bell.png?format=500w",
+            "alt": "Jeneva Bell"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690a30e03f9004453a946725/1762275553571/Alex+Cohen+crop.jpg?format=500w",
+            "alt": "Alex Cohen"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee9d07150ab7c971841a6/1759439314207/John+Couch.png?format=500w",
+            "alt": "John Couch"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee9bd513de8744239c5cd/1759439295196/Jewel+hat.png?format=500w",
+            "alt": "Jewel"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690722ff433d8d7594f3a39f/1762075392189/Ellie+Kanner.jpg?format=500w",
+            "alt": "Ellie Kanner"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e609ca36e8ea273aba67ca/1759906250781/Winston+and+Cameron+sq.jpg?format=500w",
+            "alt": "Winston & Cameron Kelly"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68f66270f00ba52aaa6d27d3/1760977520763/Nick+Kislinger+sq.jpg?format=500w",
+            "alt": "Nick Kislinger"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e60918b45cb11cb649344b/1759906072672/Melony+and+Adam+Lewis+sq.jpg?format=500w",
+            "alt": "Melony & Adam Lewis"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68deea089f218c06d0f2c746/1759439377346/Rachel+singing.png?format=500w",
+            "alt": "Rachel Platten"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e608b72177dd49681997ac/1759905976215/Dr.+George+Rapier+III+headshot+2025+sq+crop.jpg?format=500w",
+            "alt": "Dr. George Rapier III"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee9a6bb355f4c422fe846/1759439271815/Jennifer+Smorgon.png?format=500w",
+            "alt": "Jennifer Smorgon"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e608dae41c2a631ab23a46/1759906010289/Noah+Melinda+Springer+sq.jpg?format=500w",
+            "alt": "Melinda & Noah Springer"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68ec816324c71e7e79e9ab69/1760330084112/Christopher-Teas-scaled+sq.jpg?format=500w",
+            "alt": "Christopher Teas"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68deea089f218c06d0f2c745/1759439376104/John+Tyson.png?format=500w",
+            "alt": "John Tyson"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/67f862c0eb0ed869a305752d/1744331456513/Ryan+Wolfington+headshot.jpeg?format=500w",
+            "alt": "Ryan Wolfington"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68ec81cca6ad7d1cf09d23d5/1760330189118/Sean+and+Ana+Wolfington+sq.jpg?format=500w",
+            "alt": "Sean & Ana Wolfington"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68ec81e77594567546cc159d/1760330215338/Steve+and+Janet+Wozniak+sq.jpg?format=500w",
+            "alt": "Janet & Steve Wozniak"
+          }
+        ],
+        "people": [
+          {
+            "name": "Jeneva Bell",
+            "role": "Ruggable",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee98559c9af3ebb934824/1759439247206/Jeneva+Bell.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Alex Cohen",
+            "role": "Steven & Alexandra Cohen Foundation",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690a30e03f9004453a946725/1762275553571/Alex+Cohen+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "John Couch",
+            "role": "Apple Computers",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee9d07150ab7c971841a6/1759439314207/John+Couch.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Jewel",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee9bd513de8744239c5cd/1759439295196/Jewel+hat.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Ellie Kanner",
+            "role": "Friends (TV Show)",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690722ff433d8d7594f3a39f/1762075392189/Ellie+Kanner.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Winston & Cameron Kelly",
+            "role": "Philanthropists",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e609ca36e8ea273aba67ca/1759906250781/Winston+and+Cameron+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Nick Kislinger",
+            "role": "Flourish Trust",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68f66270f00ba52aaa6d27d3/1760977520763/Nick+Kislinger+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Melony & Adam Lewis",
+            "role": "BAMM Ventures",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e60918b45cb11cb649344b/1759906072672/Melony+and+Adam+Lewis+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Rachel Platten",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68deea089f218c06d0f2c746/1759439377346/Rachel+singing.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Dr. George Rapier III",
+            "role": "WellMed",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e608b72177dd49681997ac/1759905976215/Dr.+George+Rapier+III+headshot+2025+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Jennifer Smorgon",
+            "role": "Smorgon Family Foundation",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68dee9a6bb355f4c422fe846/1759439271815/Jennifer+Smorgon.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Melinda & Noah Springer",
+            "role": "Pickle Pro Labs",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e608dae41c2a631ab23a46/1759906010289/Noah+Melinda+Springer+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Christopher Teas",
+            "role": "CAD Therapeutics",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68ec816324c71e7e79e9ab69/1760330084112/Christopher-Teas-scaled+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "John Tyson",
+            "role": "Tyson Foods",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68deea089f218c06d0f2c745/1759439376104/John+Tyson.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Ryan Wolfington",
+            "role": "Inspiring Children Foundation",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/67f862c0eb0ed869a305752d/1744331456513/Ryan+Wolfington+headshot.jpeg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Sean & Ana Wolfington",
+            "role": "Entrepreneurs",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68ec81cca6ad7d1cf09d23d5/1760330189118/Sean+and+Ana+Wolfington+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Janet & Steve Wozniak",
+            "role": "Apple Computers",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68ec81e77594567546cc159d/1760330215338/Steve+and+Janet+Wozniak+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          }
+        ]
+      },
+      {
+        "id": "6909b0921f18976df9d0205d",
+        "title": "Musicians",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "Musicians"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b72b267b4c903f125e/1762071226929/Alec+Benjamin.jpg",
+            "alt": "Alec Benjamin"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def735d6c1446a00be6c9b/1759442747432/Bishop+Briggs.png?format=500w",
+            "alt": "Bishop Briggs"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def83a364b7b498baf21ba/1759443039826/Sheila+E.png?format=500w",
+            "alt": "Sheila E."
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b790ce573d32a47823/1762071226902/BLU+EYES+smaller.jpg",
+            "alt": "BLÜ EYES"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e610e005ddd77caa1928f6/1759908067757/Flavor+Flav+headshot+sq+crop.jpg?format=500w",
+            "alt": "Flavor Flav"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f28dc9597d931de866/1762071538890/Jon+Foreman.jpg",
+            "alt": "Jon Foreman"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e610f319c52c0243c80baf/1759908084313/Harry+Hudson+headshot+sq+crop.jpg?format=500w",
+            "alt": "Harry Hudson"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def7356a61d60fc9b1373a/1759442750985/Jewel+hat.png?format=500w",
+            "alt": "Jewel"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690715cb290260526296eba4/1762072014234/Silas+Luke+Jones.jpg",
+            "alt": "Silas Luke Jones"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e61273a491221cfd85c3c5/1759908467700/gavin-magnus+headshot+sq+crop.jpg?format=500w",
+            "alt": "Gavin Magnus"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714936b5e3a49eba8d68e/1762071700814/Jonah+Marais.jpg",
+            "alt": "Jonah Marais"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156fc97dfb3b1eb9d09a/1762071920648/Run+DMC.jpg",
+            "alt": "Darryl McDaniels"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e61108bef8e030e759ca4c/1759908104594/Nicholas+Petricca+headshot+sq+crop.jpg?format=500w",
+            "alt": "Nicholas Petricca"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69125a1ef93c0c243af09d39/1762810398530/Rachel+Platten+headshot+2.jpeg?format=500w",
+            "alt": "Rachel Platten"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69071383ca6fda39e7f7ac16/1762071428142/Cassadee+Pope.jpg",
+            "alt": "Cassadee Pope"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def83aae48a143486df275/1759443040021/JP+Saxe.png?format=500w",
+            "alt": "JP Saxe"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690715cbfd428757ebdaf52e/1762072014325/Zia+Victoria.jpg",
+            "alt": "Zia Victoria"
+          }
+        ],
+        "people": [
+          {
+            "name": "Alec Benjamin",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b72b267b4c903f125e/1762071226929/Alec+Benjamin.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Bishop Briggs",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def735d6c1446a00be6c9b/1759442747432/Bishop+Briggs.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Sheila E.",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def83a364b7b498baf21ba/1759443039826/Sheila+E.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "BLÜ EYES",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b790ce573d32a47823/1762071226902/BLU+EYES+smaller.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Flavor Flav",
+            "role": "Rock and Roll Hall of Fame Inductee and Grammy Lifetime Achievement Recipient",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e610e005ddd77caa1928f6/1759908067757/Flavor+Flav+headshot+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Jon Foreman",
+            "role": "Switchfoot",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f28dc9597d931de866/1762071538890/Jon+Foreman.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Harry Hudson",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e610f319c52c0243c80baf/1759908084313/Harry+Hudson+headshot+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Jewel",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def7356a61d60fc9b1373a/1759442750985/Jewel+hat.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Silas Luke Jones",
+            "role": "Musician",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690715cb290260526296eba4/1762072014234/Silas+Luke+Jones.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Gavin Magnus",
+            "role": "Singer & Content Creator",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e61273a491221cfd85c3c5/1759908467700/gavin-magnus+headshot+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Jonah Marais",
+            "role": "Singer",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714936b5e3a49eba8d68e/1762071700814/Jonah+Marais.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Darryl McDaniels",
+            "role": "Run DMC",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156fc97dfb3b1eb9d09a/1762071920648/Run+DMC.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Nicholas Petricca",
+            "role": "Walk The Moon",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e61108bef8e030e759ca4c/1759908104594/Nicholas+Petricca+headshot+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Rachel Platten",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69125a1ef93c0c243af09d39/1762810398530/Rachel+Platten+headshot+2.jpeg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Cassadee Pope",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69071383ca6fda39e7f7ac16/1762071428142/Cassadee+Pope.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "JP Saxe",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def83aae48a143486df275/1759443040021/JP+Saxe.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Zia Victoria",
+            "role": "Singer-Songwriter",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690715cbfd428757ebdaf52e/1762072014325/Zia+Victoria.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          }
+        ]
+      },
+      {
+        "id": "6909b0a3851c6d3d089e4d1f",
+        "title": "Entertainers & Athletes",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "Entertainers & Athletes"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def9f2debb7337b2b52861/1759443446394/Kevin+Anderson.png?format=500w",
+            "alt": "Kevin Anderson"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def9f2cec59767ba07845d/1759443448305/Bob+Mike+Bryan.png?format=500w",
+            "alt": "Bob & Mike Bryan"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def9f26a61d60fc9b1d379/1759443447318/Chevy+Chase.png?format=500w",
+            "alt": "Chevy Chase"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714934013d81a43a4cfd0/1762071700407/Jordan+Doww.jpg",
+            "alt": "Jordan Doww"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690715cbca4a711fbb20a216/1762072014230/Sarah+Gilman.jpg",
+            "alt": "Sarah Gilman"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156febaab802f2292b32/1762071920955/Perez+Hilton.jpg",
+            "alt": "Perez Hilton"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f2b377df6a4c77fdde/1762071540470/Jason+Kennedy.jpg",
+            "alt": "Jason Kennedy"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156f6f1b4111d77a8bc8/1762071920597/Loni+Love+Alex+Hill+sq+copy.jpg",
+            "alt": "Loni Love"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f2f04e05756b404e43/1762071540808/Jada+Pinkett+Smith.jpg",
+            "alt": "Jada Pinkett Smith"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713aa7d40fa1f7ff2bfe6/1762071467585/Estefania+Saavedra.jpg",
+            "alt": "Estefania Saavedra"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defa33953b9e372025a611/1759443511669/Mike+Tyson.png?format=500w",
+            "alt": "Mike Tyson"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69071df87e00bd67a74188c1/1762074105564/Tallulah+Willis.jpg",
+            "alt": "Tallulah Willis"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b7abf5ac2a945b0c2a/1762071227002/Bethel+Wilson.jpg",
+            "alt": "Wilson Bethel"
+          }
+        ],
+        "people": [
+          {
+            "name": "Kevin Anderson",
+            "role": "Former Pro Tennis Player",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def9f2debb7337b2b52861/1759443446394/Kevin+Anderson.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Bob & Mike Bryan",
+            "role": "Hall of Fame Tennis Players",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def9f2cec59767ba07845d/1759443448305/Bob+Mike+Bryan.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Chevy Chase",
+            "role": "Actor",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68def9f26a61d60fc9b1d379/1759443447318/Chevy+Chase.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Jordan Doww",
+            "role": "Actor",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714934013d81a43a4cfd0/1762071700407/Jordan+Doww.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Sarah Gilman",
+            "role": "Actress",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690715cbca4a711fbb20a216/1762072014230/Sarah+Gilman.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Perez Hilton",
+            "role": "Media Personality",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156febaab802f2292b32/1762071920955/Perez+Hilton.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Jason Kennedy",
+            "role": "Entertainment Journalist",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f2b377df6a4c77fdde/1762071540470/Jason+Kennedy.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Loni Love",
+            "role": "Comedian & TV Host",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156f6f1b4111d77a8bc8/1762071920597/Loni+Love+Alex+Hill+sq+copy.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Jada Pinkett Smith",
+            "role": "Actress & Businesswoman",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f2f04e05756b404e43/1762071540808/Jada+Pinkett+Smith.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Estefania Saavedra",
+            "role": "Content Creator",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713aa7d40fa1f7ff2bfe6/1762071467585/Estefania+Saavedra.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Mike Tyson",
+            "role": "Hall of Fame Boxer",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defa33953b9e372025a611/1759443511669/Mike+Tyson.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Tallulah Willis",
+            "role": "Actress & Advocate",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69071df87e00bd67a74188c1/1762074105564/Tallulah+Willis.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Wilson Bethel",
+            "role": "Actor",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b7abf5ac2a945b0c2a/1762071227002/Bethel+Wilson.jpg",
+            "href": "https://www.inspiringchildren.org/awards#"
+          }
+        ]
+      },
+      {
+        "id": "6909b0b8a29c2e362a3db9f5",
+        "title": "Experts",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "Experts"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b73bc7667f88f7da51/1762071224894/Blaise+Aguirre+red+tie+copy.jpg?format=500w",
+            "alt": "Blaise Aguirre, MD"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defbcb1087564f13f32bdc/1759443920958/Marc+Brackett.png?format=500w",
+            "alt": "Marc Brackett"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68f87d4e17cf4278e04d1465/1761115470147/Paul+Dalio+headshot+sq.jpg?format=500w",
+            "alt": "Paul Dalio"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713aa32f0d432b696a34f/1762071467583/David+Eagleman.jpg?format=500w",
+            "alt": "David Eagleman"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f2f04e05756b404e42/1762071540550/Jon+Hershfield.jpg?format=500w",
+            "alt": "Jon Hershfield, MFT"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156fb6b26075ebc4580d/1762071920653/Nicole+Kalhorn.jpg?format=500w",
+            "alt": "Nicole Kalhorn"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69081044874f244de1ba94c2/1762136132614/Casey+Mock+correct+2+sq.jpg?format=500w",
+            "alt": "Casey Mock"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defbcbe7895535d9f25b83/1759443920967/Lyn+Morris.png?format=500w",
+            "alt": "Lyn Morris"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defb60149f631b092d5c61/1759443841633/Bennett+Nemser.png?format=500w",
+            "alt": "Bennett Nemser"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690a510cb46c642a3e987e4a/1762283789457/Wendy+Oliver-Pyatt+sq+crop.jpg?format=500w",
+            "alt": "Wendy Oliver-Pyatt"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907149203ec5f69660b9b68/1762071701181/Kelsey+Patel.jpg?format=500w",
+            "alt": "Kelsey J. Patel"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e1be3b7346ab6eae77dc41/1759624763256/Dr.+Tasha+Rasolkhani-Kalhorn+headshot.jpg?format=500w",
+            "alt": "Tasha Rasolkhani-Kalhorn, PhD"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713aad7ad885cec973e45/1762071466720/Crystal+Romero.jpg?format=500w",
+            "alt": "Crystal Romero"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defb6118c27d15bef801a7/1759443840024/Drug+in+our+Pocket.png?format=500w",
+            "alt": "The Drug in Our Pocket"
+          }
+        ],
+        "people": [
+          {
+            "name": "Blaise Aguirre, MD",
+            "role": "McLean Psych Hospital",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b73bc7667f88f7da51/1762071224894/Blaise+Aguirre+red+tie+copy.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Marc Brackett, PhD",
+            "role": "Yale",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defbcb1087564f13f32bdc/1759443920958/Marc+Brackett.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Paul Dalio",
+            "role": "Lived Experience Expert",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68f87d4e17cf4278e04d1465/1761115470147/Paul+Dalio+headshot+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "David Eagleman, PhD",
+            "role": "Neuroscientist & Inventor",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713aa32f0d432b696a34f/1762071467583/David+Eagleman.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Jon Hershfield, MFT",
+            "role": "OCD Specialist",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713f2f04e05756b404e42/1762071540550/Jon+Hershfield.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Nicole Kalhorn",
+            "role": "Wise Friend",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907156fb6b26075ebc4580d/1762071920653/Nicole+Kalhorn.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Casey Mock",
+            "role": "Technology Policy Advocate & Writer",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69081044874f244de1ba94c2/1762136132614/Casey+Mock+correct+2+sq.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Lyn Morris, LMFT",
+            "role": "Didi Hirsch",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defbcbe7895535d9f25b83/1759443920967/Lyn+Morris.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Bennett Nemser, PhD",
+            "role": "Steven & Alexandra Cohen Foundation",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defb60149f631b092d5c61/1759443841633/Bennett+Nemser.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Wendy Oliver-Pyatt, MD, FAED, CEDS",
+            "role": "Eating Disorder Expert",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690a510cb46c642a3e987e4a/1762283789457/Wendy+Oliver-Pyatt+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Kelsey J. Patel",
+            "role": "Wellness Expert",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/6907149203ec5f69660b9b68/1762071701181/Kelsey+Patel.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Tasha Rasolkhani-Kalhorn, PhD",
+            "role": "Family Care Center",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e1be3b7346ab6eae77dc41/1759624763256/Dr.+Tasha+Rasolkhani-Kalhorn+headshot.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Crystal Romero",
+            "role": "Army National Guard",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690713aad7ad885cec973e45/1762071466720/Crystal+Romero.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "The Drug in Our Pocket",
+            "role": "Documentary",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defb6118c27d15bef801a7/1759443840024/Drug+in+our+Pocket.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          }
+        ]
+      },
+      {
+        "id": "6909b0be7c5419458a6b49d7",
+        "title": "Business Leaders & Philanthropists",
+        "blocks": [
+          {
+            "tag": "h2",
+            "text": "Business Leaders & Philanthropists"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690729eb647cae702e24ba33/1762077164469/Jaymes+Black_Headshot_2025+crop.jpg?format=500w",
+            "alt": "Jaymes Black"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e61724e6ab386252d349b5/1759909668780/Ron+Biscardi+sq+crop.jpg?format=500w",
+            "alt": "Ron Biscardi"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e616b3ba13503daaae8a19/1759909558300/Matt+Broms+headshot.jpg?format=500w",
+            "alt": "Matt Broms"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714939732490b0a1a84d9/1762071701242/Karena+Dawn.jpg?format=500w",
+            "alt": "Karena Dawn"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69016a89b8d81b19fe04db6d/1761700489951/Daniel+H.+Gillison+Jr.+CEO%2C+NAMI%2C+square+Ann+A+Morris+crop.jpg?format=500w",
+            "alt": "Daniel H. Gillison, Jr."
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68df05be51ffdc49d2fd5eb4/1759446469313/Sophie+Gregoire.png?format=500w",
+            "alt": "Sophie Grégoire"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714932b267b4c903f2dd2/1762071700304/Kevin+Hines.jpg?format=500w",
+            "alt": "Kevin Hines"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defeb0bb355f4c4234a5ba/1759444685455/David+Hirsch.png?format=500w",
+            "alt": "David Hirsch"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e616efef87f221a3c39137/1759909615930/Heather+Kahlert+sq+crop.jpg?format=500w",
+            "alt": "Heather Kahlert"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68df05be96aceb2b1149c844/1759446467479/Mike+Majlak.png?format=500w",
+            "alt": "Mike Majlak"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b70724d264b37562f6/1762071227103/Blake+Mycoskie.jpg?format=500w",
+            "alt": "Blake Mycoskie"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e613da6ac58e647b71bc67/1759908827013/Bozoma+Saint+John+sq+crop.jpg?format=500w",
+            "alt": "Bozoma Saint John"
+          },
+          {
+            "src": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e61704f5c3f048f285e900/1759909636224/Kasey+Thompson+sq+crop.jpg?format=500w",
+            "alt": "Kasey Thompson"
+          }
+        ],
+        "people": [
+          {
+            "name": "Jaymes Black",
+            "role": "Trevor Project",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690729eb647cae702e24ba33/1762077164469/Jaymes+Black_Headshot_2025+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Ron Biscardi",
+            "role": "iConnections",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e61724e6ab386252d349b5/1759909668780/Ron+Biscardi+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Matt Broms",
+            "role": "Philanthropist",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e616b3ba13503daaae8a19/1759909558300/Matt+Broms+headshot.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Karena Dawn",
+            "role": "Tone It Up",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714939732490b0a1a84d9/1762071701242/Karena+Dawn.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Daniel H. Gillison, Jr.",
+            "role": "NAMI",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/69016a89b8d81b19fe04db6d/1761700489951/Daniel+H.+Gillison+Jr.+CEO%2C+NAMI%2C+square+Ann+A+Morris+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Sophie Grégoire",
+            "role": "Former Canadian First Lady",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68df05be51ffdc49d2fd5eb4/1759446469313/Sophie+Gregoire.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Kevin Hines",
+            "role": "Suicide Prevention Speaker",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690714932b267b4c903f2dd2/1762071700304/Kevin+Hines.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "David Hirsch",
+            "role": "Philanthropist",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68defeb0bb355f4c4234a5ba/1759444685455/David+Hirsch.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Heather Kahlert",
+            "role": "Kahlert Foundation",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e616efef87f221a3c39137/1759909615930/Heather+Kahlert+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Mike Majlak",
+            "role": "Impaulsive Podcast",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68df05be96aceb2b1149c844/1759446467479/Mike+Majlak.png?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Blake Mycoskie",
+            "role": "TOMS",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/690712b70724d264b37562f6/1762071227103/Blake+Mycoskie.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Bozoma Saint John",
+            "role": "Hall of Fame CMO",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e613da6ac58e647b71bc67/1759908827013/Bozoma+Saint+John+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          },
+          {
+            "name": "Kasey Thompson",
+            "role": "Entrepreneur",
+            "image": "https://static1.squarespace.com/static/628691b65c3a24383d0eac0a/t/68e61704f5c3f048f285e900/1759909636224/Kasey+Thompson+sq+crop.jpg?format=500w",
+            "href": "https://www.inspiringchildren.org/awards#"
+          }
+        ]
+      },
+      {
+        "id": "68de186cdb09a56bd43d96ae",
+        "title": "Why It Matters",
+        "blocks": [
+          {
+            "tag": "h3",
+            "text": "Why It Matters"
+          },
+          {
+            "tag": "h4",
+            "text": "Cultural Relevance"
+          },
+          {
+            "tag": "p",
+            "text": "From artists and athletes to CEOs and community heroes."
+          },
+          {
+            "tag": "h4",
+            "text": "Streaming Scale"
+          },
+          {
+            "tag": "p",
+            "text": "Designed for broadcast, red carpet, and viral impact."
+          },
+          {
+            "tag": "h4",
+            "text": "Credibility"
+          },
+          {
+            "tag": "p",
+            "text": "Backed by Inspiring Children’s 25+ Years of Experience"
+          }
+        ],
+        "images": [],
+        "people": []
+      },
+      {
+        "id": "68de18f617359544e41a6297",
+        "title": "Awards",
+        "blocks": [
+          {
+            "tag": "h3",
+            "text": "Awards"
+          },
+          {
+            "tag": "p",
+            "text": "Bold Stand to Reduce Stigma"
+          },
+          {
+            "tag": "p",
+            "text": "Recognizing those who courageously break silence, challenge stereotypes, and inspire understanding around mental health."
+          },
+          {
+            "tag": "p",
+            "text": "Grassroots Leadership in Mental Health"
+          },
+          {
+            "tag": "p",
+            "text": "Celebrating local and community-driven leaders who uplift others through service, mentorship, and impact."
+          },
+          {
+            "tag": "p",
+            "text": "Legacy Advocacy and Transformation"
+          },
+          {
+            "tag": "p",
+            "text": "Honoring those whose lifelong commitment has reshaped the conversation on mental health and human potential."
+          },
+          {
+            "tag": "p",
+            "text": "Music That Moved the World"
+          },
+          {
+            "tag": "p",
+            "text": "For musicians whose songs have inspired healing, unity, and emotional connection across generations."
+          },
+          {
+            "tag": "p",
+            "text": "Film or Series Changing Perception"
+          },
+          {
+            "tag": "p",
+            "text": "Celebrating filmmakers and storytellers who elevate awareness, empathy, and understanding through powerful narratives."
+          },
+          {
+            "tag": "p",
+            "text": "Artist Weaving Wellness into Live Experience"
+          },
+          {
+            "tag": "p",
+            "text": "Honoring performers who infuse their concerts, events, or installations with messages of well-being and connection."
+          },
+          {
+            "tag": "p",
+            "text": "Youth-Led Impact"
+          },
+          {
+            "tag": "p",
+            "text": "Recognizing young leaders who are transforming the future of mental health through creativity, courage, and action."
+          },
+          {
+            "tag": "p",
+            "text": "Breakthrough Tools or Approaches for Mental Well-Being"
+          },
+          {
+            "tag": "p",
+            "text": "Celebrating innovative technologies, therapies, or practices that expand access and improve outcomes."
+          },
+          {
+            "tag": "p",
+            "text": "Public Figure Shifting Conversations on Mental Health"
+          },
+          {
+            "tag": "p",
+            "text": "For leaders and influencers using their platforms to champion honesty, compassion, and awareness."
+          },
+          {
+            "tag": "p",
+            "text": "Clinical Excellence Award"
+          },
+          {
+            "tag": "p",
+            "text": "For professionals redefining care through evidence-based innovation and human-centered practice."
+          },
+          {
+            "tag": "p",
+            "text": "Scientific Breakthrough Award"
+          },
+          {
+            "tag": "p",
+            "text": "Honoring researchers advancing our understanding of the mind, brain, and behavior."
+          },
+          {
+            "tag": "p",
+            "text": "Technology for Humanity Award"
+          },
+          {
+            "tag": "p",
+            "text": "Recognizing innovators developing tools that make mental health support more accessible and effective."
+          },
+          {
+            "tag": "p",
+            "text": "Philanthropy and Impact Award"
+          },
+          {
+            "tag": "p",
+            "text": "Celebrating those funding, supporting, and fueling transformative mental health initiatives."
+          },
+          {
+            "tag": "p",
+            "text": "Advocacy and Public Policy Award"
+          },
+          {
+            "tag": "p",
+            "text": "For leaders creating systemic change and driving mental health to the forefront of society."
+          },
+          {
+            "tag": "p",
+            "text": "Creative Expression Award"
+          },
+          {
+            "tag": "p",
+            "text": "Honoring artists, musicians, and storytellers whose work inspires hope, healing, and unity."
+          },
+          {
+            "tag": "p",
+            "text": "Entrepreneur of Hope Award"
+          },
+          {
+            "tag": "p",
+            "text": "Recognizing innovators turning bold ideas into sustainable solutions for emotional and social well-being."
+          },
+          {
+            "tag": "p",
+            "text": "Lived Experience Award"
+          },
+          {
+            "tag": "p",
+            "text": "Celebrating individuals whose personal journeys have brought greater understanding, compassion, and healing to others."
+          },
+          {
+            "tag": "p",
+            "text": "Legacy Award"
+          },
+          {
+            "tag": "p",
+            "text": "Honoring those whose vision and lifetime contributions have redefined what it means to be Not Alone."
+          }
+        ],
+        "images": [],
+        "people": []
+      },
+      {
+        "id": "68de19481fbab23b681f39d5",
+        "title": "Celebrating Pioneers in Human Development & Mental Health",
+        "blocks": [
+          {
+            "tag": "h4",
+            "text": "Celebrating Pioneers in Human Development & Mental Health"
+          }
+        ],
+        "images": [],
+        "people": []
+      }
+    ],
+    "footer": [
+      "Partner with us.",
+      "We are a non-profit IRS 501(c)(3) charitable organization. Our EIN is 20-1638145.",
+      "For over 25 years, the Inspiring Children Foundation (ICF) has been transforming the lives of at-risk youth in Las Vegas through a whole human approach to physical, emotional and mental health. ICF serves hundreds of youth in-person and millions online. 95% of students in their Leadership Program have earned college scholarships for academics & athletics (tennis) to some of the best colleges in the US. Parts of the program are now being duplicated in 22 cities by other non profits. Click here to learn more.",
+      "Contact Inspiring Children Foundation",
+      "Our programs, along with the contents of our website, are for informational purposes only. This website is not for emergency or crisis help. If you or someone you know is in crisis right now, please call the Suicide Prevention Lifeline at 988 . If you require emergency help, please call 911 or go to your local hospital emergency room. Click here for our full disclaimer.",
+      "We are an equal opportunity employer and all qualified applicants will receive consideration for employment without regard to race, color, religion, sex, sexual orientation, gender identity or expression, pregnancy, age, national origin, disability status, genetic information, protected veteran status, or any other characteristic protected by law."
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+.footer { background: #fff; color: #252525; padding: 56px max(24px, calc((100% - 1100px) / 2)); font-family: Arial, Helvetica, sans-serif; }
+.footer p { font-size: 15px; line-height: 1.7; max-width: none; color: #353535; }
+.footer h2 { font-size: 26px; letter-spacing: 0; }
+.footer nav { display: flex; flex-wrap: wrap; gap: 16px 24px; margin: 28px 0; }
+.footer a { text-decoration: underline; text-underline-offset: 4px; }

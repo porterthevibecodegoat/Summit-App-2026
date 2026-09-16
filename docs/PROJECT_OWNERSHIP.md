@@ -28,6 +28,11 @@ Do not automatically merge, pull, cherry-pick, import, or deploy a collaborator'
 
 Existing code history is preserved. This separation removes account-level shared write access; it does not claim to erase previously integrated code or revoke copies of public code.
 
+The original Summit/Awards presentation has now been rebuilt from ICF's source
+pages. The collaborator-added native People/Awards screens and portrait assets
+were removed while retaining our later fixes and live 2026 publication. See
+`ORIGINAL_SITE_RESTORATION.md` for the scoped rollback and content provenance.
+
 The owner confirmed that a GitHub token was previously shared. Revocation is still pending owner confirmation. Membership removal alone does not invalidate a token belonging to the owner, so complete access isolation must not be claimed until that credential is revoked. Token details belong in private account settings, not this public repository.
 
 Producer credits are restricted to the original ICF site list in `packages/config/src/producer-credits.ts`. Historical credits are not evidence of 2026 attendance.

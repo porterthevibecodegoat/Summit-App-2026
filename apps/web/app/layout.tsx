@@ -2,8 +2,10 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { AskAiBubble } from "../components/ask-ai-bubble";
 import { SiteHeader } from "../components/site-header";
+import { SiteFooter } from "../components/site-footer";
 import "./styles.css";
 import "./enhancements.css";
+import "./restored-shell.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.SITE_URL ?? "https://not-alone-summit-web-rose.vercel.app"),
@@ -17,5 +19,5 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: "#8177c9" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  return <html lang="en"><body><SiteHeader />{children}<footer><div className="footerBrand"><img src="/icf-logo.png" alt="Inspiring Children Foundation" /><div><strong>Powered by ICF</strong><p>Inspiring Children Foundation</p></div></div><p>Not Alone Summit · November 2–4, 2026 · Wynn Las Vegas</p><div><a href="https://www.inspiringchildren.org" target="_blank">Inspiring Children Foundation</a><a href="/contact">Contact</a><a href="/donate">Donate</a></div><small>This site is not for emergency or crisis help. Call 988 or 911 for immediate assistance.</small></footer><AskAiBubble /></body></html>;
+  return <html lang="en"><body><SiteHeader />{children}<SiteFooter /><AskAiBubble /></body></html>;
 }

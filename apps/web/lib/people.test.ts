@@ -14,8 +14,8 @@ describe("website reviewed directory", () => {
     expect(people2025.filter(person => /producer/i.test(person.role))).toHaveLength(6);
     expect(people2026.some(person => person.name === "Dr. George Rapier III")).toBe(false);
   });
-  it("preserves the legacy roster until staff explicitly activates publication", () => {
-    expect(directoryPeople(demoSnapshot)).toEqual(people2026);
+  it("does not infer roles from the collaborator's legacy roster", () => {
+    expect(directoryPeople(demoSnapshot)).toEqual([]);
   });
   it("does not resurrect legacy names when the reviewed directory is empty or unavailable", () => {
     expect(directoryPeople(null)).toEqual([]);

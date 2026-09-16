@@ -19,6 +19,7 @@
     "test:responsive": "node scripts/run-responsive-tests.mjs",
     "test:staff-acceptance": "node scripts/verify-staff-acceptance.mjs",
     "test:website-acceptance": "node scripts/verify-website-acceptance.mjs",
+    "test:original-sites": "node scripts/verify-original-sites.mjs",
     "test:reviewed-content": "node scripts/verify-reviewed-content.mjs",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
