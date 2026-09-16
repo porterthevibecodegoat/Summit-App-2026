@@ -42,12 +42,20 @@ const checks = [
   ["event identity matches", cached.event?.id === remote.event?.id],
   ["revision matches", cached.revision === remote.revision],
   ["schedule count matches", cached.scheduleItems?.length === remote.scheduleItems?.length],
+  ["session identities, titles, times, locations, and status match", scheduleFingerprint(cached) === scheduleFingerprint(remote)],
   ["location count matches", cached.locations?.length === remote.locations?.length],
   ["content-page count matches", cached.contentPages?.length === remote.contentPages?.length]
 ];
 for (const [name, passed] of checks) console.log(`${passed ? "PASS" : "FAIL"} - ${name}`);
 console.log(`\nSimulator ${cacheSimulatorId}; remote revision ${remote.revision}; native cache revision ${cached.revision}; ${cached.scheduleItems?.length ?? 0} sessions.`);
 if (checks.some(([, passed]) => !passed)) process.exitCode = 1;
+
+function scheduleFingerprint(snapshot) {
+  return JSON.stringify((snapshot.scheduleItems ?? []).map(item => ({
+    id: item.id, title: item.title, startUtc: item.startUtc, endUtc: item.endUtc,
+    locationId: item.locationId, locationName: item.locationName, status: item.status
+  })).sort((left, right) => left.id.localeCompare(right.id)));
+}
 
 function bootedSimulatorIds() {
   const raw = run("xcrun", ["simctl", "list", "devices", "booted", "--json"]);

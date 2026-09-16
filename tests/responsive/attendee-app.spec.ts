@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
-const routes = ["/", "/schedule", "/help", "/map", "/info"] as const;
+const routes = ["/", "/schedule", "/people", "/awards", "/help", "/map", "/info"] as const;
 const forbiddenAttendeeResidue = /prototype|demo mode|room-level map coming soon|replace this with approved|published staff-controlled|published from the staff|my schedule/i;
 
 test("published data survives API outage and reconnect without accepting stale revisions", async ({ page, request }, testInfo) => {
@@ -73,7 +73,7 @@ for (const route of routes) {
     }));
 
     expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth + 1);
-    for (const label of ["Home", "Schedule", "Ask AI", "Map", "Info"]) {
+    for (const label of ["Home", "Schedule", "People", "Awards", "Ask AI", "Map", "Info"]) {
       await expect(page.getByRole("tab", { exact: true, name: label })).toBeVisible();
     }
 
@@ -157,6 +157,16 @@ test("session detail is concise and contains no editorial placeholders", async (
   await expect(page.getByText("Event Context", { exact: true })).toHaveCount(0);
   await expect(page.locator("body")).not.toContainText(forbiddenAttendeeResidue);
   expect(runtimeErrors).toEqual([]);
+});
+
+test("people categories respond without advertising unavailable profile actions", async ({ page }) => {
+  await page.goto("/people");
+  await enterSummit(page);
+  await expect(page.getByText("View bio", { exact: false })).toHaveCount(0);
+  const category = page.getByRole("tab", { name: "Mental Health Nonprofit Founding Partners", exact: true });
+  await category.click();
+  await expect(category).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByText("No confirmed guests in this category yet.", { exact: true })).toBeVisible();
 });
 
 test("concierge disables empty submission and answers a direct schedule question", async ({ page }) => {

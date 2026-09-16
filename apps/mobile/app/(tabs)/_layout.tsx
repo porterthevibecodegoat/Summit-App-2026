@@ -27,7 +27,7 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.muted,
-        tabBarLabelStyle: { fontFamily: typography.semibold, fontSize: compact ? 9 : 11 },
+        tabBarLabelStyle: { fontFamily: typography.semibold, fontSize: compact || layout.width < 600 ? 9 : 11 },
         tabBarBackground: () => <View style={styles.tabBarBackground} />,
         tabBarStyle: {
           backgroundColor: "transparent",

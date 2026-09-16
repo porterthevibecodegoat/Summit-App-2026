@@ -80,10 +80,14 @@ try {
   assert.equal(exchange.status(), 200);
   assert.equal((await deployed.request.get(`${cloud}/api/staff/me`)).status(), 200);
   assert.equal((await deployed.request.get(`${cloud}/api/live-ops/state`)).status(), 200);
+  const deployedPage = await deployed.newPage();
+  await deployedPage.goto(`${cloud}/schedule#${authHash}`);
+  await deployedPage.getByText("Staff ADMIN active", { exact: true }).waitFor({ timeout: 30000 });
+  await deployedPage.waitForURL(url => !url.hash, { timeout: 10000 });
   await deployed.request.delete(`${cloud}/api/staff/session`);
   assert.equal((await deployed.request.get(`${cloud}/api/staff/me`)).status(), 401);
   await deployed.close();
-  pass("Deployed portal accepts real staff session, reads state, and signs out");
+  pass("Deployed portal clears callback credentials, accepts staff session, reads state, and signs out");
 
   const title = page.getByRole("textbox", { name: "Title", exact: true }).first();
   await title.waitFor();
