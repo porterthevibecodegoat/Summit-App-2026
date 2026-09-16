@@ -7,8 +7,6 @@ export const confirmedSummitGuests2026 = [
   "Kevin Hines",
   "Ryan Wolfington",
   "Jewel Murray",
-  "Erica McGraw",
-  "Jay McGraw",
   "Caroline Jones",
   "Nick Dana",
   "Sarah Steil",
@@ -16,7 +14,7 @@ export const confirmedSummitGuests2026 = [
   "Jon Hershfield",
   "Morgan Marler",
   "Nick Kislinger",
-  "Sanem Alkan",
+  "Sanem (Sam) Alkan",
   "Daniel Gillison",
   "Wendy Oliver-Pyatt",
   "Brandon Saho",
@@ -38,8 +36,10 @@ export const confirmedSummitGuests2026 = [
   "Paige Neuenschwander",
   "Noah Springer",
   "Melinda Springer",
+  "Adam Lewis",
   "Melony Lewis",
   "Cameron Kelly",
+  "Winston Kelly",
   "Jeneva Bell",
   "Alana Springsteen",
   "David Eagleman",
@@ -47,18 +47,22 @@ export const confirmedSummitGuests2026 = [
   "Mike Bryan",
   "Blaise Aguirre",
   "Isabella Wolfington",
-  "Raquelle Stevens",
   "Steven Cohen",
   "Alexandra Cohen",
   "Jen Smorgen",
   "Sean Wolfington",
-  "Ana Wolfington"
+  "Ana Wolfington",
+  "Janet Wozniak",
+  "Cathy Olson"
 ] as const;
 
 export const confirmedSummitGuests2026Source = {
   baseId: "app7BHptsc1bjc3DD",
   interfacePageId: "pagFmzDhXfNK53eWY",
-  group: "Summit Status: Confirmed",
+  group: "Summit Status: Confirmed Attendance",
   reviewedAt: "2026-09-15",
-  excludedRule: "Blank names and names explicitly marked TBC are withheld from public content."
+  observedConfirmedRows: 59,
+  publicConfirmedRows: 55,
+  excludedRule: "Blank names and names explicitly marked TBC are withheld from public content.",
+  accessMode: "Read-only Airtable interface review"
 } as const;
