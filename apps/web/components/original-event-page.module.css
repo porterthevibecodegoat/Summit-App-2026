@@ -56,6 +56,8 @@
 .awards .portraits > a, .awards .portraits > article { background: #18141e; }
 .awards .portraits h3 { color: #e6d5fb; }
 .awards .portraits p { color: #ddd; }
+.awards .leadership { background: #0e0e0e; }
+.awards .leaders p { color: #ddd; }
 .awards .portraits:has(> :only-child) { grid-template-columns: minmax(0,320px); justify-content: center; }
 .policy, .archiveRsvp, .awardsClosing { text-align: center; }
 .policy h2 { font-size: 28px; }

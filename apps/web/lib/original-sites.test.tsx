@@ -6,10 +6,27 @@ import { OriginalAwardsPage, OriginalSummitPage } from "../components/original-e
 import { event2026Snapshot } from "@not-alone/test-fixtures/event-2026";
 import { summit2025Leadership, summit2025Directory, awards2025Highlights } from "./content";
 import { publishedAwardsProgram } from "@not-alone/domain";
+import { originalProducerCredits } from "@not-alone/config";
 
 const escape = (value: string) => value.replaceAll("&", "&amp;").replaceAll("'", "&#x27;").replaceAll('"', "&quot;");
 
 describe("source-faithful, year-separated event pages", () => {
+  it("keeps every original producer credited with their portrait on both 2025 pages", () => {
+    const sourceCredits = source.summit.sections[13]!;
+    for (const html of [renderToStaticMarkup(<OriginalSummitPage year={2025} />), renderToStaticMarkup(<OriginalAwardsPage year={2025} />)]) {
+      const credits = html.match(/<section[^>]*id="producers"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? "";
+      expect(html.match(/id="producers"/g)).toHaveLength(1);
+      expect(credits.match(/<article>/g)).toHaveLength(originalProducerCredits.length);
+      expect([...credits.matchAll(/<h3>(.*?)<\/h3>/g)].map(match => match[1])).toEqual(originalProducerCredits.map(person => escape(person.name)));
+      for (const group of summit2025Directory.filter(group => /Producers/.test(group.title))) {
+        expect(credits).toContain(`<h2>${group.title}</h2>`);
+        for (const person of group.people) expect(credits).toContain(`<h3>${escape(person.name)}</h3><p>${escape(person.role)}</p>`);
+      }
+      sourceCredits.blocks.filter(block => block.tag === "h4").forEach((person, index) => {
+        expect(credits).toContain(`<img src="${escape(originalAsset(sourceCredits.images[index]!.src))}" alt="${escape(person.text)}"`);
+      });
+    }
+  });
   it("uses distinct venue and highlights photography without changing the 2025 archive", () => {
     const current = renderToStaticMarkup(<OriginalAwardsPage year={2026} snapshot={event2026Snapshot} />);
     const hero = current.match(/<section[^>]*aria-labelledby="awards-title"[^>]*>([\s\S]*?)<\/section>/)?.[1];

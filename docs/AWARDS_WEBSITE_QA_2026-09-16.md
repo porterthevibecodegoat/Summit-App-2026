@@ -34,6 +34,12 @@ records were modified by this visual pass.
 
 ## Limitations
 
+The owner-requested 2025 producer restoration adds the six original credits and
+portraits to the Awards archive, reusing the same source as the Summit archive.
+Both archives now have a regression check for the exact roster, categories and
+portraits. Repository lint, typecheck and all 154 tests passed after this change;
+the restored section was visually checked on desktop and phone.
+
 The in-app browser did not render the cross-origin YouTube embed contents.
 Embedded playback is therefore not claimed as verified. The official watch page
 played successfully; its always-visible link remains available, and the poster is

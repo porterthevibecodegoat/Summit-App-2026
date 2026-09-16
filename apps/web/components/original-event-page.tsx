@@ -178,6 +178,7 @@ export function OriginalAwardsPage({ year, program = null, snapshot = null }: Aw
       <Portraits section={awards[3]!} />
       <section className={`${styles.band} ${styles.archiveRsvp}`}><h2>2025 Awards at Wynn Las Vegas</h2><p>Registration for this past event is closed.</p><Link className={styles.action} href="/awards/2026">View 2026 Awards</Link></section>
       {awards.slice(5, 10).map(section => <Portraits key={section.id} section={section} />)}
+      <Leadership producers />
       <section className={`${styles.band} ${styles.why}`}><Copy section={awards[10]!} /></section>
       <section className={styles.band}><h2>2025 Awards</h2><div className={styles.categories}>{categories.filter((_, index) => index % 2 === 0).map((block, index) => <article key={block.text}><h3>{block.text}</h3><p>{categories[index * 2 + 1]?.text}</p></article>)}</div></section>
     <section className={`${styles.band} ${styles.awardsClosing}`}><h2>Celebrating Pioneers in Human Development &amp; Mental Health</h2><Link href="/2025" className={styles.action}>Explore the {year} Summit</Link></section>
