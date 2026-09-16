@@ -1,4 +1,4 @@
-import { getNowAndUpcoming, toEventTimeRange } from "@not-alone/domain";
+import { getNowAndUpcoming, groupPublishedProgramByDay, toEventTimeRange } from "@not-alone/domain";
 import type { EventSnapshot, ScheduleItem } from "@not-alone/validation";
 
 export type AttendeeConciergeAnswer = {
@@ -19,13 +19,10 @@ const publicSummitKnowledge = {
     "Inspiring Children Foundation is a Las Vegas-based 501(c)(3) nonprofit with more than 25 years supporting young people through whole-human development: physical health, emotional wellbeing, academics, athletics, creativity, entrepreneurship, and service.",
   summit:
     "Not Alone Summit is a premium human-development convening focused on emotional and mental health. It brings together leaders, artists, athletes, clinicians, researchers, philanthropists, and youth voices.",
-  venue: "The summit is scheduled for Wynn Las Vegas, November 2-4, 2026.",
   checkIn:
     "Use the loaded schedule for registration, credential pickup, and room guidance. Final check-in details should be verified by staff before production launch.",
   emergency:
-    "This app can help with summit schedule and event information, but it is not emergency or crisis care.",
-  featured:
-    "Public summit materials reference leaders and artists including Jewel, Steve Wozniak, Mike Tyson, Jada Pinkett Smith, Loni Love, Jason Kennedy, Rachel Platten, Darryl McDaniels, Harry Hudson, Kevin Hines, and others."
+    "This app can help with summit schedule and event information, but it is not emergency or crisis care."
 };
 
 export function createAttendeeConciergeAnswer({
@@ -38,15 +35,16 @@ export function createAttendeeConciergeAnswer({
   nowUtc: string;
 }): AttendeeConciergeAnswer {
   const normalized = question.toLowerCase();
-  const allItems = [...snapshot.scheduleItems].sort((left, right) => left.startUtc.localeCompare(right.startUtc));
+  const allItems = snapshot.scheduleItems.filter(item => item.published && item.visibilityScope.id === "public").sort((left, right) => left.startUtc.localeCompare(right.startUtc));
   const timeline = getNowAndUpcoming({
     snapshot,
     nowUtc,
-    audienceGroups: ["all_attendees", "founders", "public"]
+    audienceGroups: ["public"]
   });
-  const personMatch = findPersonScheduleMatch(normalized, allItems);
+  const personMatch = findPersonScheduleMatch(normalized, allItems, snapshot);
   const dayMatch = findDayScheduleMatch(normalized, allItems, snapshot.event.timeZone);
   const locationMatch = findLocationMatch(normalized, snapshot);
+  const pendingDays = groupPublishedProgramByDay(snapshot).filter(day => day.notes.length > 0);
 
   if (matchesAny(normalized, ["emergency", "crisis", "suicide", "self harm", "self-harm", "unsafe"])) {
     return createAnswer({
@@ -72,23 +70,31 @@ export function createAttendeeConciergeAnswer({
       body:
         personMatch.items.length > 0
           ? `${personMatch.name} appears in the loaded schedule below.`
-          : `${personMatch.name} is listed in public summit materials, but the current app schedule does not include a specific published appearance time yet.`,
+          : `${personMatch.confirmed ? `${personMatch.name} is a confirmed 2026 guest, but attendance does not confirm a speaking slot.` : `${personMatch.name} is not confirmed in the current published 2026 guest list.`} The current app schedule does not include a specific published appearance time yet.`,
       items: personMatch.items.slice(0, 4),
       snapshot
     });
   }
 
   if (dayMatch) {
+    const notes = pendingDays.filter(day => day.dayLabel.toLowerCase().startsWith(dayMatch.label.split(" ")[0]!.toLowerCase()));
     return createAnswer({
       title: `${dayMatch.label} schedule`,
-      body:
+      body: (
         dayMatch.items.length > 0
           ? `${dayMatch.items.length} published session${dayMatch.items.length === 1 ? " is" : "s are"} loaded for ${dayMatch.label.toLowerCase()}.`
-          : `No published sessions are loaded for ${dayMatch.label.toLowerCase()} yet.`,
+          : `No fully timed sessions are published for ${dayMatch.label.toLowerCase()} yet.`) + notes.map(day => `\n\n${day.notes.map(note => note.body).join("\n\n")} All times are Pacific.`).join(""),
       items: dayMatch.items.slice(0, 8),
       snapshot
     });
   }
+
+  const pendingTerms = ["tennis", "high tea", "doors open", "pre-show", "ai relationships"].filter(term => normalized.includes(term));
+  const pendingMatch = pendingDays.find(day => day.notes.some(note => pendingTerms.some(term => note.body.toLowerCase().includes(term))));
+  if (pendingMatch) return createAnswer({
+    title: `${pendingMatch.dayLabel}: timing to be confirmed`,
+    body: `${pendingMatch.notes.map(note => note.body).join("\n\n")} All times are Pacific.`, items: []
+  });
 
   if (matchesAny(normalized, ["now", "happening", "live", "current"])) {
     return createAnswer({
@@ -119,7 +125,7 @@ export function createAttendeeConciergeAnswer({
   if (matchesAny(normalized, ["summit", "what is", "about", "purpose"])) {
     return createAnswer({
       title: "Not Alone Summit",
-      body: `${publicSummitKnowledge.summit} ${publicSummitKnowledge.venue}`,
+      body: `${snapshot.event.positioning} ${snapshot.event.venueName}. ${snapshot.event.dateLabel}.`,
       items: timeline.upcoming.slice(0, 3),
       snapshot
     });
@@ -158,8 +164,10 @@ export function createAttendeeConciergeAnswer({
 
   if (matchesAny(normalized, ["featured", "speaker", "speakers", "who", "mike", "tyson", "jewel", "wozniak"])) {
     return createAnswer({
-      title: "Featured public summit voices",
-      body: publicSummitKnowledge.featured,
+      title: "Confirmed 2026 guests",
+      body: snapshot.speakers.some(person => person.published)
+        ? `${snapshot.speakers.filter(person => person.published).map(person => person.name).join(", ")}. Attendance does not confirm a speaking time; check Schedule for published appearances.`
+        : "No 2026 guests have been published yet.",
       items: findItems(allItems, normalized.split(/[^a-z0-9]+/).filter((word) => word.length > 3)).slice(0, 4),
       snapshot
     });
@@ -261,7 +269,7 @@ function createAnswer({
   };
 }
 
-function findPersonScheduleMatch(prompt: string, items: ScheduleItem[]) {
+function findPersonScheduleMatch(prompt: string, items: ScheduleItem[], snapshot: EventSnapshot) {
   const people = [
     { name: "Mike Tyson", aliases: ["mike tyson", "tyson"] },
     { name: "Steve Wozniak", aliases: ["steve wozniak", "wozniak"] },
@@ -274,7 +282,8 @@ function findPersonScheduleMatch(prompt: string, items: ScheduleItem[]) {
     { name: "Harry Hudson", aliases: ["harry hudson"] },
     { name: "Kevin Hines", aliases: ["kevin hines"] }
   ];
-  const person = people.find((candidate) => matchesAny(prompt, candidate.aliases));
+  const publishedPerson = snapshot.speakers.find(person => person.published && prompt.includes(person.name.toLowerCase()));
+  const person = publishedPerson ? { name: publishedPerson.name, aliases: [publishedPerson.name.toLowerCase()] } : people.find((candidate) => matchesAny(prompt, candidate.aliases));
 
   if (!person) {
     return null;
@@ -282,7 +291,8 @@ function findPersonScheduleMatch(prompt: string, items: ScheduleItem[]) {
 
   return {
     name: person.name,
-    items: findItems(items, person.aliases)
+    confirmed: Boolean(publishedPerson || snapshot.speakers.some(candidate => candidate.published && person.aliases.some(alias => candidate.name.toLowerCase().includes(alias)))),
+    items: items.filter(item => findItems([item], person.aliases).length > 0 || (publishedPerson && item.speakerIds.includes(publishedPerson.id)))
   };
 }
 

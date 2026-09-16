@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, typography } from "@not-alone/design-tokens";
-import { getEventPhase, getJumpToNowItem, getSessionTemporalState, groupScheduleByEventDay, type SessionTemporalState } from "@not-alone/domain";
+import { getEventPhase, getJumpToNowItem, getSessionTemporalState, groupPublishedProgramByDay, type SessionTemporalState } from "@not-alone/domain";
 import type { ScheduleItem } from "@not-alone/validation";
 import { useSummit } from "../../components/summit-context";
 import { useResponsiveLayout, type ResponsiveLayout } from "../../components/responsive-layout";
@@ -19,10 +19,11 @@ export default function ScheduleScreen() {
   const timelineY = useRef(0);
   const hasSelectedInitialDay = useRef(false);
   const [jumpTargetId, setJumpTargetId] = useState<string | null>(null);
-  const groups = useMemo(() => groupScheduleByEventDay(snapshot.scheduleItems), [snapshot.scheduleItems]);
+  const groups = useMemo(() => groupPublishedProgramByDay(snapshot), [snapshot]);
   const eventPhase = getEventPhase(snapshot, nowUtc);
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
   const selectedGroup = groups[Math.min(selectedDayIndex, Math.max(groups.length - 1, 0))];
+  const eventLocalDate = new Intl.DateTimeFormat("en-CA", { timeZone: snapshot.event.timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(nowUtc));
 
   useFocusEffect(
     useCallback(() => {
@@ -51,7 +52,8 @@ export default function ScheduleScreen() {
       const targetIndex = target
         ? groups.findIndex((group) => group.items.some((item) => item.id === target.id))
         : 0;
-      setSelectedDayIndex(Math.max(targetIndex, 0));
+      const currentDay = groups.findIndex(group => group.date === eventLocalDate);
+      setSelectedDayIndex(currentDay >= 0 ? currentDay : Math.max(targetIndex, 0));
       hasSelectedInitialDay.current = true;
       return;
     }
@@ -59,7 +61,7 @@ export default function ScheduleScreen() {
     if (selectedDayIndex >= groups.length) {
       setSelectedDayIndex(0);
     }
-  }, [groups, nowUtc, selectedDayIndex, snapshot.scheduleItems]);
+  }, [groups, nowUtc, eventLocalDate, selectedDayIndex, snapshot.scheduleItems]);
 
   async function handleRefresh() {
     setRefreshing(true);
@@ -71,6 +73,14 @@ export default function ScheduleScreen() {
   }
 
   function jumpToNow() {
+    const pendingToday = groups.findIndex(group => group.date === eventLocalDate && group.items.length === 0 && group.notes.length > 0);
+    if (pendingToday >= 0) {
+      hasSelectedInitialDay.current = true;
+      setSelectedDayIndex(pendingToday);
+      setJumpTargetId(null);
+      scrollRef.current?.scrollTo({ y: daySectionY.current, animated: true });
+      return;
+    }
     const target = getJumpToNowItem(snapshot.scheduleItems, nowUtc);
     if (!target) return;
     const targetIndex = groups.findIndex((group) => group.items.some((item) => item.id === target.id));
@@ -140,7 +150,7 @@ export default function ScheduleScreen() {
           <>
             <View accessibilityRole="tablist" style={[styles.dayRail, layout.marginStyle]}>
               {groups.map((group, index) => {
-                const day = parseDay(group.items[0]);
+                const day = { weekday: group.weekday, date: group.shortDate };
                 const selected = selectedDayIndex === index;
 
                 return (
@@ -164,7 +174,7 @@ export default function ScheduleScreen() {
                     </Text>
                     <Text style={[styles.dayDate, selected && styles.dayDateActive]}>{day.date}</Text>
                     <Text style={[styles.dayCount, selected && styles.dayCountActive]}>
-                      {group.items.length} {group.items.length === 1 ? "event" : "events"}
+                      {group.items.length > 0 ? `${group.items.length} events` : "Timing pending"}
                     </Text>
                   </Pressable>
                 );
@@ -191,6 +201,10 @@ export default function ScheduleScreen() {
                     />
                   ))}
                 </View>
+                {selectedGroup.notes.map(note => <View key={note.id} style={[styles.emptyPanel, layout.cardPaddingStyle]}>
+                  <Text style={styles.emptyTitle}>{note.title}</Text>
+                  <Text style={styles.emptyBody}>{note.body}</Text>
+                </View>)}
               </View>
             ) : null}
           </>
@@ -319,18 +333,6 @@ function groupItemsByStart(items: ScheduleItem[]) {
   }, []);
 }
 
-function parseDay(item: ScheduleItem | undefined) {
-  if (!item) {
-    return { weekday: "Day", date: "--" };
-  }
-
-  const date = new Date(item.startUtc);
-  return {
-    weekday: new Intl.DateTimeFormat("en-US", { weekday: "short", timeZone: item.eventTimeZone }).format(date),
-    date: new Intl.DateTimeFormat("en-US", { day: "numeric", month: "short", timeZone: item.eventTimeZone }).format(date)
-  };
-}
-
 function formatTime(iso: string, timeZone: string) {
   const parts = new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
@@ -424,13 +426,14 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs
   },
   eventCompleteBody: { color: colors.body, fontFamily: typography.body, fontSize: 13, lineHeight: 20, marginTop: spacing.xs },
-  dayRail: { flexDirection: "row", gap: spacing.sm, marginHorizontal: spacing.lg, marginTop: spacing.md },
+  dayRail: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm, marginHorizontal: spacing.lg, marginTop: spacing.md },
   dayTab: {
     backgroundColor: "rgba(13, 21, 48, 0.7)",
     borderColor: colors.border,
     borderRadius: 8,
     borderWidth: 1,
     flex: 1,
+    minWidth: 82,
     minHeight: 84,
     padding: spacing.md
   },

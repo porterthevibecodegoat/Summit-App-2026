@@ -4,5 +4,6 @@ import { resolveMobileApiBaseUrl } from "./mobile-api-url";
 
 export const mobileApiBaseUrl = resolveMobileApiBaseUrl(
   process.env.EXPO_PUBLIC_API_BASE_URL ?? Constants.expoConfig?.extra?.apiBaseUrl,
-  publicAppConfig.apiBaseUrl
+  publicAppConfig.apiBaseUrl,
+  __DEV__
 );

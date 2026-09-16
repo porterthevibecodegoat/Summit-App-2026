@@ -4,7 +4,7 @@ import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchPublishedSnapshot } from "@not-alone/api-client";
 import { publicAppConfig } from "@not-alone/config";
-import { demoSnapshot as canonicalSnapshot } from "@not-alone/test-fixtures";
+import { event2026Snapshot as canonicalSnapshot } from "@not-alone/test-fixtures/event-2026";
 import { sanitizePublishedSnapshotContent } from "@not-alone/domain";
 import { eventSnapshotSchema, type EventSnapshot } from "@not-alone/validation";
 import { mobileApiBaseUrl } from "../lib/mobile-api";
@@ -38,7 +38,7 @@ export function SummitProvider({ children }: PropsWithChildren) {
   const [clockTick, setClockTick] = useState(() => Date.now());
   const mountedRef = useRef(true);
   const syncInFlightRef = useRef(false);
-  const publishedSnapshotRef = useRef<EventSnapshot | null>(null);
+  const publishedSnapshotRef = useRef<EventSnapshot | null>(canonicalSnapshot);
   const snapshot = publishedSnapshot ?? canonicalSnapshot;
   const nowUtc = new Date(clockTick + serverClockOffsetMs).toISOString();
 
@@ -81,7 +81,7 @@ export function SummitProvider({ children }: PropsWithChildren) {
       setSyncError(undefined);
       void AsyncStorage.setItem(
         PUBLISHED_SNAPSHOT_CACHE_KEY,
-        JSON.stringify({ snapshot: remoteSnapshot, syncedAt })
+        JSON.stringify({ snapshot: selection.snapshot, syncedAt })
       ).catch(() => undefined);
     } catch (error) {
       if (mountedRef.current) {
@@ -110,7 +110,11 @@ export function SummitProvider({ children }: PropsWithChildren) {
           eventSnapshotSchema.parse(cachedValue.snapshot ?? cachedValue),
           canonicalSnapshot
         );
-        const selection = selectCachedSnapshot(publishedSnapshotRef.current, parsed);
+        if (parsed.revision < canonicalSnapshot.revision) return;
+        const selection = selectCachedSnapshot(
+          publishedSnapshotRef.current === canonicalSnapshot ? null : publishedSnapshotRef.current,
+          parsed
+        );
         if (selection.snapshot !== parsed) {
           return;
         }

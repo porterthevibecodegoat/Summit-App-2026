@@ -1,4 +1,4 @@
-import { confirmedSummitGuests2026 } from "@not-alone/config";
+import { confirmedSummitGuests2026, originalProducerCredit, originalProducerCredits } from "@not-alone/config";
 import { publishedDirectory } from "@not-alone/domain";
 import type { EventSnapshot } from "@not-alone/validation";
 
@@ -72,13 +72,13 @@ const candidateProfiles2026: SummitPerson[] = [
   make("Margaret Hines", ["Business Leaders & Philanthropists"], "Business leader and philanthropist", 2026, { image: "/people/margaret-hines.png" }),
   make("Raquel Stevens", ["Business Leaders & Philanthropists"], "Business leader and philanthropist", 2026, { image: "/people/raquel-stevens.png" }),
   ...["John Ratcliff", "Jessica Edwards", "Morgan Marler", "Erica McGraw", "Jay McGraw", "Leah Smith", "Michael Townsend"].map((name) => make(name, ["Business Leaders & Philanthropists"], "Summit participant — details pending approval")),
-  ...["Casey Caruso", "Paige Neuenschwander", "Payton McDonald", "Sydney Fleischmann", "Porter Winterton", "Bianca Mok"].map((name) => make(name, ["Producers"], "Associate Producer")),
-  ...["Aphrah Brokaw", "Clark Cummings", "Jan Thwaites", "Sally Dewhurst", "Sophie Novak", "Trent Alenik", "Trevor Short"].map((name) => make(name, ["Producers"], "Summit producer or staff — details pending approval"))
+  ...originalProducerCredits.map(person => make(person.name, [person.category], person.role))
 ];
 
 export const people2026: SummitPerson[] = confirmedSummitGuests2026.map((name) => {
   const profile = candidateProfiles2026.find((candidate) => candidate.name === name);
-  return profile ?? make(name, ["Attendees"], "Confirmed 2026 summit guest");
+  const credit = originalProducerCredit(name);
+  return credit ? { ...(profile ?? make(name, [credit.category], credit.role)), categories: [credit.category], role: credit.role } : profile ?? make(name, ["Attendees"], "Confirmed 2026 summit guest");
 });
 
 export const people2025: SummitPerson[] = [
@@ -91,11 +91,7 @@ export const people2025: SummitPerson[] = [
   make("Blake Mycoskie", ["Experts"], "TOMS", 2025, { image: "/people/blake-mycoskie.jpg" }),
   make("Cameron & Winston Kelly", ["Founders"], "Not Alone Summit founders", 2025, { order: 2 }),
   make("Steve & Janet Wozniak", ["Founders"], "Founders", 2025, { order: 5, image: "/people/steve-wozniak.jpg" }),
-  make("Paige Neuenschwander", ["Producers"], "Associate Producer", 2025, { image: "/people/paige-neuenschwander.png" }),
-  make("Casey Caruso", ["Producers"], "Associate Producer", 2025),
-  make("Sydney Fleischmann", ["Producers"], "Associate Producer", 2025),
-  make("Porter Winterton", ["Producers"], "Associate Producer", 2025),
-  make("Bianca Mok", ["Producers"], "Associate Producer", 2025)
+  ...originalProducerCredits.map(person => make(person.name, [person.category], person.role, 2025))
 ];
 
 export const categories: PersonCategory[] = ["Co-Chairs", "Hosts", "Founders", "Mental Health Nonprofit Founding Partners", "Musicians", "Entertainers & Athletes", "Experts", "Business Leaders & Philanthropists", "Sponsors", "Executive Producers", "Producers", "Attendees"];

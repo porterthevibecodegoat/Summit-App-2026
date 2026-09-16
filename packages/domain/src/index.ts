@@ -1,8 +1,15 @@
 import { DateTime } from "luxon";
 import type { EventNotice, EventSnapshot, ScheduleItem } from "@not-alone/validation";
+import { groupPublishedProgramByDay } from "./published-content";
 
 export * from "./live-ops";
 export * from "./published-content";
+
+export function fromEventLocalTime(localIso: string, timeZone: string, dayOffset = 0): string {
+  const instant = DateTime.fromISO(localIso, { zone: timeZone }).plus({ days: dayOffset });
+  if (!instant.isValid) throw new Error(`Invalid event-local time: ${localIso}`);
+  return instant.toUTC().toISO()!;
+}
 
 export type NowAndUpcomingInput = {
   snapshot: EventSnapshot;
@@ -128,7 +135,12 @@ export function getEventPhase(snapshot: EventSnapshot, nowUtc: string, audienceG
     .sort((left, right) => left.startUtc.localeCompare(right.startUtc));
   if (items.length === 0) return "empty";
   if (nowUtc < items[0]!.startUtc) return "before";
-  if (nowUtc >= items.reduce((latest, item) => item.endUtc > latest ? item.endUtc : latest, items[0]!.endUtc)) return "after";
+  const pendingDays = groupPublishedProgramByDay(snapshot).filter(day => day.notes.length > 0);
+  const pendingDayEnd = pendingDays.at(-1)
+    ? DateTime.fromISO(pendingDays.at(-1)!.date, { zone: snapshot.event.timeZone }).endOf("day").toUTC().toISO()!
+    : "";
+  const lastEnd = items.reduce((latest, item) => item.endUtc > latest ? item.endUtc : latest, items[0]!.endUtc);
+  if (nowUtc >= (pendingDayEnd > lastEnd ? pendingDayEnd : lastEnd)) return "after";
   return "live";
 }
 

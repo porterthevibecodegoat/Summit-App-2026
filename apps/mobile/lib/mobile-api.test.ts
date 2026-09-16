@@ -9,7 +9,11 @@ describe("resolveMobileApiBaseUrl", () => {
   });
 
   it.each(["localhost", "127.0.0.1", "[::1]"])("allows the %s loopback host during development", (host) => {
-    expect(resolveMobileApiBaseUrl(`http://${host}:3000/`, fallback)).toBe(`http://${host}:3000`);
+    expect(resolveMobileApiBaseUrl(`http://${host}:3000/`, fallback, true)).toBe(`http://${host}:3000`);
+  });
+
+  it.each(["localhost", "127.0.0.1", "[::1]"])("rejects %s outside development", (host) => {
+    expect(resolveMobileApiBaseUrl(`http://${host}:3000/`, fallback)).toBe(fallback);
   });
 
   it("rejects insecure non-loopback runtime endpoints", () => {

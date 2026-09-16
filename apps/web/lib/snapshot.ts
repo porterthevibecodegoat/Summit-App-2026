@@ -1,5 +1,5 @@
 import { fetchPublishedSnapshot } from "@not-alone/api-client";
-import { demoSnapshot } from "@not-alone/test-fixtures";
+import { event2026Snapshot as demoSnapshot } from "@not-alone/test-fixtures/event-2026";
 import type { EventSnapshot, ScheduleItem } from "@not-alone/validation";
 
 const defaultApiBaseUrl = "https://summit-app-2026-admin.vercel.app";
@@ -27,7 +27,7 @@ export type WebScheduleItem = Pick<
 
 export function publicScheduleItems(snapshot: EventSnapshot): WebScheduleItem[] {
   return snapshot.scheduleItems
-    .filter((item) => item.published)
+    .filter((item) => item.published && item.visibilityScope.id === "public")
     .sort((left, right) => left.startUtc.localeCompare(right.startUtc))
     .map(({ id, title, shortTitle, summary, startUtc, endUtc, eventTimeZone, locationName, status, featured }) => ({
       id,

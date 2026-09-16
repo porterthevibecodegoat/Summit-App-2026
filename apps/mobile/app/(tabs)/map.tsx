@@ -11,6 +11,7 @@ const summitArt = require("../../assets/summit-art-v2.png");
 export default function MapScreen() {
   const { snapshot } = useSummit();
   const layout = useResponsiveLayout();
+  const locations = snapshot.locations.filter(location => location.name !== "Location to be confirmed");
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
@@ -23,19 +24,19 @@ export default function MapScreen() {
           <View style={[styles.introScrim, layout.cardPaddingStyle]}>
             <Text style={styles.kicker}>Venue guide</Text>
             <Text style={styles.title}>{snapshot.event.venueName}</Text>
-            <Text style={styles.introBody}>{snapshot.event.city} · {snapshot.locations.length} published rooms</Text>
+            <Text style={styles.introBody}>{snapshot.event.city} · {locations.length} published {locations.length === 1 ? "room" : "rooms"}</Text>
           </View>
         </ImageBackground>
 
         <View style={[styles.venueCard, layout.marginStyle, layout.cardPaddingStyle]}>
           <Image source={wynnLogo} resizeMode="contain" style={styles.venueLogo} />
           <Text style={styles.venueTitle}>Find your room</Text>
-          <Text style={styles.venueBody}>Match the room name on each schedule card with the directory below. Registration is the primary stop for credential help and in-person directions.</Text>
+          <Text style={styles.venueBody}>Only confirmed 2026 room assignments appear below. Ask the event team for directions when your activity says "Location to be confirmed."</Text>
         </View>
 
-        {snapshot.locations.length > 0 ? (
+        {locations.length > 0 ? (
           <View accessibilityLabel="Published venue directory" style={[styles.locationList, layout.marginStyle]}>
-            {snapshot.locations.map((location, index) => {
+            {locations.map((location, index) => {
               const sessionCount = snapshot.scheduleItems.filter((item) => item.published && item.locationId === location.id).length;
               return (
                 <View key={location.id} style={[styles.locationRow, layout.cardPaddingStyle]}>

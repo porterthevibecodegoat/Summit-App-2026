@@ -15,7 +15,9 @@ function parts(item: WebScheduleItem) {
   };
 }
 
-export function ScheduleBrowser({ items }: { items: WebScheduleItem[] }) {
+type PendingDay = { key: string; label: string; date: string; notes: { id: string; title: string; body: string }[] };
+
+export function ScheduleBrowser({ items, pendingDays = [] }: { items: WebScheduleItem[]; pendingDays?: PendingDay[] }) {
   const days = useMemo(() => {
     const grouped = new Map<string, { label: string; date: string; items: WebScheduleItem[] }>();
     for (const item of items) {
@@ -27,8 +29,11 @@ export function ScheduleBrowser({ items }: { items: WebScheduleItem[] }) {
         items: [...(current?.items ?? []), item]
       });
     }
-    return [...grouped.entries()].map(([key, value]) => ({ key, ...value }));
-  }, [items]);
+    for (const day of pendingDays) {
+      if (!grouped.has(day.key)) grouped.set(day.key, { label: day.label, date: day.date, items: [] });
+    }
+    return [...grouped.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([key, value]) => ({ key, ...value }));
+  }, [items, pendingDays]);
   const [activeDay, setActiveDay] = useState(days[0]?.key ?? "");
   const selected = days.find((day) => day.key === activeDay) ?? days[0];
 
@@ -82,6 +87,10 @@ export function ScheduleBrowser({ items }: { items: WebScheduleItem[] }) {
           </section>
         ))}
       </div>
+      {pendingDays.find(day => day.key === selected.key)?.notes.map(note => <section key={note.id} className="schedule-pending">
+        <h2>{note.title}</h2>
+        {note.body.split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+      </section>)}
     </div>
   );
 }

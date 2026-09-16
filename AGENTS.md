@@ -4,6 +4,7 @@ This repository contains two connected products for Inspiring Children Foundatio
 
 - `apps/mobile`: iOS-first React Native attendee app built with Expo, Expo Router, and TypeScript.
 - `apps/admin`: separate responsive Next.js staff Event Control Portal.
+- `apps/web`: independently deployed public website, connected to the same owner-controlled API as the attendee app.
 - `packages/*`: shared source of truth for config, schemas, domain logic, API contracts, design tokens, and fixtures.
 - `supabase/*`: database migrations, local seed data, and future Edge Function code.
 
@@ -14,6 +15,8 @@ Non-negotiables:
 - Store event instants as UTC and render event-local time using an IANA time zone.
 - Staff controls must remain outside the attendee app.
 - Mobile and staff surfaces must read from the same canonical published event model.
+- Keep this owner-controlled app, website, backend, and deployments independent of collaborator forks. Do not automatically import or merge external collaborator updates; obtain an explicit owner request before integrating them. See `docs/PROJECT_OWNERSHIP.md`.
+- Airtable is read-only. Attendance confirmation is not role approval. Producer credits must remain within the original ICF site list in `packages/config/src/producer-credits.ts`.
 - Do not duplicate schedules for AI, notifications, "Now", mobile, or staff preview.
 - Keep all elevated credentials server-side. Never expose service-role Supabase credentials, OpenAI keys, Apple credentials, or push credentials in mobile/browser bundles.
 - Enforce access and publishing rules server-side with Supabase RLS and transactional application functions as the production path.
@@ -30,4 +33,3 @@ Required quality gates:
 - Mobile iOS Simulator/development-build inspection before release-ready status.
 - Staff portal browser inspection.
 - Database migration/RLS review before connecting staging or production data.
-

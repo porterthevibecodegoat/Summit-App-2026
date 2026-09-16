@@ -24,7 +24,7 @@ const session: StaffDraftSession = {
 
 describe("live operations input safety", () => {
   it("requires role provenance before publishing categorized people", () => {
-    const content = { ...demoSnapshot, event: { ...demoSnapshot.event, directoryEnabled: true }, speakers: [{ ...demoSnapshot.speakers[0]!, published: true, directoryCategories: ["Producers"] }] };
+    const content = { ...demoSnapshot, event: { ...demoSnapshot.event, directoryEnabled: true }, speakers: [{ ...demoSnapshot.speakers[0]!, published: true, directoryCategories: ["Experts"] }] };
     const { event, speakers, faqs, sponsors, media, notices, contentPages } = content;
     const payload = { event, speakers, faqs, sponsors, media, notices, contentPages };
     expect(staffContentSchema.safeParse(payload).success).toBe(false);
@@ -121,9 +121,9 @@ describe("live operations input safety", () => {
 
     const hydrated = hydrateSnapshotContent(placeholderSnapshot);
 
-    expect(hydrated.scheduleItems[0]?.summary).toBe(demoSnapshot.scheduleItems[0]?.summary);
-    expect(hydrated.scheduleItems[0]?.description).toBe(demoSnapshot.scheduleItems[0]?.description);
+    expect(hydrated.scheduleItems[0]?.summary).toBe(`${demoSnapshot.scheduleItems[0]?.title} takes place in ${demoSnapshot.scheduleItems[0]?.locationName}.`);
+    expect(hydrated.scheduleItems[0]?.description).toBe(hydrated.scheduleItems[0]?.summary);
     expect(hydrated.scheduleItems[1]?.description).toBe("Staff-approved custom session copy.");
-    expect(hydrated.locations[0]?.description).toBe(demoSnapshot.locations[0]?.description);
+    expect(hydrated.locations[0]?.description).toBe(`${demoSnapshot.locations[0]?.name} is listed in the current event schedule.`);
   });
 });

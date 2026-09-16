@@ -311,10 +311,19 @@ importers:
 
   packages/test-fixtures:
     dependencies:
+      '@not-alone/config':
+        specifier: workspace:*
+        version: link:../config
       '@not-alone/validation':
         specifier: workspace:*
         version: link:../validation
+      luxon:
+        specifier: 3.7.2
+        version: 3.7.2
     devDependencies:
+      '@types/luxon':
+        specifier: 3.7.5
+        version: 3.7.5
       typescript:
         specifier: 6.0.3
         version: 6.0.3

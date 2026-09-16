@@ -2,8 +2,10 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { createHash } from "node:crypto";
 import { z } from "zod";
-import { demoSnapshot } from "@not-alone/test-fixtures";
+import { originalProducerCredit } from "@not-alone/config";
+import { event2026Snapshot as demoSnapshot } from "@not-alone/test-fixtures/event-2026";
 import {
+  fromEventLocalTime,
   isLocationPlaceholderCopy,
   isSchedulePlaceholderCopy,
   sanitizePublishedSnapshotContent
@@ -106,13 +108,15 @@ export const staffContentSchema = z.object({
     revision: z.number().int().positive()
   })).max(250)
 }).strict().superRefine((content, ctx) => {
-  if (content.event.directoryEnabled) {
-    content.speakers.forEach((person, index) => {
-      if (person.published && person.directoryCategories?.some(category => category !== "Attendees") && !person.roleSource?.trim()) {
-        ctx.addIssue({ code: "custom", path: ["speakers", index, "roleSource"], message: `Record the approved role source for ${person.name}; attendance confirmation alone is not role approval.` });
-      }
-    });
-  }
+  content.speakers.forEach((person, index) => {
+    const credit = originalProducerCredit(person.name);
+    if (person.directoryCategories?.some(category => (category === "Producers" || category === "Executive Producers") && category !== credit?.category) || (/producer/i.test(person.role) && !credit)) {
+      ctx.addIssue({ code: "custom", path: ["speakers", index, "directoryCategories"], message: `${person.name} does not have this producer credit on the approved original site.` });
+    }
+    if (content.event.directoryEnabled && person.published && person.directoryCategories?.some(category => category !== "Attendees") && !person.roleSource?.trim()) {
+      ctx.addIssue({ code: "custom", path: ["speakers", index, "roleSource"], message: `Record the approved role source for ${person.name}; attendance confirmation alone is not role approval.` });
+    }
+  });
   const slugs = content.contentPages.map(page => page.slug);
   if (new Set(slugs).size !== slugs.length) ctx.addIssue({ code: "custom", path: ["contentPages"], message: "Content page slugs must be unique." });
 });
@@ -338,7 +342,7 @@ export async function rollbackLastPublishedSnapshot(options: { notifyAttendees: 
       location: item.locationName,
       audience: item.visibilityScope.label,
       status: "Ready",
-      reminders: `${item.notificationOffsetsMinutes.join("m, ")}m`
+      reminders: item.notificationOffsetsMinutes.map(offset => `${offset}m`).join(", ")
     })),
     publishedSnapshot,
     revisionHistory: [store.publishedSnapshot, ...store.revisionHistory.slice(1)].slice(0, 10),
@@ -367,14 +371,14 @@ export function buildPublishedSnapshotFromDraftSessions(
 ) {
   const normalizedSessions = normalizeDraftSessions(sessions);
   const eventDays = [...new Set(normalizedSessions.map((session) =>
-    eventDateKey(localEventTimeToUtc(session.day, session.start), baseSnapshot.event.timeZone)
+    eventDateKey(localEventTimeToUtc(session.day, session.start, baseSnapshot.event.timeZone), baseSnapshot.event.timeZone)
   ))].sort();
   return eventSnapshotSchema.parse({
     ...baseSnapshot,
     revision,
     serverTimeUtc: nowUtc,
     scheduleItems: normalizedSessions.map((session, index) => {
-      const startUtc = localEventTimeToUtc(session.day, session.start);
+      const startUtc = localEventTimeToUtc(session.day, session.start, baseSnapshot.event.timeZone);
       const dayOrder = eventDays.indexOf(eventDateKey(startUtc, baseSnapshot.event.timeZone));
       return createScheduleItem(session, index, Math.max(dayOrder, 0), revision, nowUtc, baseSnapshot);
     }),
@@ -455,49 +459,28 @@ export async function recordDocumentImport(job: DocumentImportJob) {
 }
 
 function createInitialDraftSessions(): StaffDraftSession[] {
-  return [
-    {
-      id: "draft-wozniak-keynote",
-      day: "Mon Nov 2",
-      start: "3:00 PM",
-      end: "4:00 PM",
-      title: "Innovation, Humanity, and Not Being Alone",
-      speaker: "Steve Wozniak",
-      location: "Encore Theater",
-      audience: "All attendees",
-      status: "Draft",
-      reminders: "30m, 10m"
-    },
-    {
-      id: "draft-reset-lounge",
-      day: "Mon Nov 2",
-      start: "4:20 PM",
-      end: "4:50 PM",
-      title: "Guided Reset and Reflection",
-      speaker: "Wellness Team",
-      location: "Reflection Lounge",
-      audience: "All attendees",
-      status: "Needs review",
-      reminders: "10m"
-    },
-    {
-      id: "draft-founder-reception",
-      day: "Mon Nov 2",
-      start: "6:00 PM",
-      end: "7:30 PM",
-      title: "Founder Circle Reception",
-      speaker: "Host Committee",
-      location: "Terrace Salon",
-      audience: "Founders only",
-      status: "Draft",
-      reminders: "30m"
-    }
-  ];
+  return snapshotToDraftSessions(demoSnapshot);
+}
+
+export function snapshotToDraftSessions(snapshot: EventSnapshot): StaffDraftSession[] {
+  const clock = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", timeZone: snapshot.event.timeZone });
+  return snapshot.scheduleItems.map(item => ({
+    id: item.id, day: formatDraftDay(item.startUtc, snapshot.event.timeZone),
+    start: clock.format(new Date(item.startUtc)), end: clock.format(new Date(item.endUtc)),
+    title: item.title,
+    speaker: item.speakerIds.map(id => snapshot.speakers.find(person => person.id === id)?.name).filter(Boolean).join(", ") || "Unassigned",
+    location: item.locationName, audience: item.visibilityScope.label,
+    status: item.published ? "Ready" : "Draft",
+    reminders: item.notificationOffsetsMinutes.map(offset => `${offset}m`).join(", ")
+  }));
 }
 
 function createScheduleItem(session: StaffDraftSession, index: number, dayOrder: number, revision: number, nowUtc: string, baseSnapshot: EventSnapshot): ScheduleItem {
-  const startUtc = localEventTimeToUtc(session.day, session.start);
-  const endUtc = localEventTimeToUtc(session.day, session.end);
+  const startUtc = localEventTimeToUtc(session.day, session.start, baseSnapshot.event.timeZone);
+  const sameDayEnd = localEventTimeToUtc(session.day, session.end, baseSnapshot.event.timeZone);
+  const endUtc = sameDayEnd <= startUtc && /^12(?::00)?\s*AM$/i.test(session.end.trim())
+    ? localEventTimeToUtc(session.day, session.end, baseSnapshot.event.timeZone, 1)
+    : sameDayEnd;
   const visibility = audienceToScope(session.audience);
   const title = session.title.trim();
   const speaker = session.speaker.trim() || "Unassigned";
@@ -529,7 +512,7 @@ function createScheduleItem(session: StaffDraftSession, index: number, dayOrder:
     endUtc,
     eventTimeZone: baseSnapshot.event.timeZone,
     dayOrder,
-    locationId: stableUuid(`location:${location}`),
+    locationId: baseSnapshot.locations.find(candidate => candidate.name === location)?.id ?? stableUuid(`location:${location}`),
     locationName: location,
     speakerIds: speaker === "Unassigned"
       ? []
@@ -537,9 +520,9 @@ function createScheduleItem(session: StaffDraftSession, index: number, dayOrder:
           baseSnapshot.speakers.find((candidate) => candidate.name.toLowerCase() === name.toLowerCase())?.id ?? stableUuid(`speaker:${name}`)
         ),
     status: "scheduled",
-    visibilityScope: visibility,
-    eligibilityScope: visibility,
-    notificationScope: visibility,
+    visibilityScope: previousItem?.visibilityScope.label === session.audience ? previousItem.visibilityScope : visibility,
+    eligibilityScope: previousItem?.visibilityScope.label === session.audience ? previousItem.eligibilityScope : visibility,
+    notificationScope: previousItem?.visibilityScope.label === session.audience ? previousItem.notificationScope : visibility,
     notificationOffsetsMinutes: parseReminderOffsets(session.reminders),
     featured: previousItem?.featured ?? index === 0,
     published: true,
@@ -578,10 +561,10 @@ export function createNotificationJobs(snapshot: EventSnapshot) {
   );
 }
 
-function localEventTimeToUtc(day: string, time: string) {
+function localEventTimeToUtc(day: string, time: string, timeZone: string, dayOffset = 0) {
   const match = time.trim().match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)$/i);
   if (!match?.[1] || !match?.[3]) {
-    return "2026-11-02T20:00:00.000Z";
+    throw new Error("A valid event-local clock time is required.");
   }
 
   const hour12 = Number(match[1]);
@@ -590,7 +573,7 @@ function localEventTimeToUtc(day: string, time: string) {
   const hour24 = meridiem === "PM" && hour12 !== 12 ? hour12 + 12 : meridiem === "AM" && hour12 === 12 ? 0 : hour12;
   const dayOfMonth = parseEventDay(day);
 
-  return new Date(Date.UTC(2026, 10, dayOfMonth, hour24 + 8, minute, 0)).toISOString();
+  return fromEventLocalTime(`2026-11-${String(dayOfMonth).padStart(2, "0")}T${String(hour24).padStart(2, "0")}:${String(minute).padStart(2, "0")}`, timeZone, dayOffset);
 }
 
 function audienceToScope(audience: string) {
@@ -604,7 +587,7 @@ function parseReminderOffsets(value: string) {
     .map((part) => Number(part.replace(/[^0-9]/g, "")))
     .filter((offset) => Number.isInteger(offset) && offset > 0);
 
-  return offsets.length > 0 ? offsets : [10];
+  return offsets;
 }
 
 function stableUuid(input: string) {
@@ -647,7 +630,7 @@ function normalizeDraftSessions(sessions: StaffDraftSession[]): StaffDraftSessio
     location: session.location.trim(),
     audience: session.audience.trim() || "All attendees",
     status: session.status,
-    reminders: session.reminders.trim() || "10m"
+    reminders: session.reminders.trim()
   }));
 }
 
@@ -656,7 +639,7 @@ function validateDraftSessionsForPublish(sessions: StaffDraftSession[]) {
 }
 
 function parseEventDay(day: string) {
-  const match = day.match(/\b(?:Nov(?:ember)?\s*)?([2-4])\b/i);
+  const match = day.match(/\b(?:Nov(?:ember)?\s*)?([1-5])\b/i);
   return match?.[1] ? Number(match[1]) : 2;
 }
 

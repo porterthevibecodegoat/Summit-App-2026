@@ -103,6 +103,13 @@ export function createScheduleQualityReport(sessions: StaffDraftSession[]): Sche
       });
     }
 
+    if (session.location.trim().toLowerCase() === "location to be confirmed") {
+      issues.push({
+        id: `${session.id}-unconfirmed-location`, severity: "warning", title: "Room not confirmed",
+        message: `${rowLabel} will show its room as unconfirmed; room conflicts cannot be checked yet.`, sessionIds: [session.id]
+      });
+    }
+
     if (parsed.startMinutes === null || parsed.endMinutes === null) {
       issues.push({
         id: `${session.id}-invalid-time`,
@@ -129,7 +136,7 @@ export function createScheduleQualityReport(sessions: StaffDraftSession[]): Sche
         id: `${session.id}-unclear-day`,
         severity: "blocking",
         title: "Unclear day",
-        message: `${rowLabel} has an unclear day label. Use Monday Nov 2, Tuesday Nov 3, or Wednesday Nov 4.`,
+        message: `${rowLabel} has an unclear day label. Use a date from November 1-5, 2026.`,
         sessionIds: [session.id]
       });
     }
@@ -202,7 +209,7 @@ function findLocationConflicts(parsedSessions: ParsedSession[]) {
       Boolean(entry.dayKey) &&
       entry.startMinutes !== null &&
       entry.endMinutes !== null &&
-      isRealLocation(entry.session.location)
+      isRealLocation(entry.session.location) && entry.session.location.trim().toLowerCase() !== "location to be confirmed"
   );
 
   for (let firstIndex = 0; firstIndex < comparableSessions.length; firstIndex += 1) {
@@ -233,17 +240,19 @@ function findLocationConflicts(parsedSessions: ParsedSession[]) {
 }
 
 function parseSession(session: StaffDraftSession): ParsedSession {
+  const startMinutes = parseTimeToMinutes(session.start);
+  const end = parseTimeToMinutes(session.end);
   return {
     session,
     dayKey: parseDayKey(session.day),
-    startMinutes: parseTimeToMinutes(session.start),
-    endMinutes: parseTimeToMinutes(session.end)
+    startMinutes,
+    endMinutes: end === 0 && startMinutes !== null && startMinutes > 0 ? 1440 : end
   };
 }
 
 function parseDayKey(day: string) {
   const normalized = day.trim().toLowerCase();
-  const explicit = normalized.match(/\b(?:nov(?:ember)?\s*)?([2-4])\b/)?.[1];
+  const explicit = normalized.match(/\b(?:nov(?:ember)?\s*)?([1-5])\b/)?.[1];
 
   if (explicit) {
     return `2026-11-${explicit.padStart(2, "0")}`;

@@ -9,7 +9,7 @@ test("published data survives API outage and reconnect without accepting stale r
   expect(response.ok()).toBeTruthy();
   const snapshot = await response.json();
   snapshot.revision += 100;
-  const item = snapshot.scheduleItems.find((entry: { title: string }) => entry.title.includes("Registration, Gifting Suite"));
+  const item = snapshot.scheduleItems.find((entry: { title: string }) => entry.title.includes("Community Ride"));
   expect(item).toBeTruthy();
   item.title = "Acceptance recovery session";
   let offline = false;
@@ -56,7 +56,7 @@ test("reviewed people and Awards follow published revisions without restoring re
   snapshot.revision += 100;
   snapshot.event.directoryEnabled = true;
   snapshot.speakers = [{ id: "83000000-0000-4000-8000-000000000001", eventId: snapshot.event.id, name: "Reviewed directory person", role: "Approved producer", bio: "Approved biography", headshotUrl: null, published: true, directoryCategories: ["Producers"], roleSource: "Test approval" }];
-  snapshot.contentPages.push({ id: "83000000-0000-4000-8000-000000000002", slug: "awards-2026-program", title: "Reviewed Awards program", body: "Approved program details", published: true, revision: snapshot.revision });
+  snapshot.contentPages = [...snapshot.contentPages.filter((page: { slug: string }) => page.slug !== "awards-2026-program"), { id: "83000000-0000-4000-8000-000000000002", slug: "awards-2026-program", title: "Reviewed Awards program", body: "Approved program details", published: true, revision: snapshot.revision }];
   await page.route("**/api/snapshot", route => route.fulfill({ json: { ...snapshot, serverTimeUtc: new Date().toISOString() } }));
   await page.goto("/people");
   await enterSummit(page);
@@ -145,25 +145,28 @@ test("attendees see one event schedule without personal schedule controls", asyn
   await expect(page.getByText(/My Schedule/i)).toHaveCount(0);
   await expect(page.getByRole("button", { name: /save|bookmark/i })).toHaveCount(0);
 
-  await page.getByRole("link", { name: /Registration, Gifting Suite/i }).click();
+  await page.getByRole("link", { name: /Community Ride/i }).click();
   await expect(page.getByText(/My Schedule/i)).toHaveCount(0);
   await expect(page.getByRole("button", { name: /save|bookmark/i })).toHaveCount(0);
   await expect(page.getByText("Reminder", { exact: true })).toHaveCount(0);
   expect(runtimeErrors).toEqual([]);
 });
 
-test("schedule days stay isolated and simultaneous sessions share one time marker", async ({ page }) => {
+test("schedule days stay isolated and pending-only days remain accessible", async ({ page }) => {
   const runtimeErrors = captureRuntimeErrors(page);
   await page.goto("/schedule");
   await enterSummit(page);
 
   await expect(page.getByText("Event schedule", { exact: true })).toBeInViewport();
-  await expect(page.getByText("1:00", { exact: true })).toHaveCount(1);
-  await expect(page.getByText("Pilates Class", { exact: true })).toBeVisible();
+  await expect(page.getByText("2:00", { exact: true })).toHaveCount(1);
+  await expect(page.getByText("Mike's Bikes Community Ride", { exact: true })).toBeVisible();
   await page.getByRole("tab", { name: /Tue, Nov 3/ }).click();
   await expect(page.getByText("Tuesday, November 3", { exact: true })).toBeVisible();
-  await expect(page.getByText("Pilates Class", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Mike's Bikes Community Ride", { exact: true })).toHaveCount(0);
   await expect(page.getByText(/Registration, Gifting Suite/i)).toHaveCount(0);
+  await page.getByRole("tab", { name: /Thu, Nov 5/ }).click();
+  await expect(page.getByText("Thursday, November 5", { exact: true })).toBeVisible();
+  await expect(page.getByText(/Tennis: 10:00 AM; end time to be confirmed/)).toBeVisible();
   expect(runtimeErrors).toEqual([]);
 });
 
@@ -171,7 +174,7 @@ test("session detail is concise and contains no editorial placeholders", async (
   const runtimeErrors = captureRuntimeErrors(page);
   await page.goto("/schedule");
   await enterSummit(page);
-  await page.getByRole("link", { name: /Registration, Gifting Suite/i }).click();
+  await page.getByRole("link", { name: /Community Ride/i }).click();
 
   await expect(page.getByText("Session details", { exact: true })).toBeVisible();
   await expect(page.getByText("Access", { exact: true })).toHaveCount(1);
@@ -186,10 +189,12 @@ test("people categories respond without advertising unavailable profile actions"
   await page.goto("/people");
   await enterSummit(page);
   await expect(page.getByText("View bio", { exact: false })).toHaveCount(0);
-  const category = page.getByRole("tab", { name: "Mental Health Nonprofit Founding Partners", exact: true });
+  const category = page.getByRole("tab", { name: "Producers", exact: true });
   await category.click();
   await expect(category).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByText("No confirmed guests in this category yet.", { exact: true })).toBeVisible();
+  await expect(page.getByText("Trent Alenik", { exact: true })).toBeVisible();
+  await expect(page.getByText("Aphrah Brokaw", { exact: true })).toBeVisible();
+  await expect(page.getByText("Mike Tyson", { exact: true })).toHaveCount(0);
 });
 
 test("concierge disables empty submission and answers a direct schedule question", async ({ page }) => {

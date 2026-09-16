@@ -6,7 +6,7 @@ export const confirmedSummitGuests2026 = [
   "Mike Majlak",
   "Kevin Hines",
   "Ryan Wolfington",
-  "Jewel Murray",
+  "Jewel",
   "Caroline Jones",
   "Nick Dana",
   "Sarah Steil",
@@ -36,11 +36,6 @@ export const confirmedSummitGuests2026 = [
   "Paige Neuenschwander",
   "Noah Springer",
   "Melinda Springer",
-  "Adam Lewis",
-  "Melony Lewis",
-  "Cameron Kelly",
-  "Winston Kelly",
-  "Jeneva Bell",
   "Alana Springsteen",
   "David Eagleman",
   "Bob Bryan",
@@ -53,16 +48,19 @@ export const confirmedSummitGuests2026 = [
   "Sean Wolfington",
   "Ana Wolfington",
   "Janet Wozniak",
-  "Cathy Olson"
+  "Cathy Olson",
+  "Jeff Levin",
+  "Darryl McDaniels (DMC)",
+  "Mike Tyson"
 ] as const;
 
 export const confirmedSummitGuests2026Source = {
   baseId: "app7BHptsc1bjc3DD",
   interfacePageId: "pagFmzDhXfNK53eWY",
   group: "Summit Status: Confirmed Attendance",
-  reviewedAt: "2026-09-15",
-  observedConfirmedRows: 59,
-  publicConfirmedRows: 55,
-  excludedRule: "Blank names and names explicitly marked TBC are withheld from public content.",
+  reviewedAt: "2026-09-16",
+  observedConfirmedRows: 57,
+  publicConfirmedRows: 53,
+  excludedRule: "Three TBC names withheld; DMC merged with Darryl McDaniels (DMC). Hold-space, invited, pending, and declined records excluded.",
   accessMode: "Read-only Airtable interface review"
 } as const;

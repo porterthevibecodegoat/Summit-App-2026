@@ -24,6 +24,7 @@ import {
   registerAttendeeDevice,
   rollbackLastPublishedSnapshot,
   saveDraftSessions,
+  snapshotToDraftSessions,
   type LiveOpsStore,
   staffDraftSessionsSchema,
   staffContentSchema,
@@ -397,7 +398,7 @@ function requireRole(context: StaffContext, allowedRoles: StaffRole[]) {
 async function readSupabaseState(): Promise<LiveOpsState> {
   const [draftRows, revisionRows, deviceRows, notificationRows, auditRows, importRows, deliveryRows] = await Promise.all([
     supabaseFetch<Array<{ working_snapshot: unknown; updated_at: string }>>(
-      `/rest/v1/schedule_drafts?event_id=eq.${encodeURIComponent(publicAppConfig.eventId)}&select=working_snapshot,updated_at&order=updated_at.desc&limit=1`,
+      `/rest/v1/schedule_drafts?event_id=eq.${encodeURIComponent(publicAppConfig.eventId)}&status=in.(DRAFT,NEEDS_REVIEW,VALIDATED)&select=working_snapshot,updated_at&order=updated_at.desc&limit=1`,
       { expectedStatus: 200 }
     ),
     supabaseFetch<Array<{ revision: number; snapshot: unknown; published_at: string }>>(
@@ -693,31 +694,7 @@ function parseDraftSessions(value: unknown, snapshot: EventSnapshot): StaffDraft
     return parsed.data;
   }
 
-  return snapshot.scheduleItems.map((item) => ({
-    id: item.id,
-    day: new Intl.DateTimeFormat("en-US", {
-      day: "numeric",
-      month: "short",
-      timeZone: snapshot.event.timeZone,
-      weekday: "short"
-    }).format(new Date(item.startUtc)),
-    start: new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      timeZone: snapshot.event.timeZone
-    }).format(new Date(item.startUtc)),
-    end: new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      timeZone: snapshot.event.timeZone
-    }).format(new Date(item.endUtc)),
-    title: item.title,
-    speaker: item.speakerIds.map((id) => snapshot.speakers.find((speaker) => speaker.id === id)?.name).filter(Boolean).join(", ") || "Unassigned",
-    location: item.locationName,
-    audience: item.visibilityScope.label,
-    status: item.published ? "Ready" : "Draft",
-    reminders: `${item.notificationOffsetsMinutes.join("m, ")}m`
-  }));
+  return snapshotToDraftSessions(snapshot);
 }
 
 function toNotificationJobStatus(value: string): NotificationJob["status"] {

@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./event-2026": "./src/event-2026.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit",
@@ -12,9 +13,12 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@not-alone/config": "workspace:*",
+    "luxon": "3.7.2",
     "@not-alone/validation": "workspace:*"
   },
   "devDependencies": {
+    "@types/luxon": "3.7.5",
     "typescript": "6.0.3",
     "vitest": "4.1.11"
   }

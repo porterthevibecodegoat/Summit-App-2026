@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export { confirmedSummitGuests2026, confirmedSummitGuests2026Source } from "./confirmed-2026.ts";
+export { originalProducerCredit, originalProducerCredits, producerCreditSource } from "./producer-credits.ts";
 
 export const environmentNameSchema = z.enum(["local", "development", "staging", "production"]);
 
