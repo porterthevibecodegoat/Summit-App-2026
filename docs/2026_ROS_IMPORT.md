@@ -57,3 +57,11 @@ The second read-only ROS review matched all 32 source rows, including unchanged 
 The native Ask AI fallback still contained a separate historical program/role description list. It has been removed. Both the staff-hosted attendee endpoint and the phone's offline fallback now call `@not-alone/domain/concierge`, using the same published snapshot. Current guest attendance does not imply an old host role or a new speaking slot. The fallback no longer asserts old Community Day activities, a closing concert, registration rooms, or historical sponsors. Published pending-timing notes remain available offline.
 
 The native cache verifier now compares event information, full guest records, rooms, FAQs, sponsors, media, notices, and content-page text in addition to schedule identity/timing/revision checks.
+
+## Local-store cleanup
+
+A subsequent check found the laptop's ignored local development store still held revision 3 and 34 historical schedule rows, even though the deployed API and installed Simulator used revision 9. `scripts/sync-local-store-from-published.mjs --expected-local-revision=3 --apply` backed up that store privately, replaced active content and working drafts with the published 2026 snapshot, and superseded old pending local notification jobs. Device registrations, audit history, and prior revisions were retained. The script only writes the local file; it does not publish to Supabase or send push notifications. It requires an explicit expected local revision before replacing drafts.
+
+Supabase had zero active DRAFT/NEEDS_REVIEW/VALIDATED rows for this event. No new cloud revision was needed. The staff publishing fallback no longer infers room purposes from historical room names; reviewed descriptions are preserved, and new rooms receive neutral copy until staff supplies details. Two regression tests cover both cases.
+
+After this cleanup, all 146 workspace tests, lint, type checking, and all 10 native-cache comparisons passed. The 2025 website archive and historical audit records intentionally remain separate from the active 2026 event.

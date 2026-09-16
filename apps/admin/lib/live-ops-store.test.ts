@@ -8,6 +8,7 @@ import {
   type StaffDraftSession
 } from "./live-ops-store";
 import { demoSnapshot } from "@not-alone/test-fixtures";
+import { event2026Snapshot } from "@not-alone/test-fixtures/event-2026";
 
 const session: StaffDraftSession = {
   id: "opening-session",
@@ -23,6 +24,27 @@ const session: StaffDraftSession = {
 };
 
 describe("live operations input safety", () => {
+  it("does not infer room purposes from the historical program", () => {
+    const rooms = ["La Tache", "Registration Desk", "Wisdom Forum", "Lafleur", "Pomerol", "Mouton 1", "Mouton", "Outside SW", "SW Steakhouse", "BOA Steakhouse"];
+    const snapshot = buildPublishedSnapshotFromDraftSessions(
+      rooms.map((location, index) => ({ ...session, id: `new-room-${index}`, location })),
+      10,
+      "2026-09-16T21:00:00.000Z",
+      event2026Snapshot
+    );
+    expect(snapshot.locations.map(location => location.description)).toEqual(
+      rooms.map(name => `${name} is listed in the current event schedule.`)
+    );
+  });
+
+  it("preserves reviewed 2026 room information when republishing", () => {
+    const room = event2026Snapshot.locations.find(location => location.name === "Margaux")!;
+    const snapshot = buildPublishedSnapshotFromDraftSessions(
+      [{ ...session, location: room.name }], 10, "2026-09-16T21:00:00.000Z", event2026Snapshot
+    );
+    expect(snapshot.locations[0]).toEqual(room);
+  });
+
   it("requires role provenance before publishing categorized people", () => {
     const content = { ...demoSnapshot, event: { ...demoSnapshot.event, directoryEnabled: true }, speakers: [{ ...demoSnapshot.speakers[0]!, published: true, directoryCategories: ["Experts"] }] };
     const { event, speakers, faqs, sponsors, media, notices, contentPages } = content;

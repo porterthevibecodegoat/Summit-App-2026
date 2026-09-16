@@ -227,22 +227,6 @@ function isLocationPlaceholder(value: string) {
   return isLocationPlaceholderCopy(value);
 }
 
-function createLocationDescription(name: string) {
-  const normalized = normalizeText(name);
-
-  if (normalized.includes("la tache")) return "Arrival and hospitality area for awards programming.";
-  if (normalized.includes("registration")) return "Guest check-in, credential support, schedule help, and wayfinding.";
-  if (normalized.includes("margaux") || normalized.includes("wisdom forum")) return "Main room for summit programming, panels, performances, and award moments.";
-  if (normalized.includes("lafleur")) return "Movement, mindfulness, meditation, and reset programming.";
-  if (normalized.includes("pomerol")) return "Fitness, recreation, and community wellness programming.";
-  if (normalized.includes("mouton 1")) return "Attendee gifting, speaker hospitality, and event support.";
-  if (normalized.includes("mouton")) return "Meals, workshops, and quieter conversation spaces.";
-  if (normalized.includes("outside sw")) return "Arrival point for designated gatherings at SW Steakhouse.";
-  if (normalized.includes("sw steakhouse")) return "Hosted dining location for designated summit gatherings.";
-  if (normalized.includes("boa")) return "Closing dinner and music programming location.";
-  return "Event room used by the published schedule.";
-}
-
 export async function writeLiveOpsStore(store: LiveOpsStore) {
   await mkdir(dirname(storePath), { recursive: true });
   await writeFile(storePath, JSON.stringify(store, null, 2));
@@ -541,7 +525,7 @@ function createLocations(sessions: StaffDraftSession[], baseSnapshot: EventSnaps
       name: locationName,
       description: existing && !isLocationPlaceholder(existing.description)
         ? existing.description
-        : createLocationDescription(locationName),
+        : `${locationName} is listed in the current event schedule.`,
       mapX: existing?.mapX ?? (locations.length <= 1 ? 0.5 : 0.18 + (index / Math.max(locations.length - 1, 1)) * 0.64),
       mapY: existing?.mapY ?? 0.36 + (index % 3) * 0.18
     };
