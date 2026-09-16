@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   // Production delivery intentionally stays server-side. Configure the provider and
   // attendee identity records before enabling email or push dispatch.
   if (!process.env.MESSAGE_DELIVERY_WEBHOOK_URL || !process.env.MESSAGE_DELIVERY_WEBHOOK_SECRET) {
-    return NextResponse.json({ message: "Your request was validated. Delivery is in preview mode until attendee emails and the secure messaging provider are connected." }, { status: 202 });
+    return NextResponse.json({ error: "Messaging is not available. No message has been sent." }, { status: 503 });
   }
   const delivery = await fetch(process.env.MESSAGE_DELIVERY_WEBHOOK_URL, {
     method: "POST",

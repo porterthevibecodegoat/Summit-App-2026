@@ -25,7 +25,7 @@ export function AwardsYearPage({ year }: { year: AwardsYear }) {
         {Object.entries(roster).map(([title, entries]) => <section className="awardsSection" key={title}><p className="eyebrow">2025 Not Alone Awards</p><h2>{title}</h2><div className="awardPeopleGrid">{entries.map((entry) => <PersonCard key={entry.name} {...entry} image={profiles.find((person) => person.name === entry.name)?.image} />)}</div></section>)}
       </> : <section className="awardsSection announcementPanel"><p className="eyebrow">2026 program</p><h2>Honorees and show roles will be announced after final approval.</h2><p>The confirmed Summit directory is live now. Awards-specific appearances and categories remain withheld until the event team approves them.</p><Link className="primaryButton" href="/#directory">View confirmed Summit guests</Link></section>}
       <section className="awardsSection"><p className="eyebrow">Why it matters</p><h2>Awards</h2><div className="awardGrid categoryAwardGrid">{awardCategories.map(([title, description]) => <article key={title}><div><strong>{title}</strong><p>{description}</p></div></article>)}</div></section>
-      <section className="awardsClosing"><p className="eyebrow">Celebrating pioneers</p><h2>Human development & mental health</h2><Link className="primaryButton" href="/#rsvp">RSVP for the {year} experience</Link></section>
+      <section className="awardsClosing"><p className="eyebrow">Celebrating pioneers</p><h2>Human development & mental health</h2><Link className="primaryButton" href={year === 2025 ? "/2025" : "/#rsvp"}>{year === 2025 ? "Explore the 2025 archive" : "Registration updates"}</Link></section>
     </section>
   </main>;
 }

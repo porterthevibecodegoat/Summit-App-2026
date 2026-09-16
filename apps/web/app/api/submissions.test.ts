@@ -20,7 +20,7 @@ describe("website submissions", () => {
     vi.stubEnv("MESSAGE_DELIVERY_WEBHOOK_URL", "https://example.org/delivery");
     vi.stubEnv("MESSAGE_DELIVERY_WEBHOOK_SECRET", "");
     const fetchMock = vi.fn(); vi.stubGlobal("fetch", fetchMock);
-    expect((await messages(request(message))).status).toBe(202);
+    expect((await messages(request(message))).status).toBe(503);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
