@@ -1,0 +1,141 @@
+OCTOBER 28 OWNER FOLLOW-UP
+Current production is in a newly identified repository; account access is pending.
+This repository/PR remains a draft reference for a scoped port, not a website
+publication target. Private handoff coordinates are in the owner workspace.
+Airtable is now the explicit owner authority for program discrepancies: Tuesday
+Life Plan is 9:00–9:45 AM, Life Plan Preparedness with DBT expert Dr. Blaise Aguirre.
+Two signup review notes now include that decision. Earlier notes and all states,
+original labels/timestamps, links and Staff Notes remain intact. Review flags remain
+visible until website reconciliation. Three unverified guest links remain blank.
+No booking status, source/waiver record, deployment or texting setting changed.
+
+WELLNESS SIGNUPS IN AIRTABLE — OCTOBER 28, 2026
+
+IMPLEMENTED LIVE: AUTOMATIC SIGNUP DATA SYNC
+Nick requested Airtable wellness storage and migration of existing signups, then
+approved the dedicated Main NA Summit 2026 connection on October 28. Granted only
+that base, with schema/record read and record write. The provider scope includes
+deletion capability, but this workflow contains no delete step. The existing
+Airtable connection and unrelated Make scenarios are unchanged.
+
+Make: NAS 2026 - wellness Airtable sync - DATA ONLY
+Scenario 6805809; team 3087705; Active, every 30 minutes; sequential processing.
+https://us2.make.com/3087705/scenarios/6805809/edit
+Modules: HTTP GET private feed -> Iterator -> Airtable bulk upsert (advanced).
+Connections: feed 11996083; dedicated base-limited Airtable 12007644.
+No SMS, ClickSend, email or deletion module. Reminder scenario 6765208 remains
+Inactive, verified October 28; it was not run or changed. All texts, including
+tests, remain held until Nick approves the complete process and build.
+
+AIRTABLE DESTINATION AND CURRENT RECORDS
+Main NA Summit 2026: app7BHptsc1bjc3DD
+Wellness Signups: tblbfPmjZGnJPnINI; view viwqr4LyJWolD5Wr4
+https://airtable.com/app7BHptsc1bjc3DD/tblbfPmjZGnJPnINI/viwqr4LyJWolD5Wr4
+Exact field IDs: apps/web/config/wellness-airtable-2026.draft.json.
+October 27 migration imported all 12 source selections from 5 people, with 12
+verified activity links and 10 verified guest links. The first live writer run
+on October 28 found 7 newer real source selections and upserted them, bringing
+the table to 19 records. All original record IDs and protected values survived.
+No fictional guests or test records were inserted into the live table.
+
+All 19 rows currently say Booking Status=Signup received and Text Permission=
+Not evaluated. This is an operational signup copy; it does not confirm places,
+initialize a capacity ledger, grant admission or authorize outreach.
+Follow-up reconciliation October 28: all 19 activity links are verified by exact
+public title/date/start/end and published ROS ID. Added 6 guest links using exact
+name, a unique matching source/contact-sheet phone and verified roster record ID.
+Those 6 rows retain an informational email-difference review note; no contacts
+were copied. All reviewed links/notes survived the next scheduled data sync.
+Computed Link Review (fldQPO5NnbLr6mTwt): 3 Needs matching, 11 Needs review,
+5 Linked. Three guest links remain unassigned: 2 conflicting contact-to-roster
+selections and 1 without contact-sheet evidence for a same-name candidate.
+The 11 review rows cover 6 email-only differences, 2 phone differences and 3
+historical activity title/time differences. Never match a guest by name alone or
+borrow a different guest's contact. Staff Notes remains unchanged and staff-owned.
+See WELLNESS_CUTOVER_REVIEW.txt for concrete exceptions and activation gates.
+
+WRITER CONTRACT AND SAFEGUARDS
+Require HTTP 200, schemaVersion=1, complete=true, scope=wellness, exact target
+base/table, and a generatedAt timestamp between now-90 seconds and now+5 seconds.
+Iterate previewRecords only after that guard. Each row must have an intact source
+ID equal to its Source Record ID field; snapshot freshness is checked again before
+writing. Stop on HTTP failure; never delete rows because a snapshot omits them.
+Match by Source Record ID (fldoGzXmb9GTmPwpW), not guest name or session label.
+One record per request stays below Airtable's 10-record bulk limit. Smart links
+(typecast) is false: the workflow cannot create linked guest/session records.
+
+Exactly 13 source-owned columns are written: Signup, Source Record ID, Guest Name,
+Website Session ID, Booking Status, Source Submitted At, Source Updated At,
+Waitlist Position, Waiver Status, Text Permission, Booking ID, Source Revision,
+and Last Synced At. Nullable values use Make's erase keyword. All timestamps
+pass through as canonical UTC ISO strings using the generic Text column type;
+Make's Date option was observed to truncate time-of-day and must not be restored.
+
+Guest, Session, Staff Notes, Sync State and Sync Details are ALWAYS OMITTED from
+automatic updates. This preserves verified/manual links and reviewed notes even
+when the raw feed lacks mapping context. New rows are flagged by computed Link
+Review. Newly added/changed selections may need staff review; this first version
+does not automatically reconcile roster links or overwrite reviewed annotations.
+SourceRevision is content-stable across retries; Last Synced At refreshes.
+
+PRIVATE SOURCE AND DEPLOYMENT
+Website /api/wellness continues to save one workshop/category=wellness record per
+selected activity in Netlify Blobs staff-portal. Original contacts, signatures,
+waivers, journal history and durable source identities remain there. Development
+JSON is not production. Contacts remain in All Summit Data under the existing
+privacy workflow. Only signup identity/label/status and sync metadata enter this
+table; no phone/email, signature, waiver body, intake payload or management token.
+
+GET https://nas-2026-reminders.netlify.app/api/integrations/wellness-airtable
+is read-only, bearer-authenticated, private/no-store, complete and wellness-only.
+It always returns mode=preview-only, syncEnabled=false, records=[], previewRecords
+and sendApproval=pending. Those flags hold outbound sending; Make's separately
+approved data writer consumes previewRecords. The endpoint itself has no writer.
+Raw wellness IDs absent from the older checkout are retained. Incomplete reads,
+duplicate source identities and broken booking references fail the snapshot.
+Legacy sources remain Signup received; future enabled ledger sources may carry
+registered/waitlisted/cancelled states. Cancelled records remain, never deleted.
+
+Approved companion-only deploy: 6ae1722358b471bf0feaa9f1; source 986b1d3.
+Rollback: 6ade3cc97fe4cdf0f71c5453. No public website deployment this work.
+WELLNESS_AIRTABLE_FEED_TOKEN is secret/functions/production in Netlify and stored
+in Make's dedicated API-key connection restricted to the companion origin.
+WELLNESS_AIRTABLE_SOURCE_MODE=live affects only this read-only projection.
+INTEGRATION_SMS_SEND_APPROVED=false; existing reminder/STOP test source, isolated
+prefix and disabled source writes remain unchanged. Temporary deployment token
+was revoked immediately and verified invalid (401); no PAT entered Make/source.
+
+VERIFIED OCTOBER 28
+- Rehearsal intentionally required schemaVersion=999: source returned 200, guard
+  passed zero bundles, no Airtable operation or protected-field change occurred.
+- Corrected real run: all 19 source IDs and all 247 written field values matched
+  Airtable readback, including exact timestamps; no duplicate Source Record ID.
+- Repeat corrected run: same 19 Airtable IDs, zero unexpected field changes,
+  all 19 sync timestamps refreshed, original 12 rows' five protected fields intact.
+- Exported live runtime mappings, filters, module versions, connection IDs and
+  sequential mode match the reviewed flow; Active/30-minute state verified in UI.
+- First scheduled run succeeded: 4 seconds, 21 operations/credits.
+- SMS scenario is Inactive; outbound queue empty; zero texts sent during this work.
+
+Previous source validation: 147 focused checks / 16 files passed, production web
+build and TypeScript passed, companion bundle/TypeScript and network-blocked auth/
+failure checks passed. No application code changed October 28. Previously known
+77 identical baseline full-suite failures remain; full release readiness is not
+claimed. Live workflow blueprints and private readback evidence stay only in the
+ignored owner workspace; do not commit provider connections or attendee exports.
+
+REMAINING, SEPARATE FROM THE LIVE DATA MIRROR
+Resolve the 3 pending guest links and remaining review flags with verified
+identity/programming decisions; all 19 current activity links are verified. Table edits cannot cancel or promote a
+booking or send messages. Keep source data and staff notes intact.
+The public 32-ID catalog now exactly matches owner policy choices, but current
+production source is still absent from the shared Git branch. Obtain its exact
+commit before integrating the older 30-session shared branch with the live catalog,
+retain exact IDs and Nick's capacity choices, finish the reviewed non-destructive
+booking migration/legacy-link/restore plan, then coordinate website publication
+with Porter. Booking/capacity/cancellation changes remain draft PR #2, not live.
+Before any SMS: reconcile STOP/provider suppression and All Summit Data Do Not
+Text, delivery state and consent; review actual recipient/message previews and
+obtain Nick's complete-process/build approval. Data sync approval is not SMS
+approval. At 19 selections the current full-snapshot flow uses about 21 Make
+credits per run; batch/unchanged-row optimization is a future operational task.

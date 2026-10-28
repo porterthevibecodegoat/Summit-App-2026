@@ -1,3 +1,61 @@
+## October 28 — remaining guest identities confirmed by owner
+
+Nick explicitly confirmed the previously ambiguous roster identities. Added the 3 guest links on existing Wellness Signups rows and appended owner confirmation without clearing prior notes. All 19 current selections now have verified guest and activity links. Original signup labels/spelling, source IDs, Staff Notes, booking states, text permission and contact-sheet/roster values were preserved; readback verified and no duplicate source IDs exist. Contact differences remain separate review items. This supersedes earlier pending identity questions; do not ask them again. No texts or booking-status changes. Current production source access and the initial capacity exception remain pending.
+
+## October 28 owner follow-up — current repository identified; access pending
+
+The owner supplied a new production repository and latest commit/tag. Our existing GitHub account cannot yet read that source (404; no pending invitation). Exact private handoff coordinates remain in the owner workspace. This older repository and draft PR are references only: hold merging/deploying them while scoped wellness changes are prepared against the verified current website source. Preserve the newer website and Git history; inspect a file-level port after access is granted.
+
+Nick resolved the programming question: Airtable is authoritative when in doubt. Tuesday Life Plan is 9:00–9:45 AM, “Life Plan Preparedness with DBT expert Dr. Blaise Aguirre.” Added that decision to both affected signup review notes without clearing history, changing states or rewriting original labels/times. Three guest links remain unverified; explaining the uncertainty was not identity confirmation. All SMS stays disabled.
+
+## October 28 follow-up — verified links and current-source cutover review
+
+Verified all 19 activity links and 16 guest links; 7 reviewed rows updated without touching source/waiver records, source-owned columns or Staff Notes. The next scheduled run succeeded and preserved every new link/note. Three guest links await identity decisions; 11 rows retain contact/programming review notes, including 6 email-only differences with verified phones. All 32 public activity IDs match Nick's policies, including pickleball 10/yoga 20, but the live CLI-published website is newer than the shared production commit. Current-source branch/SHA requested before integration. A read-only capacity inventory found one 2-signup/1-place chiropractic exception plus a legacy ID and one historical no-signup selection. No booking status, SMS setting or deployment changed. See `docs/WELLNESS_CUTOVER_REVIEW.txt` and `docs/WELLNESS_AIRTABLE_SYNC.txt`.
+
+## October 28 — IMPLEMENTED LIVE: wellness signup data sync; SMS held
+
+Nick approved a dedicated Airtable OAuth grant restricted to Main NA Summit 2026. Make scenario 6805809 now reads the private companion feed and upserts 13 source-owned fields by immutable Source Record ID, every 30 minutes, sequentially. Preserves Guest, Session, Staff Notes, Sync State and Sync Details; no messaging or delete modules. It picked up 7 newer source selections, bringing Airtable to 19. Rejection rehearsal passed; all 247 mapped values read back exactly after correcting Make's date-only coercion; repeat run preserved IDs/links/notes with zero duplicates. Nine rows need matching and five other rows have review notes. SMS scenario 6765208 remains Inactive, verified October 28; no texts. This supersedes earlier pending-writer/permission notes. Website booking/capacity changes remain a draft. See `docs/WELLNESS_AIRTABLE_SYNC.txt`.
+
+## October 27 — private Airtable source feed LIVE; Make writer pending permission
+
+Owner-approved companion-only deployment `6ae1722358b471bf0feaa9f1` publishes reviewed source `986b1d3`; the main website deploy is unchanged. Authenticated feed and the Make HTTP reader both return 200 with all 12 wellness signups; unauthorized routes reject access and the SMS queue remains empty. Temporary deployment token revoked and verified unusable. A dedicated origin-restricted feed credential is saved in Netlify/Make. No automatic Airtable writer or sender is active. Existing Airtable OAuth needs renewed permissions; a separate base-limited wellness connection is prepared and awaiting owner approval. Computed Link Review preserves visibility of unmatched new rows while the future writer preserves existing links/notes. See `docs/WELLNESS_AIRTABLE_SYNC.txt`.
+
+## October 27 — existing wellness signups migrated to Airtable
+
+Nick authorized importing existing signups. Migrated all 12 source selections from 5 people by immutable source ID; verified every written field by readback. All 12 activities are linked; 10 rows have verified guest links and 2 retain an identity-review flag. Generic Sync Details notes preserve contact/schedule discrepancies without copying private contacts. Original source records, waivers, admissions, contact sheet and automation settings are unchanged; no deployment or texts. Ongoing Make sync remains pending. See `docs/WELLNESS_AIRTABLE_SYNC.txt`.
+
+## October 27 — Airtable wellness table prepared; live sync pending
+
+Nick requested wellness signup data in Airtable. Created and verified an empty Wellness Signups table in Main NA Summit 2026, linked to Guest Tracker and Summit Programming ROS; existing record values and automations are unchanged. Added a private, authenticated, preview-only source projection with stable source IDs, cancellation/waitlist state and review flags. It omits phone/email, signatures, private intake data and management tokens, preserving the existing All Summit Data contact workflow. No records imported, deployments or messages. See `docs/WELLNESS_AIRTABLE_SYNC.txt`; live Make sync, exact link matching and cutover remain planned.
+
+## October 27 — yoga set to 20
+
+Nick set all three listed yoga sessions to 20 places: Tuesday and Wednesday Morning Yoga Flow plus Wednesday Yoga Pilates Fusion. Both draft configuration files and the re-import override now preserve this choice. Current owner totals are 22 limited, 8 unlimited and 2 no-signup activities; source reconciliation and all SMS holds remain in place.
+
+## October 27 — pickleball reduced to 10
+
+Nick reduced all three listed pickleball activities from 12 places to 10. Updated both the 32-row owner decision file and the two matching runtime draft entries; the newer Monday ID remains preserved pending source sync. This direct instruction supersedes the CSV, whose original values remain unchanged. Booking/SMS gates and all other choices are unchanged.
+
+## October 27 — owner capacity choices captured, disabled
+
+Imported Nick’s 32-row capacity/signup CSV by header names and exact session IDs. Recorded 19 numeric limits, 11 unlimited signup-required activities, and two no-signup Monday activities. Life Plan stays at 20 per session; Nick deferred workbook reallocation until after the first session. The older source matches 17 numeric limits and all 11 unlimited choices; four newer Monday IDs and two older absent IDs require source reconciliation. No custom shared-resource engine is required. All SMS and deployments remain held. See `docs/WELLNESS_OWNER_CAPACITY_CHOICES_2026-10-27.txt`; earlier all-unset statements are historical.
+
+## October 26 — IMPLEMENTED locally: complete booking flow and automatic promotion
+
+Connected the disabled atomic booking engine to wellness signup, durable private intake/source recovery, signed guest cancellation, full-staff booking view/actions/private backup, promotion-message previews and a read-only initial migration report. Nick chose automatic first-come promotion. All 30 real limits remain unset. All SMS, including tests, remains on hold; the Make reminder scenario was verified inactive earlier on October 26. No live data, deployment or provider setting changed. Production-build HTTP/browser rehearsals used fictional isolated records only. See `docs/WELLNESS_BOOKING_WORKFLOW.txt` for exact checks and remaining migration/cutover requirements. This update supersedes earlier foundation-only descriptions below.
+
+## OWNER HOLD — October 26: all SMS pending complete approval
+
+Nick requires approval of the complete process and build before any text, including tests. The reminder feed now defaults to previews only and an empty dispatch queue; `INTEGRATION_SMS_SEND_APPROVED` must remain unset/false. No Make run, live SMS, deployment or provider setting was changed. This gate is source code pending deployment, not a claim that an already deployed service was modified.
+
+## IMPLEMENTED locally / PARTIAL rollout — October 26: wellness reminder port and booking foundation
+
+Built on production commit `39f561da94a6ce24a2191089f9294281344f2ed2` on `codex/wellness-reminders-20261026`. New authenticated wellness-only feed and STOP routes plus shared companion-service source derive all 30 current sessions from the canonical public form. Feed reads only wellness workshops, text preferences and program approvals; it honors staff/contact holds without changing approval code. Added a disabled capacity policy, atomic booking ledger/conditional-write adapter, FIFO waitlist/cancellation logic and optional read-only booking suppression. Real limits remain unset. Public signup/cancellation UI binding and reviewed migration of existing registrations are PLANNED, not live. Source is prepared for draft review; nothing was deployed or sent. See `docs/WELLNESS_REMINDER_REVIEW.txt`; exact validation and baseline failure comparison are supplied in the local review package.
+
+## PARTIAL — October 26: wellness capacity placeholders
+
+Nick authorized placeholders while actual class limits are being decided. Added a disabled draft capacity map for all 30 canonical wellness session IDs, with `mode: unset` and `maxPlaces: null`, plus separate synthetic test-only examples. Unset means unconfirmed; it does not imply unlimited capacity. No signup handler, source schedule, approval interface, live data, deployment or outbound sending changed. See `docs/WELLNESS_CAPACITY_PLACEHOLDERS.txt`. Capacity enforcement, waitlist/cancellation behavior and integration with reminders remain PLANNED.
+
 ## LIVE — October 24: Cherrial's Approval Portal integrated staff workflow
 
 Production deploy `6add7c8158581fd1b9e40056` adds a clearly separate **Cherrial's Approval Portal** top-menu option at `/staff/cherrial-operations`, backed by the existing canonical and journaled staff store. Rollback deploy: `6add7a02fc8f3a605c1c5466`. The earlier `/staff/cheryl-operations` URL redirects to the correctly spelled route so existing links remain intact. It covers Standard, VIP, Uber VIP and partner Awards/Nevada Mental Health Day requests plus Closing Dinner, wellness, Summit workshops, Tennis & High Tea and poker. Staff can approve/reduce/hold/decline, explicitly place approved guests into a ready-to-contact queue, inspect responses and waiver gaps, and distinguish Awards ticket fulfillment from Nevada Mental Health Day check-in. Non-ticket decisions use the new `programApproval` record kind; full backups include it. Original request records remain unchanged. Outbound email, text and ticket sending remains disabled pending owner approval. Focused workflow tests, typecheck, production build, authenticated route/API checks and the 33-case public live-site suite passed. See `docs/CHERRIAL_OPERATIONS_WORKFLOW.md`.

@@ -1,0 +1,127 @@
+OCTOBER 28 OWNER FOLLOW-UP — SUPERSEDES EARLIER SOURCE/COPY QUESTIONS
+The owner identified the newer production repository and exact latest commit/tag;
+GitHub account access is pending. Keep this old PR as a draft reference and port
+only scoped wellness files onto verified current website source after access.
+Airtable is authoritative for programming: Tuesday Life Plan is 9:00–9:45 AM,
+Life Plan Preparedness with DBT expert Dr. Blaise Aguirre. This decision was
+appended to both affected review notes; historical details/states are preserved.
+Initial capacity exception handling and three guest links remain unconfirmed.
+All SMS is disabled. Exact repository handoff details stay in the private owner
+workspace because the current source is not readable with this account yet.
+
+WELLNESS PROCESS REVIEW — OCTOBER 28, 2026
+
+CURRENT LIVE STATUS
+Airtable data mirror is Active every 30 minutes; it contains all 19 current
+selections. Nineteen verified activity links and sixteen verified guest links.
+Seven rows received reviewed matching updates; no source/waiver/admission record
+was changed, and Staff Notes was preserved. The next scheduled Make run succeeded
+and a fresh Airtable readback verified all new links/review notes survived, with
+no duplicate source IDs. No new records were created during this reconciliation.
+
+Guest matches use verified existing record IDs, exact names and unique matching
+phones across the contact sheet; never a similar name alone. Six newly linked
+selections have an email difference, retained as an explicit informational review
+note; their source phone matches the contact sheet. Three selections remain
+unlinked pending identity evidence. Two other selections have a phone difference
+that must be reconciled before sending. Three historical selections have a
+program title/time difference. Current computed flags: 3 Needs matching,
+11 Needs review, 5 Linked. Original contact values are not copied into Airtable.
+
+CAPACITY CATALOG REVIEW — PASSED, DRAFT SETTINGS ONLY
+Downloaded the public wellness page from immutable Netlify production deploy
+6ae23014e7ddc521294941ac, published October 28 at 10:25 AM Pacific.
+All 32 published IDs match Nick's exact-ID owner choices: 22 numeric limits,
+8 unlimited signup activities, and 2 no-signup activities. Pickleball remains
+10 per listed session; all 3 yoga sessions remain 20. Life Plan remains 20 per
+session; workbook pooling is deferred. Limits are still provisional/editable.
+
+The two Monday no-signup activities are chiropractic and Reformer Pilates,
+12:00-2:30 PM. The live public form still offers both as selectable checkboxes;
+removing those booking controls and displaying information-only cards is part
+of the pending website change. Historical selections must remain in history.
+
+CAPACITY EXCEPTION — DECISION PENDING, NO LIVE BOOKING CHANGE
+Wednesday November 4, 9:30-9:50 AM chiropractic has 2 existing selections for
+1 place. The earlier and later source submissions are identified in the private owner review. Recommended
+initial-migration policy: earlier gets the place, later starts on the waitlist,
+subject to Nick's decision. Do not silently treat both Signup received rows as
+confirmed bookings or downgrade either while approval remains pending.
+
+One original Monday chiropractic selection uses retired/legacy ID
+wellness-nov2-chiro and an older 12:00-5:00 PM window. Current Monday chiropractic
+has a new ID, a 12:00-2:30 PM window and no signup requirement. Preserve the
+original record, ID, contact and waiver; decide/document its legacy disposition
+before a booking cutover. Do not rewrite the original session ID.
+
+SOURCE SYNCHRONIZATION — REQUIRED BEFORE WEBSITE INTEGRATION
+GitHub branch codex/production-netlify-20261026 still points to 39f561d.
+All 4 shared branches were inspected: main and Awards are older, while Bianca
+shares the same baseline. No newer current source is present. Netlify says the
+current website was published from CLI; build stages are skipped and the deploy
+page exposes no current Git commit. The public HTML verifies current activities,
+but cannot replace complete server source, build configuration or provenance.
+Ask Porter to push the exact source for deploy 6ae23014e7ddc521294941ac and provide
+branch/commit, then rebase/reconcile only the wellness changes. Porter is still
+the initial website publisher. No website was deployed during this work.
+
+PENDING CONTENT / IDENTITY CONFIRMATIONS
+- Two selections have a contact-to-roster identity conflict.
+- One selection has a same-name roster candidate without contact-sheet evidence.
+  Exact identities and source IDs remain only in the private owner review.
+- Tuesday Life Plan: website says Wise Friend, 9:00-9:50 AM; ROS says DBT expert
+  Dr. Blaise Aguirre, 9:00-9:45 AM. Original source labels are preserved.
+
+BUILD / MIGRATION REVIEW BEFORE ANY ACTIVATION
+1. Obtain exact current production source; preserve all newer approval/invitation/
+   email/website work, public URLs and /rsvp proxies. Update the 32-ID canonical
+   catalog and bind the 2 no-signup decisions without replacing other features.
+2. Apply capacities in a disabled configuration, retaining unlimited choices and
+   FIFO promotion. Rehearse the owner-limit cases below with fictional guests in
+   a labelled isolated store; never use live submissions as disposable fixtures.
+3. Read a complete unchanged private source backup, review its hash/IDs/waivers
+   and all exceptions, and prepare a non-destructive ledger migration plus
+   legacy management-link recovery and a restore rehearsal. Airtable's operational
+   copy is not a raw backup or authorization to initialize a live ledger.
+4. Re-run relevant tests/build against that exact source; check phone/desktop
+   signup, waitlist, management and staff views, plus cancellation and recovery.
+5. Present the complete workflow/build and remaining exceptions for approval.
+   Source access, a merge, build pass or data-sync approval never authorizes SMS.
+
+ISOLATED ACCEPTANCE CHECKLIST
+- Yoga: 20 places; next request waitlists. Pickleball: 10; next waits.
+- Reformer Pilates: 2 places; next waits. Chiropractic: 1; next waits.
+- Life Plan: 20 per session; no shared-workbook automation.
+- Unlimited activities remain available beyond numeric example limits.
+- Monday no-signup activities display information without requesting a booking.
+- Concurrent requests for the last place allocate exactly once; no lost records.
+- Retry and partial-save recovery preserve IDs, original submission/waiver times
+  and one place per intended booking. Incomplete intake stays out of reminders.
+- Repeated cancellation is safe, retains history and promotes the earliest
+  eligible waiting guest once. Staff holds/conflicts are respected.
+- Expired, wrong-intake and unauthenticated management links cannot act.
+- Original sources, contact routing, existing invitation URLs and staff approval
+  decisions remain intact. Back up and rehearse restore before cutover.
+- Reconcile all 19 original records explicitly; no silent drop, delete or duplicate.
+- Previous-evening agenda is 7 PM Las Vegas time; activity reminder is 60 minutes
+  before. Verify the November 1 DST transition and the actual November event dates.
+- Cancelled/waitlisted/held/STOP/Do Not Text guests are excluded from sends;
+  promotion/agenda/reminder deduplication and late-job expiry survive retries.
+- A stale/incomplete feed and provider failure cannot mark a message delivered.
+- Provider/website STOP sync and contact-sheet suppression must be reconciled
+  in live mode before eventual dispatch; current reminder/STOP rehearsal source
+  remains isolated test mode with live source writes disabled.
+
+SMS HOLD — STILL IN FORCE
+No texts, including test texts, until Nick approves the complete process/build.
+Data-only Make scenario 6805809 may run; SMS scenario 6765208 must stay Inactive.
+INTEGRATION_SMS_SEND_APPROVED stays false; no dispatch sender is in the source
+feed. Historical handset rehearsals passed, but do not approve the current build.
+Nick's earlier test phone replied STOP: do not erase that suppression to test.
+Only after approval may Nick choose/resubscribe an authorized test phone and
+verify provider/handset/STOP behavior before a separately reviewed live cutover.
+An opt-out confirmation text remains optional; do not contact support.
+
+No texts, booking-status changes, source/waiver mutations or website deployment
+occurred in this reconciliation. This document is a review checklist, not an
+approval or instruction to activate anything.

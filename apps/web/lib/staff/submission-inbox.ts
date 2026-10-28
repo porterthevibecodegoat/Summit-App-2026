@@ -100,7 +100,10 @@ const keyFor = (folder: "received" | "failed", entry: InboxEntry) => `${folder}/
  * Wraps a form API's POST handler: the request body is stored before the handler runs, and any request that
  * is not answered with a 2xx is stored again under failed/ with the answer the guest saw.
  */
-export function withSubmissionInbox(endpoint: string, handler: (request: Request) => Promise<Response>) {
+export function withSubmissionInbox(endpoint: string, handler: (request: Request) => Promise<Response>, options: {
+  storeProvider?: () => Promise<InboxStore>;
+  limitHandledByWorkflow?: () => boolean;
+} = {}) {
   return async function POST(request: Request): Promise<Response> {
     let body = "";
     try { body = (await request.text()).slice(0, inboxMaxBodyBytes); } catch { body = ""; }
@@ -109,13 +112,14 @@ export function withSubmissionInbox(endpoint: string, handler: (request: Request
       origin: request.headers.get("origin") ?? "", userAgent: (request.headers.get("user-agent") ?? "").slice(0, 300),
       body, ...contactFromBody(body)
     };
-    const inbox = await getInboxStore().catch(error => { console.error(`[submission-inbox] ${endpoint}: inbox unavailable`, error instanceof Error ? error.message : error); return null; });
+    const inbox = await (options.storeProvider ?? getInboxStore)().catch(error => { console.error(`[submission-inbox] ${endpoint}: inbox unavailable`, error instanceof Error ? error.message : error); return null; });
     await inbox?.set(keyFor("received", entry), entry).catch(error => console.error(`[submission-inbox] ${endpoint}: could not store received copy`, error instanceof Error ? error.message : error));
     // The handler gets an identical, unread request (the original body was consumed above).
     const replay = new Request(request.url, { method: request.method, headers: request.headers, body });
     let response: Response;
     // Oct 20 (owner): one submission per person per form type, except the unlimited test submitters (submission-limit.ts).
-    const refused = await checkSubmissionLimit(endpoint, body, entry);
+    const workflowLimit = options.limitHandledByWorkflow?.() ?? false;
+    const refused = workflowLimit ? null : await checkSubmissionLimit(endpoint, body, entry);
     if (refused) response = refused;
     else try { response = await handler(replay); }
     catch (error) {
@@ -123,7 +127,7 @@ export function withSubmissionInbox(endpoint: string, handler: (request: Request
       response = Response.json({ ok: false, error: "We could not save your request. Please try again." }, { status: 500, headers: { "Cache-Control": "no-store" } });
     }
     if (response.status < 300) {
-      rememberAccepted(endpoint, body, entry);
+      if (!workflowLimit) rememberAccepted(endpoint, body, entry);
       // Oct 20 (owner): a resubmitted RSVP replaces the guest's earlier one (no duplicates; nothing deleted).
       await replaceEarlierSubmissions(endpoint, entry.receivedAt, entry, body);
     }

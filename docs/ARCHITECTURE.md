@@ -1,3 +1,7 @@
+## October 26 wellness booking addition — IMPLEMENTED locally / PARTIAL rollout
+
+For the current web wellness flow, an immutable private intake precedes an atomic conditional seat/waitlist transition; stable per-class writes then materialize into the canonical staff source and receive an audit acknowledgment. A partial materialization is recoverable and cannot enter reminders. Signed fragment-only capabilities scope guest access to one intake; full staff auth protects management and private backup. Cancellations/promotions share one conditional ledger write. No Supabase migration, existing approval rewrite or production deployment is part of this change. Activation and initial data migration remain disabled and require review; details are in `docs/WELLNESS_BOOKING_WORKFLOW.txt`.
+
 # Architecture
 
 September 18 continuity: apps/web adds Summit navigation/video/theme and separate /partners and /venue. Display-only founder grouping/public bio/portrait enrichment is lib/awards-people.ts; canonical IDs/operational records unchanged. Summit plum/pearl/mint, Awards approved dark compact. No new backend/service/deploy. External migration/RLS parity not verified. AI/push server adapters and job tables exist, but independently active production worker/release is not proven.

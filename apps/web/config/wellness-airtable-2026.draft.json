@@ -1,0 +1,30 @@
+{
+  "baseId": "app7BHptsc1bjc3DD",
+  "tableId": "tblbfPmjZGnJPnINI",
+  "tableName": "Wellness Signups",
+  "viewId": "viwqr4LyJWolD5Wr4",
+  "guestTableId": "tblalB1l5s3NY4xuI",
+  "programmingTableId": "tblx3xWst9CANqzSD",
+  "fields": {
+    "Signup": "fldXOS4M5zeobDp06",
+    "Source Record ID": "fldoGzXmb9GTmPwpW",
+    "Guest Name": "fld2BjYMe5OZNFwh4",
+    "Guest": "fldunpSTCKCXqd9xT",
+    "Session": "fldDC31VVjA6CW4uu",
+    "Website Session ID": "fldthta1mNQ5x2pHw",
+    "Booking Status": "fldWDg96tGwK5duEP",
+    "Source Submitted At": "fldaXJdUrxd4d35q4",
+    "Source Updated At": "fldpPQq1epsRWBsxU",
+    "Waitlist Position": "fldg80QAcctm3xY1I",
+    "Waiver Status": "flddVm98r4lZtkYVi",
+    "Text Permission": "fldp5UvGgjBoNz7mK",
+    "Booking ID": "fldVhoLb8RJKCdAjD",
+    "Source Revision": "fldO3BvwsXlaoHuR6",
+    "Last Synced At": "fldiad3BcwvVcthYx",
+    "Sync State": "fldVn6C64M8fUVA2e",
+    "Staff Notes": "fldHmDJEvgE4MyyfJ",
+    "Sync Details": "fldZwmVChVNRZS606"
+  },
+  "enabled": false,
+  "sendApproval": "pending"
+}

@@ -1,3 +1,29 @@
+## October 28 owner follow-up — current repository identified; access pending
+
+The owner supplied a new production repository and latest commit/tag. Our existing GitHub account cannot yet read that source (404; no pending invitation). Exact private handoff coordinates remain in the owner workspace. This older repository and draft PR are references only: hold merging/deploying them while scoped wellness changes are prepared against the verified current website source. Preserve the newer website and Git history; inspect a file-level port after access is granted.
+
+Nick resolved the programming question: Airtable is authoritative when in doubt. Tuesday Life Plan is 9:00–9:45 AM, “Life Plan Preparedness with DBT expert Dr. Blaise Aguirre.” Added that decision to both affected signup review notes without clearing history, changing states or rewriting original labels/times. Three guest links remain unverified; explaining the uncertainty was not identity confirmation. All SMS stays disabled.
+
+## October 28 follow-up — remaining decisions and exact current source
+
+Data-only sync remains Active every 30 minutes; after 7 reviewed matching updates, the next scheduled run preserved all 19 activity links, 16 guest links and review notes. Three guest links still need identity evidence. Eleven rows retain notes (6 email-only differences with verified phones, 2 phone differences and 3 program title/time differences). Do not recreate the 19 rows or overwrite staff/review notes.
+
+Obtain the Git branch/SHA matching CLI-published website deploy 6ae23014e7ddc521294941ac (or its newer published replacement). Shared production branch still points to 39f561d; main is older. Public HTML verifies all 32 policy IDs but cannot substitute for complete current server/build source. Then integrate the capacity/no-signup changes on that exact source and revalidate the build.
+
+Before booking migration, resolve initial 2-selections/1-place chiropractic handling, one legacy ID, and the historical no-signup selection, with a complete source backup and reviewed restore/legacy-link plan. Pending owner questions also cover 2 identity cases and Tuesday Life Plan copy/end time. All SMS, including tests, remains held. See `WELLNESS_CUTOVER_REVIEW.txt` for the concrete acceptance checklist; do not ask again for supplied limits or the completed Airtable connection grant.
+
+## October 27 wellness next steps
+
+Capacity choices are now supplied; do not ask again for the filled limits or introduce a workbook-resource engine. Reconcile the latest live 32-session catalog and production source with the older shared GitHub branch, retaining exact IDs and existing guest records. Then apply the two no-signup policies to public binding, finish migration/restore and provider/delivery reconciliation, and prepare the complete review before any deployment or text. Life Plan remains 20 per session, with workbook reallocation deferred until after the first session.
+
+## October 26 wellness next steps — PARTIAL, all SMS held
+
+Local booking/UI/recovery/private-backup work is implemented and tested; review it in draft PR #2. Next: confirm per-class limits or unlimited policies; review an unchanged real-source migration report and exception/legacy-link plan; implement a separately approved non-destructive cutover plus restore rehearsal; have Porter publish only the reviewed commit with booking/SMS gates off; validate isolated provider previews and reconcile STOP/All Summit Data Do Not Text plus Make delivery records. Nick’s explicit complete-process/build approval is required before any SMS, including tests. Do not activate Make or deploy automatically. Details and local validation are in `docs/WELLNESS_BOOKING_WORKFLOW.txt`.
+
+**October 26 wellness implementation — PARTIAL rollout:** Review the new wellness feed/STOP port, shared companion build, capacity engine and conservative program-approval contact-hold contract. Bind booking to the public signup/cancellation experience only with recoverable source writes and a reviewed migration of existing registrations; do not initialize an empty live ledger. Real class limits can be supplied later, before activation. Confirm waitlist-promotion/staff-hold policy, reconcile historical suppressions, finish delivery reconciliation and inspect the recipient/message preview before enabling attendee sends. Porter remains production publisher. See `docs/WELLNESS_REMINDER_REVIEW.txt`.
+
+**October 26 wellness follow-up — PARTIAL:** Editable capacity placeholders now exist for all 30 canonical sessions; real limits can be supplied later. Continue local development with the separate test-only sample values. Before any capacity/waitlist activation, confirm limits and drop-in policy, implement concurrency-safe booking behavior and cancellation/waitlist semantics, preserve Cherrial approval code, and verify reminder suppression. See `docs/WELLNESS_CAPACITY_PLACEHOLDERS.txt`.
+
 # Next Tasks
 
 **October 14 website follow-ups:** (1) provide a base-scoped, read-only Airtable token for live syncing of approved public fields; (2) check the payment method in the `marketing@inspiringchildren.org` OpenAI API organization; (3) decide whether the `codex/site-improvements` branch should be pushed to the public GitHub repository, since it includes 159 earlier commits beyond remote `main`. The approved Summit/Awards/Community Day website changes are already live on the shared Netlify site; these follow-ups are not release blockers for that deployment.

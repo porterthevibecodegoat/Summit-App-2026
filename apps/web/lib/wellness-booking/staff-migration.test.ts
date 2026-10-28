@@ -1,0 +1,76 @@
+import { randomUUID } from "node:crypto";
+import { expect, it, vi } from "vitest";
+import { handleStaffBookings } from "../../app/api/staff/wellness-bookings/route";
+import { capacityRules } from "./capacity";
+import { planWellnessMigration } from "./migration";
+import { createBookingWorkflow, memoryIntakeStore } from "./service";
+import { memoryBookingStore } from "./ledger";
+import { memorySubmissionStore, programApprovalPayloadSchema, type WorkshopSubmission } from "../staff/store";
+import { siteVisitWaiver } from "../morning-workshops";
+
+const sessionId = "wellness-nov2-breathwork";
+const record = (i: number): WorkshopSubmission => ({ id: randomUUID(), source: "form", submittedAt: `2026-10-2${i}T22:00:00Z`, name: `Example Guest ${i}`, email: `guest${i}@example.com`, phone: `+1702555010${i}`, category: "wellness", sessionId, sessionTitle: "Wellness", sessionDay: "", sessionTime: "", waiverAccepted: true, signature: `Example Guest ${i}`, waiverVersion: siteVisitWaiver.version });
+const rules = capacityRules({ [sessionId]: { mode: "limited", maxPlaces: 1 } });
+it("creates a read-only migration plan that preserves existing places and flags over-capacity", () => {
+  const rows = [record(0), record(1)], original = structuredClone(rows);
+  const plan = planWellnessMigration(rows, rules);
+  expect(plan.active).toHaveLength(2); expect(plan.active.every(row => row.preserveExistingPlace)).toBe(true);
+  expect(plan.sessions.find(session => session.sessionId === sessionId)!.overProposedCapacity).toBe(1);
+  expect(plan).toMatchObject({ dryRun: true, requiresOwnerApproval: true, existingRecordsChanged: false, readyForReviewedMigration: false });
+  expect(rows).toEqual(original);
+  expect(planWellnessMigration(rows, capacityRules({})).sessions.every(session => session.needsCapacityDecision)).toBe(true);
+});
+it("does not resurrect an older row behind a cancellation tombstone", () => {
+  const old = record(0), cancelled = { ...old, id: randomUUID(), submittedAt: "2026-10-25T22:00:00Z", cancelledAt: "2026-10-26T00:00:00Z" };
+  const plan = planWellnessMigration([old, cancelled], rules);
+  expect(plan.active).toEqual([]); expect(plan.issues).toHaveLength(1);
+});
+it("protects the staff API before opening a workflow and recovers a pending signup without SMS", async () => {
+  const unauthorized = await handleStaffBookings(new Request("https://example.test/api/staff/wellness-bookings"), { authorized: false });
+  expect(unauthorized.status).toBe(401);
+  const source = memorySubmissionStore(), ledger = memoryBookingStore();
+  const workflow = createBookingWorkflow({ source, ledger, intakes: memoryIntakeStore(), rules, managementSecret: "fictional-management-secret-more-than-32-characters", now: () => new Date("2026-10-26T22:00:00Z") });
+  const add = vi.spyOn(source, "add").mockRejectedValueOnce(new Error("temporary failure"));
+  const requestId = randomUUID();
+  await expect(workflow.register({ name: "Example Guest", email: "guest@example.com", phone: "+17025550100", sessions: [sessionId], waiverAccepted: true, signature: "Example Guest", waiverVersion: siteVisitWaiver.version }, requestId)).rejects.toThrow();
+  expect((await workflow.summary()).pendingIntakes).toHaveLength(1);
+  const response = await handleStaffBookings(new Request("https://example.test/api/staff/wellness-bookings", { method: "POST", headers: { origin: "https://example.test", "content-type": "application/json" }, body: JSON.stringify({ action: "recover", intakeId: requestId }) }), { authorized: true, workflow });
+  expect(response.status).toBe(200); const result = await response.json(); expect(result.pendingIntakes).toEqual([]); expect(result.sendApproval).toBe("pending");
+  expect(await source.list("workshop")).toHaveLength(1); expect(add).toHaveBeenCalledTimes(2);
+  const saved = result.bookings[0];
+  const cancelRequest = (origin: string) => new Request("https://example.test/api/staff/wellness-bookings", { method: "POST", headers: { origin, "content-type": "application/json" }, body: JSON.stringify({ action: "cancel", bookingId: saved.id, requestId: randomUUID() }) });
+  expect((await handleStaffBookings(cancelRequest("https://other.test"), { authorized: true, workflow })).status).toBe(403);
+  expect((await handleStaffBookings(cancelRequest("https://example.test"), { authorized: false, workflow })).status).toBe(401);
+  expect((await handleStaffBookings(cancelRequest("https://example.test"), { authorized: true, workflow })).status).toBe(200);
+  expect((await ledger.read())!.value.audit.at(-1)!.actor).toBe("staff");
+});
+it("skips explicitly held/declined waitlist requests without treating STOP as a seat cancellation", async () => {
+  const source = memorySubmissionStore(), ledger = memoryBookingStore();
+  const workflow = createBookingWorkflow({ source, ledger, intakes: memoryIntakeStore(), rules, managementSecret: "fictional-management-secret-more-than-32-characters", now: () => new Date("2026-10-26T22:00:00Z") });
+  const results = [];
+  for(let i=0;i<3;i++) results.push(await workflow.register({ name: `Example Guest ${i}`, email: `guest${i}@example.com`, phone: `+1702555010${i}`, sessions: [sessionId], waiverAccepted: true, signature: `Example Guest ${i}`, waiverVersion: siteVisitWaiver.version }, randomUUID()));
+  const row = (await source.list("workshop")).find(row => row.email === "guest1@example.com")!;
+  await source.add("programApproval", { ...programApprovalPayloadSchema.parse({ sourceKind: "workshop", sourceId: row.id, eventKey: sessionId, eventLabel: "Wellness", name: row.name, email: row.email, form: "Wellness", requestedQuantity: 1, approvedQuantity: 0, decision: "declined", fulfillment: "check-in", formVersion: "current", reviewedAt: "2026-10-26T22:00:00Z" }), id: randomUUID(), source: "staff", submittedAt: "2026-10-26T22:00:00Z" });
+  await source.add("textPreference", { id: randomUUID(), source: "staff", submittedAt: "2026-10-26T22:00:00Z", name: "", email: "", phone: "+17025550102", choice: "no", via: "stop-reply" });
+  const capability = new URLSearchParams(results[0]!.manageUrl.split("#")[1]).get("token")!;
+  await workflow.manage(capability, "cancel", results[0]!.bookings[0]!.id, randomUUID());
+  const snapshot = await workflow.summary();
+  expect(snapshot.bookings.find(row => row.email === "guest1@example.com")!.status).toBe("waitlisted");
+  expect(snapshot.bookings.find(row => row.email === "guest2@example.com")!.status).toBe("registered");
+  expect(snapshot.bookings.find(row => row.email === "guest2@example.com")!.smsEligible).toBe(false);
+});
+it("exports private booking history, durable intakes and source waivers only after staff authentication", async () => {
+  const source = memorySubmissionStore(), ledger = memoryBookingStore(), intakes = memoryIntakeStore();
+  const workflow = createBookingWorkflow({ source, ledger, intakes, rules, managementSecret: "fictional-management-secret-more-than-32-characters", now: () => new Date("2026-10-26T22:00:00Z") });
+  await workflow.register({ name: "Example Guest", email: "guest@example.com", phone: "+17025550100", sessions: [sessionId], waiverAccepted: true, signature: "Example Guest", waiverVersion: siteVisitWaiver.version }, randomUUID());
+  const request = () => new Request("https://example.test/api/staff/wellness-bookings?download=backup");
+  expect((await handleStaffBookings(request(), { authorized: false, workflow })).status).toBe(401);
+  const response = await handleStaffBookings(request(), { authorized: true, workflow }), data = await response.json();
+  expect(response.headers.get("content-disposition")).toContain("attachment");
+  expect(response.headers.get("cache-control")).toContain("no-store");
+  expect(data.ledger).toEqual((await ledger.read())!.value);
+  expect(data.intakes).toHaveLength(1); expect(data.source.workshop).toEqual(await source.list("workshop"));
+  expect(JSON.stringify(data)).not.toContain("fictional-management-secret");
+  vi.spyOn(intakes, "read").mockResolvedValue(null);
+  expect((await handleStaffBookings(request(), { authorized: true, workflow })).status).toBe(503);
+});

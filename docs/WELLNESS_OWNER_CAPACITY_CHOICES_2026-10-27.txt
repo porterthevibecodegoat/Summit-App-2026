@@ -1,0 +1,38 @@
+OWNER WELLNESS SETTINGS — OCTOBER 27, 2026
+
+IMPLEMENTED in draft configuration only. Nick supplied Wellness activity planning.csv and asked us to use its values for now, with later adjustments permitted. Parsed the moved columns by header name and joined rows by exact Session ID. The original CSV is unchanged. No live data, provider settings, deployment or sending changed. All SMS, including tests, remains pending complete-process/build approval.
+
+CURRENT CHOICES
+32 published activity rows: 30 require signup; the two Monday chiropractic/Pilates drop-in rows do not. The original CSV had 19 numeric limits and 11 signup-required rows with no number. Nick first confirmed blank limits as unlimited, then set all three listed yoga sessions to 20 places. Current totals: 22 limited activities, 8 unlimited activities and 2 no-signup activities.
+
+- Pickleball: 10 places per listed Monday/Tuesday/Wednesday activity. Nick's later chat instruction supersedes the CSV's original 12-place values.
+- Sauna & Cold Plunge: 14 per listed Monday/Tuesday/Wednesday activity.
+- Tuesday Reformer Pilates with Yvette Baker: 2 per listed 8:30, 9:00 and 9:30 session.
+- Wednesday Reformer Pilates with Aleina Lasker: 2 per listed 8:00, 8:30, 9:00 and 9:30 session.
+- Wednesday chiropractic: 1 per listed 8:00, 8:30, 9:00 and 9:30 session.
+- Life Plan: 20 per session for now. Nick explicitly deferred workbook reallocation until after the first session. Do not implement or require a shared-resource engine for this launch. Earlier guidance that one guest uses one workbook across both sessions is retained as future context only; it does not change either current 20-place limit.
+- Yoga: 20 per Tuesday Morning Yoga Flow, Wednesday Morning Yoga Flow and Wednesday Yoga Pilates Fusion session. This later chat instruction supersedes the earlier unlimited choice for these three rows.
+- Other signup-required rows: unlimited for now.
+- Monday Chiropractic Sessions with Dr. Katie Hightower and Monday Reformer Pilates with Olympian Yvette Baker: no signup required; no physical capacity was supplied or invented.
+
+SOURCE AND CONFIGURATION
+CSV SHA-256: cec57bb6fb28d6a3a6d0aebf52c98761166f0d7d34e51025cc5afb809689b169
+All 32 exact-ID choices: apps/web/config/wellness-owner-decisions-2026.draft.json.
+Current source-matched limits: apps/web/config/wellness-capacity-2026.draft.json. This existing runtime-facing draft now has 20 matched numeric limits and 8 explicit unlimited policies. Two older source IDs absent from the sheet remain unset and must not be repurposed.
+
+SOURCE RECONCILIATION — STILL REQUIRED
+The shared production GitHub branch still points to 39f561da94a6ce24a2191089f9294281344f2ed2 when checked October 27. It contains an older 30-session catalog. The sheet/live public page has four new Monday IDs and omits two earlier IDs. Do not replace the newer live website with this older checkout or map different activities by title similarity. Keep every new row in the owner decision file until the current production source is reconciled.
+
+New Monday IDs preserved:
+  wellness-rec456nwSazwD3yrF — chiropractic, no signup
+  wellness-recR6UpM64gjwZV0t — Pilates, no signup
+  wellness-recsGwZMl7v1NoN9z — pickleball, 10
+  wellness-reckiT92R8wAH2OD4 — sauna/cold plunge, 14
+Older draft IDs absent from the sheet:
+  wellness-nov2-breathwork
+  wellness-nov3-pilates-1
+
+The activation gate now refuses a config with unresolved activationHolds even if someone changes status/enabled. This is an explicit source-reconciliation guard; it is not a new approval request. Keep booking and SMS disabled. Once the current canonical source is reconciled, reapply these exact-ID choices and verify no-signup handling, reminders, existing-record migration and source preservation before publication.
+
+VALIDATION
+The owner-provided two-place Pilates and one-place chiropractic limits hold under eight simultaneous fictional requests; excess guests waitlist. A test verifies that unresolved source holds cannot be bypassed by flipping draft flags. Full web suite: 898 pass / 77 fail, 975 total; failures exactly match the untouched production baseline. All 133 targeted tests across 15 files pass. Bundled-snapshot web build/TypeScript and companion build/TypeScript pass. No UI changed, so prior layout checks were not repeated. No live submission, SMS or deployment occurred.

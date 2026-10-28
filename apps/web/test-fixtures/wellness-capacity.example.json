@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "status": "test-only",
+  "enabled": false,
+  "description": "Synthetic capacity examples only. Never use this file for attendee bookings or production limits.",
+  "sessions": {
+    "wellness-nov2-breathwork": {
+      "mode": "limited",
+      "maxPlaces": 2
+    },
+    "wellness-nov3-pickleball": {
+      "mode": "unlimited",
+      "maxPlaces": null
+    }
+  }
+}

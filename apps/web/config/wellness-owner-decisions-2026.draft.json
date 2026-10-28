@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "status": "owner-choices-for-draft",
+  "enabled": false,
+  "acceptedOn": "2026-10-27",
+  "source": {
+    "filename": "Wellness activity planning.csv",
+    "sha256": "cec57bb6fb28d6a3a6d0aebf52c98761166f0d7d34e51025cc5afb809689b169",
+    "matching": "Session ID (reference), never column position or title similarity"
+  },
+  "blankCapacityPolicy": "unlimited-for-signup-required-activities",
+  "sessions": {
+    "wellness-rec456nwSazwD3yrF": {
+      "signupRequired": false,
+      "mode": "unset",
+      "maxPlaces": null
+    },
+    "wellness-recsGwZMl7v1NoN9z": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 10
+    },
+    "wellness-recR6UpM64gjwZV0t": {
+      "signupRequired": false,
+      "mode": "unset",
+      "maxPlaces": null
+    },
+    "wellness-reckiT92R8wAH2OD4": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 14
+    },
+    "wellness-nov3-breathwork": {
+      "signupRequired": true,
+      "mode": "unlimited",
+      "maxPlaces": null
+    },
+    "wellness-nov3-morning-yoga": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 20
+    },
+    "wellness-nov3-pickleball": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 10
+    },
+    "wellness-nov3-sauna-cold-plunge": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 14
+    },
+    "wellness-nov3-fitness": {
+      "signupRequired": true,
+      "mode": "unlimited",
+      "maxPlaces": null
+    },
+    "wellness-nov3-pilates-2": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 2
+    },
+    "wellness-nov3-inspire-cards": {
+      "signupRequired": true,
+      "mode": "unlimited",
+      "maxPlaces": null
+    },
+    "wellness-nov3-life-plan": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 20
+    },
+    "wellness-nov3-movement-breathwork": {
+      "signupRequired": true,
+      "mode": "unlimited",
+      "maxPlaces": null
+    },
+    "wellness-nov3-pilates-3": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 2
+    },
+    "wellness-nov3-pilates-4": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 2
+    },
+    "wellness-nov4-chiro-1": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 1
+    },
+    "wellness-nov4-morning-yoga": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 20
+    },
+    "wellness-nov4-pickleball": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 10
+    },
+    "wellness-nov4-pilates-1": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 2
+    },
+    "wellness-nov4-sauna-cold-plunge": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 14
+    },
+    "wellness-nov4-chiro-2": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 1
+    },
+    "wellness-nov4-pilates-2": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 2
+    },
+    "wellness-nov4-yoga-pilates-fusion": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 20
+    },
+    "wellness-nov4-chiro-3": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 1
+    },
+    "wellness-nov4-inspire-cards": {
+      "signupRequired": true,
+      "mode": "unlimited",
+      "maxPlaces": null
+    },
+    "wellness-nov4-fitness-1": {
+      "signupRequired": true,
+      "mode": "unlimited",
+      "maxPlaces": null
+    },
+    "wellness-nov4-pilates-3": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 2
+    },
+    "wellness-nov4-mindsurf": {
+      "signupRequired": true,
+      "mode": "unlimited",
+      "maxPlaces": null
+    },
+    "wellness-nov4-chiro-4": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 1
+    },
+    "wellness-nov4-life-plan": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 20
+    },
+    "wellness-nov4-fitness-2": {
+      "signupRequired": true,
+      "mode": "unlimited",
+      "maxPlaces": null
+    },
+    "wellness-nov4-pilates-4": {
+      "signupRequired": true,
+      "mode": "limited",
+      "maxPlaces": 2
+    }
+  },
+  "ownerOverrides": [
+    {
+      "requestedOn": "2026-10-27",
+      "source": "direct owner chat instruction",
+      "sessionIds": [
+        "wellness-recsGwZMl7v1NoN9z",
+        "wellness-nov3-pickleball",
+        "wellness-nov4-pickleball"
+      ],
+      "previousMaxPlaces": 12,
+      "maxPlaces": 10
+    },
+    {
+      "requestedOn": "2026-10-27",
+      "source": "direct owner chat instruction",
+      "sessionIds": [
+        "wellness-nov3-morning-yoga",
+        "wellness-nov4-morning-yoga",
+        "wellness-nov4-yoga-pilates-fusion"
+      ],
+      "previousMode": "unlimited",
+      "mode": "limited",
+      "maxPlaces": 20
+    }
+  ],
+  "sharedResources": {
+    "life-plan-workbooks": {
+      "total": 40,
+      "sessionIds": [
+        "wellness-nov3-life-plan",
+        "wellness-nov4-life-plan"
+      ],
+      "initialPlacesPerSession": 20,
+      "currentRule": "20 places per session; no automatic workbook reallocation",
+      "reallocationReview": "deferred-until-after-first-session-by-owner",
+      "futureCountingGuidance": "one-workbook-per-unique-guest-across-both-sessions",
+      "customEnforcementRequiredForLaunch": false,
+      "sourceNote": "I listed 20 as the limit because each participant will need a workbook, and we have 40 workbooks total for guests. So if the first life plan session has less than 20 participants, this second session can have more than 20, because we will have workbooks left over."
+    }
+  },
+  "allSmsApproval": "pending"
+}

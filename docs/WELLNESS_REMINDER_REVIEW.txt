@@ -1,0 +1,52 @@
+OCTOBER 27 OWNER SETTINGS UPDATE
+
+Nick has supplied the provisional limits and signup choices. Blank signup-required limits are unlimited; Life Plan stays at 20 per session, and workbook reallocation is deferred. All 32 choices are preserved, with matched settings applied to the disabled older source. Source sync remains required and all SMS remains held. See WELLNESS_OWNER_CAPACITY_CHOICES_2026-10-27.txt. Earlier all-unset descriptions below are historical.
+
+CURRENT STATUS — OCTOBER 26 PHASE 2
+
+The booking flow, private guest cancellation, automatic first-come promotion, staff recovery/actions/private backup and read-only migration report are now implemented locally and disabled. See WELLNESS_BOOKING_WORKFLOW.txt for current behavior, exact validation and rollout requirements. The foundation record below is retained as historical implementation detail; its descriptions of UI binding as future work are superseded. No live migration, deployment or SMS occurred.
+
+WELLNESS REMINDERS AND CAPACITY FOUNDATION — LOCAL REVIEW
+
+Source baseline: 39f561da94a6ce24a2191089f9294281344f2ed2
+Target branch: codex/production-netlify-20261026
+Working branch: codex/wellness-reminders-20261026
+Status: IMPLEMENTED for draft source review; not merged or deployed.
+
+OWNER SMS HOLD — REQUIRED
+Nick explicitly requires approval of the complete process and build before ANY text, including a test text. INTEGRATION_SMS_SEND_APPROVED defaults to false/unset. The feed returns sendApproval=pending, previewJobs for review, and reminderJobs=[] until this server-only setting is explicitly true after that approval. A PR review, test pass, merge or deployment does not grant permission to enable it. Keep every Make reminder scenario inactive and do not use Run once on an SMS-sending flow. The previously deployed service is unchanged; the new gate is prepared source until reviewed deployment.
+
+REMINDER FEED
+GET /api/integrations/agenda requires its own random server-side bearer secret of at least 32 characters. It reads only workshop, textPreference and programApproval records. Only category=wellness records with a canonical wellness ID qualify. It derives titles and UTC instants directly from lib/wellness-signups-2026.ts; no second class schedule is maintained. There are currently 30 choices. Other RSVP, dinner, site-visit and admission configuration cannot enter this API.
+
+Ordinary wellness signups do not need an additional staff approval. If a matching programApproval exists, the newest exact source-record/class decision controls: hold, decline, zero approved quantity, and contact hold all suppress reminders. An approved record must be ready or sent in the existing contact queue. Tied holds beat approvals. Staff approval and confirmation code is unchanged. This conservative contact-hold interpretation should be reviewed with Porter/Cherrial before production.
+
+The feed validates contact identity, separates event-only permission from broader updates consent, suppresses STOP by phone/email aliases, and holds numbers shared by different named guests. A new checkbox does not undo STOP. Only a later positive preference for the same phone can clear it. It keeps latest per-class selections across phone/email edits and does not revive older registrations behind cancellation/removal markers. Any required source failure returns 503 without partial recipients or contact details. All responses prohibit caching.
+
+The planner produces one combined agenda at 7 PM on the previous Las Vegas evening and one reminder 60 minutes before each selected class/window. Job keys remain stable across retry, email edits and rescheduling. Drop-ins are described as windows. No room is invented. Make must revalidate the current complete job immediately before dispatch and own durable send reservations, provider outcomes and delivery reconciliation. Snapshot reads span multiple sources and are not a single transaction with ClickSend.
+
+STOP CALLBACK
+POST /api/integrations/clicksend-inbound accepts configured bearer auth or the separately secured provider callback query token. It checks the dedicated destination and expected account/subaccount, validates message_id (legacy inboundmessage_id accepted; conflicting aliases rejected), records the provider event time, and durably saves the no preference before acknowledging it. It does not use original_message_id for deduplication, treat START as consent, or send any SMS. Keep query credentials out of access logs.
+
+SHARED COMPANION SERVICE SOURCE
+integrations/reminder-service builds the same handlers as two separate Netlify Functions, with no outbound SMS sender. It can replace the older local companion source after review, without replacing the main website. Its adapter permits only workshop/textPreference/programApproval reads, journaled inbound STOP writes, and optional read-only booking-ledger access. No deletes, approval changes or booking writes are available through the reminder service. Test mode requires an isolated prefix; live preference writes have a separate explicit gate. The previously deployed companion remains unchanged.
+
+CAPACITY FOUNDATION — IMPLEMENTED AND TESTED LOCALLY
+Editable draft: apps/web/config/wellness-capacity-2026.draft.json. All 30 modes remain unset with null maxPlaces. Unset is neither zero nor unlimited. Synthetic two-place/unlimited examples live separately under apps/web/test-fixtures. The runtime approval gate rejects a draft or any unset class.
+
+The booking domain supports atomic batches, idempotent request IDs, duplicate-attendee suppression, registered/waitlisted/cancelled states, FIFO promotion after cancellation, owner-key checks, conflict validation, immutable audit events, and strict stored-state validation. The whole transition uses one conditional ledger write; concurrent requests cannot overwrite each other's seat counts. Netlify adapter reads strongly, uses onlyIfNew for explicit isolated initialization and onlyIfMatch for an existing ETag; a conflict retries the complete operation. Real stores default to refusing automatic initialization. See official provider semantics: https://docs.netlify.com/build/data-and-storage/netlify-blobs/
+
+A booking-ledger snapshot can be supplied to the reminder feed. Only registered entries qualify; waitlisted, cancelled or unmapped signups are suppressed. WELLNESS_BOOKING_ENABLED=true additionally requires a complete approved capacity configuration and an already initialized ledger. A missing/unreadable ledger holds reminders. This setting is not enabled.
+
+PARTIAL: the booking engine is not yet connected to the public signup handler, guest cancellation UI, or staff capacity controls. It cannot enforce live capacity by itself. The existing signup page remains unchanged. No existing guest was reclassified or imported into the ledger. Before binding the engine, plan a reviewed migration of existing wellness registrations and an idempotent, recoverable source-write/outbox workflow; do not seed an empty live ledger or silently treat old guests as having no place. Review how staff decisions affect seat release and waitlist promotion. Cancellation capability links and notification deduplication must be completed before guest self-service launch.
+
+LIVE STATUS
+No Make scenario, ClickSend rule, provider credential, Netlify environment, deployment or live attendee record was changed in this implementation. Attendee sends remain disabled. The existing successful test sends and STOP deployment are historical evidence, not a live rollout of this new source.
+
+REVIEW / PUBLICATION
+Review the source diff against the exact production baseline and coordinate the approval contract with Porter. Porter remains production publisher. Preserve /rsvp proxies, every existing invite URL, backend stores and waiver/attendance records. Reconcile historical STOP/Do Not Text suppressions and delivery reconciliation before attendee activation. Real capacities can be filled in after local development, but must be confirmed before activating capacity/waitlist behavior.
+
+VERIFICATION — OCTOBER 26, 2026
+Node 22.23.1, pnpm 11.19.0. Bundled-snapshot web build and its TypeScript check pass. Companion bundle build, dedicated TypeScript check and built-function auth/failure smoke checks pass; the smoke test disables network and observes zero calls. Focused wellness/integration/booking/Cherrial tests: 101 passed in 10 files. Isolated wellness-only full web suite: 872 passed, 77 failed (949 total). An isolated untouched checkout of production commit 39f561da94a6ce24a2191089f9294281344f2ed2 produces the identical 77 failures (779 passed, 856 total); no new failing assertions were introduced. Full-suite green/release readiness is not claimed. Public UI and staff approval files were not changed; no mobile/admin application changes are included.
+
+PREVIEW-ONLY HTTP PROOF: The compiled production website was started locally with a fictional fixture and INTEGRATION_SMS_SEND_APPROVED=false. Authenticated GET returned 200, sendApproval=pending, two previewJobs and zero reminderJobs; unauthenticated GET returned 401. No SMS was sent. The local server was stopped afterward. The Make reminder scenario was subsequently verified inactive in the correct work Chrome profile on October 26; no active run was present.

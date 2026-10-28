@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+<title>Wellness Bookings | Not Alone Staff</title><link rel="stylesheet" href="/wellness/wellness.css"></head>
+<body class="manage-body"><main class="manage-page staff-bookings">
+<p class="manage-brand">Not Alone Summit · Staff</p><h1>Wellness bookings</h1>
+<p><a href="/staff">Staff portal</a> · <a href="/staff/login">Staff sign-in</a></p>
+<p id="staff-status" role="status" aria-live="polite">Loading bookings…</p><p id="staff-error" role="alert" hidden></p>
+<button id="refresh" type="button">Refresh bookings</button>
+<p><a href="/api/staff/wellness-bookings?download=backup">Download private booking backup</a></p>
+<section><h2>Pending saves</h2><div id="pending-intakes"></div></section>
+<details><summary>Places and waitlists</summary><div id="capacity-summary"></div></details>
+<section><h2>Guest activity status</h2><div id="staff-bookings"></div></section>
+</main><script src="/wellness/staff.js" defer></script></body></html>

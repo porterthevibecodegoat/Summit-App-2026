@@ -1,0 +1,65 @@
+OCTOBER 27 OWNER SETTINGS UPDATE
+
+Nick has supplied the provisional limits and signup choices. Blank signup-required limits are unlimited; Life Plan stays at 20 per session, and workbook reallocation is deferred. All 32 choices are preserved, with matched settings applied to the disabled older source. Source sync remains required and all SMS remains held. See WELLNESS_OWNER_CAPACITY_CHOICES_2026-10-27.txt. Earlier all-unset descriptions below are historical.
+
+OCTOBER 26 PHASE 2 UPDATE
+
+IMPLEMENTED locally: public booking binding, durable retry/recovery, private guest cancellation, automatic first-come promotion (Nick’s choice), staff view/actions/private backup and read-only initial migration planning. All remain disabled for production. All 30 real capacities below are still unset. Historical foundation-only descriptions below are superseded by WELLNESS_BOOKING_WORKFLOW.txt; no live source data changed.
+
+WELLNESS CAPACITY PLACEHOLDERS — OCTOBER 26, 2026
+
+PARTIAL: editable draft settings plus a locally tested booking engine and reminder-status integration. No live capacity, waitlist or cancellation behavior is activated. No existing signup or staff approval code has changed.
+
+Owner instruction: use placeholders now and edit limits later.
+Production starting point: codex/production-netlify-20261026 at 39f561da94a6ce24a2191089f9294281344f2ed2.
+
+EDITABLE DRAFT
+apps/web/config/wellness-capacity-2026.draft.json
+
+All 30 current session IDs are listed, derived from apps/web/lib/wellness-signups-2026.ts. This file holds capacity settings only; titles, dates and times continue to come from the canonical wellness source. If that source changes, reconcile added/removed IDs before using the configuration.
+
+SETTINGS
+- Not yet decided: mode = unset; maxPlaces = null. This is a placeholder, not zero places and not unlimited.
+- Limited places: mode = limited; maxPlaces = a positive whole number approved by the event team.
+- Unlimited: mode = unlimited; maxPlaces = null. Use only after the event team explicitly confirms this policy. A drop-in flag does not establish unlimited capacity.
+- Leave status = draft and enabled = false during preparation. These settings are not currently imported by the live signup handler. Merely editing this draft cannot enforce a cap or enable a waitlist.
+
+ISOLATED SAMPLE VALUES
+apps/web/test-fixtures/wellness-capacity.example.json
+This separate test-only file includes one two-place example and one unlimited example using real session IDs. Both values are invented solely for local tests, not event facts. It is not imported into booking code.
+IMPLEMENTED local engine tests: two distinct registrations receive places; the third is waitlisted; replaying a registration does not use another place; a cancellation releases one place; promotion selects the next eligible person once; 20 simultaneous requests do not exceed a two-place limit; unset settings cannot be activated. Waitlisted/cancelled entries are excluded from reminder snapshots, and promotion changes the next snapshot. Public signup/cancellation UI binding, existing-guest migration and operational publishing remain planned. See WELLNESS_REMINDER_REVIEW.txt.
+
+BEFORE CAPACITY/WAITLIST PUBLICATION
+Confirm actual limits, shared-equipment/group-size rules, drop-in policy, cancellation and waitlist-promotion policy. Implement and test durable capacity enforcement against the actual production store; a count-then-write check alone is insufficient for simultaneous requests. Preserve existing records, waivers, IDs and staff approval/confirmation workflows. All final limits must be confirmed before the capacity feature is activated. Porter remains production publisher.
+
+CURRENT PLACEHOLDER LIST
+wellness-nov2-breathwork | Monday, November 2 | 1:30–2:30 PM | Breathwork with Nick Kislinger | NOT SET
+wellness-nov3-pilates-1 | Tuesday, November 3 | 8:00–8:20 AM | Reformer Pilates with Olympian Yvette Baker | NOT SET
+wellness-nov3-breathwork | Tuesday, November 3 | 8:00–8:45 AM | Breathwork with Nick Kislinger | NOT SET
+wellness-nov3-morning-yoga | Tuesday, November 3 | 8:00–8:20 AM | Morning Yoga Flow: Wake Up and Ground | NOT SET
+wellness-nov3-pilates-2 | Tuesday, November 3 | 8:30–8:50 AM | Reformer Pilates with Olympian Yvette Baker | NOT SET
+wellness-nov3-fitness | Tuesday, November 3 | 8:30–8:50 AM | Fitness with Kelly Richardson | NOT SET
+wellness-nov3-pilates-3 | Tuesday, November 3 | 9:00–9:20 AM | Reformer Pilates with Olympian Yvette Baker | NOT SET
+wellness-nov3-movement-breathwork | Tuesday, November 3 | 9:00–9:45 AM | Move Together, Breathe Together with Karena Dawn | NOT SET
+wellness-nov3-life-plan | Tuesday, November 3 | 9:00–9:45 AM | Life Plan Session | NOT SET
+wellness-nov3-inspire-cards | Tuesday, November 3 | 9:00–9:45 AM | Inspire Cards with Cherrial Odell | NOT SET
+wellness-nov3-pilates-4 | Tuesday, November 3 | 9:30–9:50 AM | Reformer Pilates with Olympian Yvette Baker | NOT SET
+wellness-nov3-pickleball | Tuesday, November 3 | 8:00–10:00 AM | Pickleball Clinic | NOT SET
+wellness-nov3-sauna-cold-plunge | Tuesday, November 3 | 8:00–10:00 AM | Sauna & Cold Plunge | NOT SET
+wellness-nov4-pilates-1 | Wednesday, November 4 | 8:00–8:20 AM | Reformer Pilates with Aleina Lasker | NOT SET
+wellness-nov4-chiro-1 | Wednesday, November 4 | 8:00–8:20 AM | Chiropractic with Dr. Katie Hightower | NOT SET
+wellness-nov4-morning-yoga | Wednesday, November 4 | 8:00–8:20 AM | Morning Yoga Flow: Wake Up and Ground | NOT SET
+wellness-nov4-pilates-2 | Wednesday, November 4 | 8:30–8:50 AM | Reformer Pilates with Aleina Lasker | NOT SET
+wellness-nov4-chiro-2 | Wednesday, November 4 | 8:30–8:50 AM | Chiropractic with Dr. Katie Hightower | NOT SET
+wellness-nov4-yoga-pilates-fusion | Wednesday, November 4 | 8:30–8:50 AM | Yoga Pilates Fusion: Strength, Balance, and Core | NOT SET
+wellness-nov4-pilates-3 | Wednesday, November 4 | 9:00–9:20 AM | Reformer Pilates with Aleina Lasker | NOT SET
+wellness-nov4-chiro-3 | Wednesday, November 4 | 9:00–9:20 AM | Chiropractic with Dr. Katie Hightower | NOT SET
+wellness-nov4-fitness-1 | Wednesday, November 4 | 9:00–9:20 AM | Fitness with Kelly Richardson | NOT SET
+wellness-nov4-mindsurf | Wednesday, November 4 | 9:00–9:30 AM | Mindsurf with Jen Smorgon | NOT SET
+wellness-nov4-inspire-cards | Wednesday, November 4 | 9:00–9:45 AM | Inspire Cards with Cherrial Odell | NOT SET
+wellness-nov4-pilates-4 | Wednesday, November 4 | 9:30–9:50 AM | Reformer Pilates with Aleina Lasker | NOT SET
+wellness-nov4-chiro-4 | Wednesday, November 4 | 9:30–9:50 AM | Chiropractic with Dr. Katie Hightower | NOT SET
+wellness-nov4-fitness-2 | Wednesday, November 4 | 9:30–9:50 AM | Fitness with Kelly Richardson | NOT SET
+wellness-nov4-life-plan | Wednesday, November 4 | 9:30–9:50 AM | Life Plan Session | NOT SET
+wellness-nov4-pickleball | Wednesday, November 4 | 8:00–10:00 AM | Pickleball Clinic | NOT SET
+wellness-nov4-sauna-cold-plunge | Wednesday, November 4 | 8:00–10:00 AM | Sauna & Cold Plunge | NOT SET

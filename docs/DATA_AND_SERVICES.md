@@ -1,3 +1,35 @@
+## October 28 follow-up — verified link enrichment
+
+Added 7 verified ROS activity links and 6 verified guest links to the existing Wellness Signups rows only. Matching used exact activity title/date/time and exact guest name plus a unique matching source/contact-sheet phone, with existing roster IDs; no name-only guest matching or contact copying. All 19 activity links and 16 guest links are now present. Three guest links remain unassigned; notes preserve contact/program differences. Scheduled writer readback proves those omitted manual fields remain untouched. Original sources/waivers and the contact sheet were unchanged. See `WELLNESS_CUTOVER_REVIEW.txt`.
+
+## October 28 wellness data sync — IMPLEMENTED LIVE
+
+Nick approved the new Main NA Summit 2026-only OAuth read/schema/write connection. Make scenario 6805809 is Active every 30 minutes and upserts 13 source-owned columns into Wellness Signups by immutable Source Record ID. Guest/Session links and staff/review notes are omitted and preserved; Smart links is false, no deletes or outbound messaging. Nineteen rows are verified, including 7 newer source selections; full UTC timestamp strings avoid native Make Date truncation. Nine matching flags and five additional review flags remain. The feed stays read-only/preview-only; Make is the separately approved data writer. Original Netlify submissions/waivers and All Summit Data contacts remain in place; bookings/admission/SMS are not activated. All historical no-writer/empty-table notes below are superseded. See `WELLNESS_AIRTABLE_SYNC.txt`.
+
+## October 27 — approved companion feed publication
+
+Feed endpoint is live on nas-2026-reminders deploy `6ae1722358b471bf0feaa9f1`, source `986b1d3`. Dedicated secret `WELLNESS_AIRTABLE_FEED_TOKEN` is stored only in provider settings/Make's origin-restricted connection; feed source mode is explicitly live and read-only. Existing reminder/STOP test-source settings were preserved, with SMS approval false. Deployment token revoked and its invalidity verified. No website deployment, source mutation or text. Make writer remains pending a separate Main NA Summit 2026 OAuth grant; the existing connection was not changed. New computed Link Review field flags missing links/review details without changing source data or admission. See `docs/WELLNESS_AIRTABLE_SYNC.txt`.
+
+## October 27 existing wellness import — IMPLEMENTED
+
+Nick authorized existing signup migration. Wellness Signups now contains 12 verified unique source selections (5 people), including legacy/new IDs. Upsert merged only by Source Record ID. Guest/ROS links use verified existing records; 2 guest links remain unassigned. A sync-owned Sync Details field holds generic review notes without private contacts; Staff Notes is preserved. Contacts and original signatures/waivers remain outside this table. The source and all existing automation settings were unchanged. Automatic ongoing sync is still inactive. Details: `docs/WELLNESS_AIRTABLE_SYNC.txt`.
+
+## October 27 wellness Airtable exception — PARTIAL
+
+Nick explicitly requested wellness signup data in Airtable as the central operations view. Created empty table `tblbfPmjZGnJPnINI` in base `app7BHptsc1bjc3DD`, linked to existing Guest Tracker and Summit Programming ROS. No existing values or automation settings changed; no attendee records imported. This narrow owner request supersedes historical read-only guidance only for the new wellness integration. The private feed always produces previews with an empty write queue; there is no Airtable writer. It excludes private contacts, signatures and management links. The existing contact-to-All Summit Data workflow and website source/waiver/atomic booking storage remain authoritative for those responsibilities. See `docs/WELLNESS_AIRTABLE_SYNC.txt` and the disabled field-ID manifest.
+
+## October 27 owner capacity source
+
+The owner-supplied CSV is normalized into `apps/web/config/wellness-owner-decisions-2026.draft.json`, preserving all 32 exact session IDs and the input hash without personal file paths or attendee data. The runtime-facing disabled draft contains 20 matched limited policies and 8 unlimited policies. Four new IDs await canonical source sync; two absent older IDs stay unset. Activation holds prevent enabling an unreconciled policy. No workbook pool automation is required: use 20 per Life Plan session until later owner review.
+
+## October 26 booking workflow — IMPLEMENTED locally, disabled
+
+The web booking writer adds conditional `wellness/ledger-v1.json` transitions and immutable `wellness-intakes/<uuid>.json` payloads plus journal copies in the existing Netlify staff store. Source workshops keep original IDs, timestamps and waivers; cancellations live in the new audit/ledger. Pending source materialization suppresses all intake reminders. Test sources, inbox, outbox and ledger require isolated prefixes/directories. The companion remains read-only for bookings and cannot mutate intakes. A new full-staff-only private backup exports booking history and recovery payloads; the older general staff export is unchanged. No live store initialization or migration is included. See `docs/WELLNESS_BOOKING_WORKFLOW.txt` for settings and cutover restrictions.
+
+## October 26 wellness integration — IMPLEMENTED locally / PARTIAL activation
+
+The current web staff source is Netlify Blobs, not the historical admin/Supabase flow described elsewhere in this document. The new reminder feed reads `workshop`, `textPreference` and `programApproval`; only canonical wellness workshops enter the feed. The source adapter only writes generated journaled STOP opt-outs and cannot delete, approve or alter bookings. The optional booking projection reads `wellness/ledger-v1.json` through a read-only adapter, requires confirmed capacity configuration and refuses a missing live ledger. The atomic booking engine and sample policies are local foundation code; no live migration, public booking binding, provider setting or attendee sending was activated. See `docs/WELLNESS_REMINDER_REVIEW.txt`.
+
 # Data and Services
 
 This document names systems and configuration variables only. It contains no secret values.

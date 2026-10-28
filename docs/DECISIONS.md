@@ -1,3 +1,49 @@
+## October 28 owner follow-up — current repository identified; access pending
+
+The owner supplied a new production repository and latest commit/tag. Our existing GitHub account cannot yet read that source (404; no pending invitation). Exact private handoff coordinates remain in the owner workspace. This older repository and draft PR are references only: hold merging/deploying them while scoped wellness changes are prepared against the verified current website source. Preserve the newer website and Git history; inspect a file-level port after access is granted.
+
+Nick resolved the programming question: Airtable is authoritative when in doubt. Tuesday Life Plan is 9:00–9:45 AM, “Life Plan Preparedness with DBT expert Dr. Blaise Aguirre.” Added that decision to both affected signup review notes without clearing history, changing states or rewriting original labels/times. Three guest links remain unverified; explaining the uncertainty was not identity confirmation. All SMS stays disabled.
+
+## October 28 follow-up — preserve exceptions; obtain current source
+
+Nick said to proceed with matching/review and the remaining website preparation. Verified links may be added using exact session IDs/times and strong contact evidence, while ambiguous identities remain unlinked. Preserve original contact values, timestamps, labels, waivers and Staff Notes. Do not silently resolve the initial 2-selection/1-place capacity exception or rewrite a retired source session ID. Obtain the exact code of the newer CLI-published website before integration; the older shared branch is not a safe website replacement. Complete-process/build approval remains required for every text, including tests. See `WELLNESS_CUTOVER_REVIEW.txt`.
+
+## October 28 — dedicated Summit base connection approved; data-only sync active
+
+Nick explicitly approved granting schema/record read and record write to the dedicated Make connection for Main NA Summit 2026 only. Provider write scope includes deletion capability; no workflow deletion step is present. This completes Nick's existing signup-storage/migration/automatic-sync request. After a rejection rehearsal, exact field readback and repeat-run verification, enabled only scenario 6805809 every 30 minutes. Preserve manual guest/session links and staff/review notes; no fuzzy guest matching, contact copying or source deletion. All SMS, including tests, remains held until complete-process/build approval. No additional website deployment was performed. See `WELLNESS_AIRTABLE_SYNC.txt`.
+
+## October 27 — data-feed deployment approved, texts still held
+
+Nick approved a temporary Netlify token, deployment to nas-2026-reminders only, separate private feed credential in Netlify/Make and immediate token revocation. Completed that scope without replacing the website or changing reminder/STOP source mode. Authenticated read-only Make verification is permitted for this data-only connection; no SMS test or sender activation is approved. A new Airtable base-limited OAuth grant is a separate pending approval.
+
+## October 27 — existing wellness signup import approved
+
+Nick explicitly asked to proceed and migrate existing signups into Wellness Signups. Imported the 12-row source snapshot without changing original submissions, waivers, contacts or admissions. Preserve source identities and flag uncertain guest links or schedule/contact differences; never infer a roster match solely from a similar name or borrowed contact. Automatic syncing and SMS remain separate; no text is authorized by this import.
+
+## October 27 — owner requests Airtable wellness records
+
+Use Main NA Summit 2026 for the wellness operations view. Prepare a separate linked Wellness Signups table and private source preview; retain original website submissions, waiver evidence and atomic capacity/booking state in Netlify. Preserve existing contact routing to All Summit Data. Exact source IDs identify sync rows; unmatched guests/classes need review and do not imply admission. Table editing is not a booking command or SMS authorization. No live import, deployment or texts authorized by this preparation. Details: `docs/WELLNESS_AIRTABLE_SYNC.txt`.
+
+## October 27 — yoga capacity
+
+Nick specified 20 places per yoga session. Apply this to both Morning Yoga Flow sessions and Yoga Pilates Fusion. Preserve this later instruction over the earlier unlimited blank-limit interpretation when re-importing the CSV.
+
+## October 27 — pickleball limit amendment
+
+Nick explicitly changed pickleball capacity from 12 to 10. Apply 10 to every listed pickleball activity and retain the override when re-importing the earlier CSV. This changes no other capacity or rollout approval.
+
+## October 27 — provisional wellness limits and simple Life Plan policy
+
+Nick approved using the filled CSV for now and explicitly said blank signup-required limits mean unlimited. Two Monday activities require no signup. Nick then deferred complex workbook rules until after the first Life Plan session, so retain the listed 20-place limit for each session and do not add custom allocation logic. Preserve the original shared-40-workbook note as future context only. Complete-process/build approval is still required for all SMS. See `docs/WELLNESS_OWNER_CAPACITY_CHOICES_2026-10-27.txt`.
+
+## October 26 — wellness promotion and booking rollout decisions
+
+IMPLEMENTED locally: Nick selected automatic, first-come promotion after a wellness cancellation. Real capacity modes stay unset until confirmed. The default draft flow closes changes at class start, preserves source/waiver history, holds incomplete source saves from reminders, and treats STOP as message suppression rather than seat cancellation. Source-save recovery and private staff backup are included. Initial migration planning is strictly read-only; no real ledger seed or automatic legacy-link recovery is authorized. All SMS, including tests and promotion notices, requires Nick’s approval of the complete process and build. See `docs/WELLNESS_BOOKING_WORKFLOW.txt` for the reviewable defaults.
+
+## October 26 — wellness reminders and editable capacity draft
+
+**IMPLEMENTED locally:** derive reminder times/titles from `wellness-signups-2026.ts`, use UTC instants and Las Vegas rendering, exclude other event domains, and honor exact staff decisions/contact holds. An ordinary wellness signup does not require a new approval. **IMPLEMENTED locally / not activated:** distinguish unset from unlimited capacity, reserve/cancel/promote through a single conditional ledger write with audit/idempotency, and suppress nonregistered ledger entries in reminder snapshots. **PLANNED:** existing-record migration, recoverable public signup writes, cancellation capability links/UI and final capacity/promotion policy. A draft or missing ledger must never silently activate capacity behavior. No production publication or sends occurred.
+
 # Decisions
 
 ## Latest Owner Decisions (September 18)
